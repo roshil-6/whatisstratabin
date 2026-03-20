@@ -25,8 +25,28 @@ const FaqItem = ({ question, answer, isOpen, onClick }: { question: string; answ
   </div>
 );
 
+const COMPARE_ROWS = [
+  { aspect: "Workspace", individual: "One private workspace", team: "Team workspace with members" },
+  { aspect: "Projects", individual: "Personal projects", team: "Shared projects, assignable" },
+  { aspect: "Chat", individual: "—", team: "Direct chat with workspace members" },
+  { aspect: "Invitations", individual: "—", team: "Invite by email/username" },
+  { aspect: "Daily tasks", individual: "—", team: "Assign and track daily tasks" },
+  { aspect: "Roles", individual: "—", team: "Admin (invite, manage) / Member" },
+  { aspect: "Visibility", individual: "Private", team: "Private or Public" },
+];
+
+const FEATURE_TABS = [
+  { id: "compare", label: "Individual vs Team", icon: "⇄" },
+  { id: "workspace", label: "Workspace", icon: "◉" },
+  { id: "strategy", label: "Strategy", icon: "◇" },
+  { id: "ai", label: "AI & Reports", icon: "✦" },
+  { id: "community", label: "Community", icon: "◈" },
+  { id: "extras", label: "Extras", icon: "◎" },
+];
+
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [featureTab, setFeatureTab] = useState("compare");
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-black">
@@ -39,6 +59,9 @@ export default function Home() {
           <div className="flex gap-10">
             <a href="#what-is-stratabin" className="text-sm font-medium text-black/70 hover:text-orange-500 transition-colors relative group">
               What is Stratabin <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300" />
+            </a>
+            <a href="#features" className="text-sm font-medium text-black/70 hover:text-orange-500 transition-colors relative group">
+              Features <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300" />
             </a>
             <a href="#faq" className="text-sm font-medium text-black/70 hover:text-orange-500 transition-colors relative group">
               FAQ <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300" />
@@ -132,46 +155,153 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-28 px-6 bg-gradient-to-b from-[#fafafa] to-white">
+      {/* Features - Interactive */}
+      <section id="features" className="py-28 px-6 bg-gradient-to-b from-[#fafafa] to-white scroll-mt-24">
         <div className="max-w-6xl mx-auto">
           <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold tracking-widest uppercase mb-4">Features</span>
           <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
-            What you can do with Stratabin
+            Explore Stratabin
           </h2>
-          <p className="text-black/70 mb-16 max-w-2xl text-lg">
-            Two workspaces—one for yourself, one for your team. Both let you organize ideas, plan execution, and track progress.
+          <p className="text-black/70 mb-12 max-w-2xl text-lg">
+            From solo planning to team collaboration—discover everything Stratabin offers.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="group p-10 rounded-3xl bg-white border border-black/[0.06] shadow-card hover:shadow-card-hover hover:border-orange-200 transition-all duration-500">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl mb-6 shadow-lg shadow-orange-500/20">1</div>
-              <h3 className="text-2xl font-bold text-black mb-6">Individual Workspace</h3>
-              <p className="text-black/75 leading-relaxed mb-6">
-                For your personal projects and ideas. Create folders and add unlimited projects. Each project is a structured document where you can:
-              </p>
-              <ul className="text-black/70 space-y-3 text-sm leading-relaxed">
-                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> Write ideas in sections, visualize as a flow</li>
-                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> Create tasks with timelines and phases</li>
-                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> Use Strab AI to organize messy thoughts</li>
-                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> Move, merge, or duplicate projects</li>
-              </ul>
-            </div>
+          {/* Tab bar */}
+          <div className="flex flex-wrap gap-2 mb-10">
+            {FEATURE_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setFeatureTab(tab.id)}
+                className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
+                  featureTab === tab.id
+                    ? "bg-orange-500 text-white shadow-lg shadow-orange-500/25"
+                    : "bg-white border border-black/10 text-black/70 hover:border-orange-200 hover:text-orange-600"
+                }`}
+              >
+                <span className="mr-2 opacity-80">{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
-            <div className="group p-10 rounded-3xl bg-white border border-black/[0.06] shadow-card hover:shadow-card-hover hover:border-orange-200 transition-all duration-500">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white font-bold text-xl mb-6 shadow-lg shadow-orange-500/20">2</div>
-              <h3 className="text-2xl font-bold text-black mb-6">Team Workspace</h3>
-              <p className="text-black/75 leading-relaxed mb-6">
-                For collaborating with others. Create shared folders, invite members, and work on the same projects together.
-              </p>
-              <ul className="text-black/70 space-y-3 text-sm leading-relaxed">
-                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> Shared editing and structured collaboration</li>
-                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> Shared goals and progress tracking</li>
-                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> Strab AI for team insights</li>
-                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> <strong>Team roles</strong> — Admins can set who is Admin or Member; the workspace owner stays fixed</li>
-                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> <strong>Daily tasks</strong> — Add tasks by date, assign to team members (or yourself), mark them done, and filter to see only your tasks</li>
-              </ul>
-            </div>
+          {/* Tab content */}
+          <div className="min-h-[480px]">
+            {featureTab === "compare" && (
+              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-card overflow-hidden animate-fade-in">
+                <div className="grid grid-cols-3 gap-0 border-b border-black/5">
+                  <div className="p-4 font-semibold text-black/60 text-sm">Aspect</div>
+                  <div className="p-4 font-semibold text-orange-600 text-sm bg-orange-50/50">Individual</div>
+                  <div className="p-4 font-semibold text-orange-600 text-sm bg-orange-50/50">Team</div>
+                </div>
+                {COMPARE_ROWS.map((row, i) => (
+                  <div key={i} className={`grid grid-cols-3 gap-0 border-b border-black/5 last:border-0 hover:bg-orange-50/30 transition-colors ${i % 2 ? "bg-black/[0.02]" : ""}`}>
+                    <div className="p-4 font-medium text-black text-sm">{row.aspect}</div>
+                    <div className="p-4 text-black/70 text-sm">{row.individual}</div>
+                    <div className="p-4 text-black/70 text-sm">{row.team}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {featureTab === "workspace" && (
+              <div className="space-y-6 animate-fade-in">
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">1</span> Dashboard</h4>
+                  <p className="text-black/70 mb-4 text-sm">Central hub at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/dashboard</code>. Stats: streak, progress points, project count, tasks done.</p>
+                  <p className="text-black/60 text-sm mb-2">Tabs: Writing & Flow, Task Lists, Timelines, Strategic Calendar, Project Weekly Planner, Reports, Monitor, STRAB AI.</p>
+                  <p className="text-black/60 text-sm">Sidebar: General Projects, Custom Folders, Team Workspaces, Profile, Feed, Community. Project sections: Pinned, Current Focus, Merged, All. Actions: New Project, STRAB AI, Reports, Calendar, Merge projects.</p>
+                </div>
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">2</span> Workspaces</h4>
+                  <p className="text-black/70 mb-4 text-sm">Organize at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/workspace/:id</code>.</p>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div><p className="font-medium text-black mb-2 text-sm">Individual</p><p className="text-black/60 text-sm">Private, single owner, projects only.</p></div>
+                    <div><p className="font-medium text-black mb-2 text-sm">Team</p><p className="text-black/60 text-sm">Invite by email/username. Roles: Admin (invite, manage, daily tasks) / Member. Visibility: Private or Public. Shared projects, assignable. Daily tasks with date, assignee, toggle done. Activity feed.</p></div>
+                  </div>
+                </div>
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">3</span> Projects</h4>
+                  <p className="text-black/70 text-sm">Units of work. Statuses: Idea → Planning → Executing → Completed. Assign to members (team). Folders, pin, mark current, merge. Card info: tasks %, nodes, words, streak, last updated. Duplicate, move, rename, delete.</p>
+                </div>
+              </div>
+            )}
+
+            {featureTab === "strategy" && (
+              <div className="space-y-6 animate-fade-in">
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◇</span> Canvas (Writing & Flow)</h4>
+                  <p className="text-black/70 mb-4 text-sm">Visual strategy at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/strategy/:id</code>. Node types: Idea, Question, Decision, Text, Image, SubProject. Branch, Split (Option A/B), connect edges. Rich writing section. Subprojects, merged canvases. Command dock for quick add.</p>
+                </div>
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">⏱</span> Timeline</h4>
+                  <p className="text-black/70 text-sm">Phases and milestones. Status: Planned → Active → Done. Add/delete phases, expand/collapse.</p>
+                </div>
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">✓</span> Todo (Task Lists)</h4>
+                  <p className="text-black/70 text-sm">Tasks per project. Add, toggle complete, delete. Max 200 chars, no duplicates. Strikethrough when done.</p>
+                </div>
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📅</span> Calendar</h4>
+                  <p className="text-black/70 text-sm">Month/Week views. Add, remove, toggle events. Time presets: All Day, 9:00, 14:00, 18:00. Project or global scope. Daily execution: executed, blocking, tomorrow. Reminders. Stats: total/completed/pending for month.</p>
+                </div>
+              </div>
+            )}
+
+            {featureTab === "ai" && (
+              <div className="space-y-6 animate-fade-in">
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center text-sm">✦</span> STRAB AI</h4>
+                  <p className="text-black/70 mb-4 text-sm">AI assistant at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/strab</code> (general) or <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/strab/:id</code> (project).</p>
+                  <p className="text-black/60 text-sm mb-2"><strong>General:</strong> Chat, create canvases/nodes/edges/todos via [ACTIONS] blocks.</p>
+                  <p className="text-black/60 text-sm mb-2"><strong>Project:</strong> Context-aware chat (nodes, edges, todos, writing, timeline). Streaming. Reports: Snapshot, canvas, tasks, writing, timeline, risks, next actions. Quick prompts: &quot;What should I do next?&quot;, &quot;Biggest risks?&quot;, &quot;Top action for tomorrow?&quot; Daily execution, goals (label, current, target, unit).</p>
+                  <p className="text-black/50 text-xs">Limits: Guest limited; Pro 12/day (UTC reset).</p>
+                </div>
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📊</span> Reports</h4>
+                  <p className="text-black/70 text-sm">AI-generated reports. Content: Snapshot, Canvas analysis, Tasks, Writing, Timeline, Risks, Next actions. At <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/reports</code> or STRAB Reports tab.</p>
+                </div>
+              </div>
+            )}
+
+            {featureTab === "community" && (
+              <div className="space-y-6 animate-fade-in">
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◈</span> Community</h4>
+                  <p className="text-black/70 mb-4 text-sm">Discover and connect at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/community</code>.</p>
+                  <p className="text-black/60 text-sm mb-2"><strong>Chats:</strong> Direct chat with workspace members, typing indicator, unread count, real-time.</p>
+                  <p className="text-black/60 text-sm mb-2"><strong>Discover:</strong> Search by username/email, profile link, Message or Send invite.</p>
+                  <p className="text-black/60 text-sm"><strong>Feed:</strong> Public projects, workspaces, recent activity.</p>
+                </div>
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📰</span> Feed</h4>
+                  <p className="text-black/70 text-sm">Public content: projects (title, workspace, owner, assignee), public workspaces, recent activity with timestamps.</p>
+                </div>
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">👤</span> Profile</h4>
+                  <p className="text-black/70 text-sm">Public profile: username, email, avatar, bio, streak, progress points, public projects, recent activity. Editable bio (own). Message, Send invite, Community link.</p>
+                </div>
+              </div>
+            )}
+
+            {featureTab === "extras" && (
+              <div className="space-y-6 animate-fade-in">
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">🗺</span> Folder Workflow (Map)</h4>
+                  <p className="text-black/70 text-sm">Visual workflow map per folder at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/folder-workflow/:folderId</code>. Add boxes, connect steps.</p>
+                </div>
+                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
+                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◎</span> Other Tools</h4>
+                  <p className="text-black/70 text-sm">Theme toggle (light/dark), Auth (Clerk), Paywall (trial/paid), Notifications (invitations, reminders), User credentials (username/password for non-email login).</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-12 text-center">
+            <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-orange-100 hover:bg-orange-200 text-orange-600 font-semibold transition-colors">
+              Try Stratabin
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
           </div>
         </div>
       </section>
