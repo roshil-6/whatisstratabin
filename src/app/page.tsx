@@ -318,7 +318,11 @@ export default function Home() {
                   {expandedFeature === "timeline" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-3">Break your project into phases and milestones. Each phase has a name, timeframe, and description.</p>
-                      <p className="text-black/70 text-sm">Mark phases as planned, active, or done. Add or remove phases and expand or collapse them to focus on what matters.</p>
+                      <p className="text-black/70 text-sm mb-4">Mark phases as planned, active, or done. Add or remove phases and expand or collapse them to focus on what matters.</p>
+                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
+                        <Image src="/stratabin-timeline.png" alt="Timeline view with phases" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Organize your project into phases with status badges and progress tracking</p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -335,7 +339,11 @@ export default function Home() {
                   {expandedFeature === "todo" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-3">A simple list of tasks for each project. Add a task, tick it when done, or remove it.</p>
-                      <p className="text-black/70 text-sm">Tasks stay short and clear. When you complete one, it gets a strikethrough so you can see your progress.</p>
+                      <p className="text-black/70 text-sm mb-4">Tasks stay short and clear. When you complete one, it gets a strikethrough so you can see your progress.</p>
+                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
+                        <Image src="/stratabin-task-list.png" alt="Task list view" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Add tasks, check them off, or delete them. Break your strategy into actionable steps.</p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -352,7 +360,11 @@ export default function Home() {
                   {expandedFeature === "calendar" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-3">View your schedule by month or week. Add events, mark them done, or remove them.</p>
-                      <p className="text-black/70 text-sm mb-2">Pick times like All Day, 9am, 2pm, or 6pm. Use it for one project or across everything. See what you did today, what is blocking you, and what to do tomorrow. Get reminders and see how many tasks you have for the month.</p>
+                      <p className="text-black/70 text-sm mb-4">Pick times like All Day, 9am, 2pm, or 6pm. Use it for one project or across everything. See what you did today, what is blocking you, and what to do tomorrow. Get reminders and see how many tasks you have for the month.</p>
+                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
+                        <Image src="/stratabin-calendar.png" alt="Weekly planner with daily check-in" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Weekly planner with daily check-in, seven-day grid, and quick task entry</p>
+                      </div>
                     </div>
                   )}
                 </div>
