@@ -27,12 +27,12 @@ const FaqItem = ({ question, answer, isOpen, onClick }: { question: string; answ
 
 const COMPARE_ROWS = [
   { aspect: "Workspace", individual: "One private workspace", team: "Team workspace with members" },
-  { aspect: "Projects", individual: "Personal projects", team: "Shared projects, assignable" },
-  { aspect: "Chat", individual: "—", team: "Direct chat with workspace members" },
-  { aspect: "Invitations", individual: "—", team: "Invite by email/username" },
-  { aspect: "Daily tasks", individual: "—", team: "Assign and track daily tasks" },
-  { aspect: "Roles", individual: "—", team: "Admin (invite, manage) / Member" },
-  { aspect: "Visibility", individual: "Private", team: "Private or Public" },
+  { aspect: "Projects", individual: "Personal projects", team: "Shared projects you can assign" },
+  { aspect: "Chat", individual: "Not available", team: "Direct chat with team members" },
+  { aspect: "Invitations", individual: "Not available", team: "Invite by email or username" },
+  { aspect: "Daily tasks", individual: "Not available", team: "Assign and track daily tasks" },
+  { aspect: "Roles", individual: "Not available", team: "Admin or Member" },
+  { aspect: "Visibility", individual: "Always private", team: "Private or public" },
 ];
 
 const FEATURE_TABS = [
@@ -47,6 +47,7 @@ const FEATURE_TABS = [
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [featureTab, setFeatureTab] = useState("compare");
+  const [expandedFeature, setExpandedFeature] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-black">
@@ -171,7 +172,7 @@ export default function Home() {
             {FEATURE_TABS.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setFeatureTab(tab.id)}
+                onClick={() => { setFeatureTab(tab.id); setExpandedFeature(null); }}
                 className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
                   featureTab === tab.id
                     ? "bg-orange-500 text-white shadow-lg shadow-orange-500/25"
@@ -189,9 +190,9 @@ export default function Home() {
             {featureTab === "compare" && (
               <div className="bg-white rounded-2xl border border-black/[0.06] shadow-card overflow-hidden animate-fade-in">
                 <div className="grid grid-cols-3 gap-0 border-b border-black/5">
-                  <div className="p-4 font-semibold text-black/60 text-sm">Aspect</div>
-                  <div className="p-4 font-semibold text-orange-600 text-sm bg-orange-50/50">Individual</div>
-                  <div className="p-4 font-semibold text-orange-600 text-sm bg-orange-50/50">Team</div>
+                  <div className="p-4 font-semibold text-black/60 text-sm">What</div>
+                  <div className="p-4 font-semibold text-orange-600 text-sm bg-orange-50/50">Just you</div>
+                  <div className="p-4 font-semibold text-orange-600 text-sm bg-orange-50/50">With your team</div>
                 </div>
                 {COMPARE_ROWS.map((row, i) => (
                   <div key={i} className={`grid grid-cols-3 gap-0 border-b border-black/5 last:border-0 hover:bg-orange-50/30 transition-colors ${i % 2 ? "bg-black/[0.02]" : ""}`}>
@@ -204,94 +205,273 @@ export default function Home() {
             )}
 
             {featureTab === "workspace" && (
-              <div className="space-y-6 animate-fade-in">
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">1</span> Dashboard</h4>
-                  <p className="text-black/70 mb-4 text-sm">Central hub at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/dashboard</code>. Stats: streak, progress points, project count, tasks done.</p>
-                  <p className="text-black/60 text-sm mb-2">Tabs: Writing & Flow, Task Lists, Timelines, Strategic Calendar, Project Weekly Planner, Reports, Monitor, STRAB AI.</p>
-                  <p className="text-black/60 text-sm">Sidebar: General Projects, Custom Folders, Team Workspaces, Profile, Feed, Community. Project sections: Pinned, Current Focus, Merged, All. Actions: New Project, STRAB AI, Reports, Calendar, Merge projects.</p>
+              <div className="space-y-4 animate-fade-in">
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "dashboard" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "dashboard" ? null : "dashboard")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold">1</span>
+                      <h4 className="text-lg font-bold text-black">Dashboard</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "dashboard" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "dashboard" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">Your main home screen. See your streak, progress points, how many projects you have, and tasks you have done.</p>
+                      <p className="text-black/70 text-sm mb-2">Switch between Writing and Flow, Task Lists, Timelines, Calendar, Weekly Planner, Reports, and STRAB AI.</p>
+                      <p className="text-black/70 text-sm">From the sidebar you can open your projects, folders, team workspaces, profile, feed, and community. Pin projects, mark your current focus, or merge two projects into one.</p>
+                    </div>
+                  )}
                 </div>
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">2</span> Workspaces</h4>
-                  <p className="text-black/70 mb-4 text-sm">Organize at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/workspace/:id</code>.</p>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div><p className="font-medium text-black mb-2 text-sm">Individual</p><p className="text-black/60 text-sm">Private, single owner, projects only.</p></div>
-                    <div><p className="font-medium text-black mb-2 text-sm">Team</p><p className="text-black/60 text-sm">Invite by email/username. Roles: Admin (invite, manage, daily tasks) / Member. Visibility: Private or Public. Shared projects, assignable. Daily tasks with date, assignee, toggle done. Activity feed.</p></div>
-                  </div>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "workspaces" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "workspaces" ? null : "workspaces")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold">2</span>
+                      <h4 className="text-lg font-bold text-black">Workspaces</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "workspaces" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "workspaces" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-4">Where you keep your projects and work with others.</p>
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="p-4 rounded-xl bg-orange-50/50">
+                          <p className="font-semibold text-black mb-2">For yourself</p>
+                          <p className="text-black/70 text-sm">Your own private space. Only you can see it. Add as many projects as you need.</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-orange-50/50">
+                          <p className="font-semibold text-black mb-2">For your team</p>
+                          <p className="text-black/70 text-sm">Invite people by email or username. Admins can invite others and manage daily tasks. Members can work on shared projects. Choose if the workspace is private or visible to others. Assign projects to team members and add daily tasks with checkboxes.</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">3</span> Projects</h4>
-                  <p className="text-black/70 text-sm">Units of work. Statuses: Idea → Planning → Executing → Completed. Assign to members (team). Folders, pin, mark current, merge. Card info: tasks %, nodes, words, streak, last updated. Duplicate, move, rename, delete.</p>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "projects" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "projects" ? null : "projects")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold">3</span>
+                      <h4 className="text-lg font-bold text-black">Projects</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "projects" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "projects" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">Each project is one thing you are working on. Mark it as an idea, in planning, in progress, or done.</p>
+                      <p className="text-black/70 text-sm mb-2">In a team workspace you can assign a project to someone. Put projects in folders, pin the ones you use most, or merge two projects together. Each project card shows how many tasks are done, when you last updated it, and your streak.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
             {featureTab === "strategy" && (
-              <div className="space-y-6 animate-fade-in">
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◇</span> Canvas (Writing & Flow)</h4>
-                  <p className="text-black/70 mb-4 text-sm">Visual strategy at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/strategy/:id</code>. Node types: Idea, Question, Decision, Text, Image, SubProject. Branch, Split (Option A/B), connect edges. Rich writing section. Subprojects, merged canvases. Command dock for quick add.</p>
+              <div className="space-y-4 animate-fade-in">
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "canvas" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "canvas" ? null : "canvas")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◇</span>
+                      <h4 className="text-lg font-bold text-black">Canvas (Writing and Flow)</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "canvas" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "canvas" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">A visual board where you map out your strategy. Add boxes for ideas, questions, decisions, or notes. Add images or link to other projects.</p>
+                      <p className="text-black/70 text-sm mb-2">Split one idea into multiple paths, or create Option A and Option B. Connect boxes with lines to show how they relate. Write longer text in the writing area. Link to other canvases or combine several into one view.</p>
+                    </div>
+                  )}
                 </div>
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">⏱</span> Timeline</h4>
-                  <p className="text-black/70 text-sm">Phases and milestones. Status: Planned → Active → Done. Add/delete phases, expand/collapse.</p>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "timeline" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "timeline" ? null : "timeline")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">⏱</span>
+                      <h4 className="text-lg font-bold text-black">Timeline</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "timeline" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "timeline" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">Break your project into phases and milestones. Each phase has a name, timeframe, and description.</p>
+                      <p className="text-black/70 text-sm">Mark phases as planned, active, or done. Add or remove phases and expand or collapse them to focus on what matters.</p>
+                    </div>
+                  )}
                 </div>
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">✓</span> Todo (Task Lists)</h4>
-                  <p className="text-black/70 text-sm">Tasks per project. Add, toggle complete, delete. Max 200 chars, no duplicates. Strikethrough when done.</p>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "todo" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "todo" ? null : "todo")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">✓</span>
+                      <h4 className="text-lg font-bold text-black">Task List</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "todo" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "todo" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">A simple list of tasks for each project. Add a task, tick it when done, or remove it.</p>
+                      <p className="text-black/70 text-sm">Tasks stay short and clear. When you complete one, it gets a strikethrough so you can see your progress.</p>
+                    </div>
+                  )}
                 </div>
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📅</span> Calendar</h4>
-                  <p className="text-black/70 text-sm">Month/Week views. Add, remove, toggle events. Time presets: All Day, 9:00, 14:00, 18:00. Project or global scope. Daily execution: executed, blocking, tomorrow. Reminders. Stats: total/completed/pending for month.</p>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "calendar" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "calendar" ? null : "calendar")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📅</span>
+                      <h4 className="text-lg font-bold text-black">Calendar</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "calendar" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "calendar" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">View your schedule by month or week. Add events, mark them done, or remove them.</p>
+                      <p className="text-black/70 text-sm mb-2">Pick times like All Day, 9am, 2pm, or 6pm. Use it for one project or across everything. See what you did today, what is blocking you, and what to do tomorrow. Get reminders and see how many tasks you have for the month.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
             {featureTab === "ai" && (
-              <div className="space-y-6 animate-fade-in">
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center text-sm">✦</span> STRAB AI</h4>
-                  <p className="text-black/70 mb-4 text-sm">AI assistant at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/strab</code> (general) or <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/strab/:id</code> (project).</p>
-                  <p className="text-black/60 text-sm mb-2"><strong>General:</strong> Chat, create canvases/nodes/edges/todos via [ACTIONS] blocks.</p>
-                  <p className="text-black/60 text-sm mb-2"><strong>Project:</strong> Context-aware chat (nodes, edges, todos, writing, timeline). Streaming. Reports: Snapshot, canvas, tasks, writing, timeline, risks, next actions. Quick prompts: &quot;What should I do next?&quot;, &quot;Biggest risks?&quot;, &quot;Top action for tomorrow?&quot; Daily execution, goals (label, current, target, unit).</p>
-                  <p className="text-black/50 text-xs">Limits: Guest limited; Pro 12/day (UTC reset).</p>
+              <div className="space-y-4 animate-fade-in">
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "strab" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "strab" ? null : "strab")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center text-sm">✦</span>
+                      <h4 className="text-lg font-bold text-black">STRAB AI</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "strab" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "strab" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-4">Your built-in AI assistant. Use it in general or inside a specific project.</p>
+                      <p className="text-black/70 text-sm mb-2">In general mode you can chat and ask it to create canvases, tasks, or writing for you. Inside a project it knows your ideas, tasks, writing, and timeline. Ask things like What should I do next? or What are my biggest risks? or What is the top action for tomorrow?</p>
+                      <p className="text-black/70 text-sm mb-2">It can generate reports with a snapshot, canvas summary, tasks, writing, timeline, risks, and next actions. You can also set goals with a label, current value, target, and unit.</p>
+                      <p className="text-black/60 text-xs">Guests have limited messages. Pro users get a set number of messages per day.</p>
+                    </div>
+                  )}
                 </div>
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📊</span> Reports</h4>
-                  <p className="text-black/70 text-sm">AI-generated reports. Content: Snapshot, Canvas analysis, Tasks, Writing, Timeline, Risks, Next actions. At <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/reports</code> or STRAB Reports tab.</p>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "reports" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "reports" ? null : "reports")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📊</span>
+                      <h4 className="text-lg font-bold text-black">Reports</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "reports" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "reports" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">AI-generated summaries of your project. Get a snapshot, canvas analysis, tasks, writing, timeline, risks, and suggested next actions.</p>
+                      <p className="text-black/70 text-sm">Open reports from the main Reports area or from the STRAB AI tab inside a project.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
             {featureTab === "community" && (
-              <div className="space-y-6 animate-fade-in">
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◈</span> Community</h4>
-                  <p className="text-black/70 mb-4 text-sm">Discover and connect at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/community</code>.</p>
-                  <p className="text-black/60 text-sm mb-2"><strong>Chats:</strong> Direct chat with workspace members, typing indicator, unread count, real-time.</p>
-                  <p className="text-black/60 text-sm mb-2"><strong>Discover:</strong> Search by username/email, profile link, Message or Send invite.</p>
-                  <p className="text-black/60 text-sm"><strong>Feed:</strong> Public projects, workspaces, recent activity.</p>
+              <div className="space-y-4 animate-fade-in">
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "community" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "community" ? null : "community")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◈</span>
+                      <h4 className="text-lg font-bold text-black">Community</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "community" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "community" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">Discover people and connect with your team.</p>
+                      <p className="text-black/70 text-sm mb-2">Chat directly with workspace members. See when someone is typing and how many unread messages you have. Search for people by username or email, open their profile, and send a message or invite them to a workspace. Browse public projects, workspaces, and recent activity.</p>
+                    </div>
+                  )}
                 </div>
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📰</span> Feed</h4>
-                  <p className="text-black/70 text-sm">Public content: projects (title, workspace, owner, assignee), public workspaces, recent activity with timestamps.</p>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "feed" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "feed" ? null : "feed")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📰</span>
+                      <h4 className="text-lg font-bold text-black">Feed</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "feed" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "feed" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">See what is public. Browse projects and workspaces that others have shared, plus recent activity with timestamps.</p>
+                    </div>
+                  )}
                 </div>
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">👤</span> Profile</h4>
-                  <p className="text-black/70 text-sm">Public profile: username, email, avatar, bio, streak, progress points, public projects, recent activity. Editable bio (own). Message, Send invite, Community link.</p>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "profile" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "profile" ? null : "profile")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">👤</span>
+                      <h4 className="text-lg font-bold text-black">Profile</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "profile" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "profile" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">Your public page. Shows your username, avatar, bio, streak, progress points, public projects, and recent activity.</p>
+                      <p className="text-black/70 text-sm">You can edit your own bio. Others can message you, send an invite, or open your profile from the community.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
             {featureTab === "extras" && (
-              <div className="space-y-6 animate-fade-in">
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">🗺</span> Folder Workflow (Map)</h4>
-                  <p className="text-black/70 text-sm">Visual workflow map per folder at <code className="px-1.5 py-0.5 rounded bg-black/5 text-xs">/folder-workflow/:folderId</code>. Add boxes, connect steps.</p>
+              <div className="space-y-4 animate-fade-in">
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "folder-map" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "folder-map" ? null : "folder-map")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">🗺</span>
+                      <h4 className="text-lg font-bold text-black">Folder Workflow Map</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "folder-map" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "folder-map" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">A visual map for each folder. Add boxes for each step and connect them with lines to show how your workflow flows.</p>
+                    </div>
+                  )}
                 </div>
-                <div className="p-8 rounded-2xl bg-white border border-black/[0.06] shadow-card hover:border-orange-200 transition-colors">
-                  <h4 className="text-xl font-bold text-black mb-4 flex items-center gap-2"><span className="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◎</span> Other Tools</h4>
-                  <p className="text-black/70 text-sm">Theme toggle (light/dark), Auth (Clerk), Paywall (trial/paid), Notifications (invitations, reminders), User credentials (username/password for non-email login).</p>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "other" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                  <button onClick={() => setExpandedFeature(expandedFeature === "other" ? null : "other")} className="w-full p-6 text-left flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◎</span>
+                      <h4 className="text-lg font-bold text-black">Other Tools</h4>
+                    </div>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "other" ? "rotate-180" : ""}`}>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedFeature === "other" && (
+                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
+                      <p className="text-black/80 mb-3">Switch between light and dark mode. Sign in or sign up. Try the app before upgrading. Get notifications for invites and reminders. Use a username and password if you prefer not to sign in with email.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
