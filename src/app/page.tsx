@@ -64,7 +64,7 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-black/[0.04] shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
           <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="text-base sm:text-lg font-bold text-black tracking-tight hover:text-orange-500 transition-colors">
-            stratabin guide
+            Stratabin guide
           </a>
           {/* Desktop nav */}
           <div className="hidden md:flex gap-6 lg:gap-10">
