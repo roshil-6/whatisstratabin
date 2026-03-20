@@ -251,6 +251,10 @@ export default function Home() {
                           <p className="text-black/70 text-sm">Invite people by email or username. Admins can invite others and manage daily tasks. Members can work on shared projects. Choose if the workspace is private or visible to others. Assign projects to team members and add daily tasks with checkboxes.</p>
                         </div>
                       </div>
+                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg mb-4">
+                        <Image src="/stratabin-team-workspace.png" alt="Team workspace with projects, members, daily tasks, and activity" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Team workspace: projects, members with roles, daily tasks, and activity feed</p>
+                      </div>
                       <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
                         <Image src="/stratabin-split-workspace.png" alt="Split workspace with writing and flow canvas" width={800} height={450} className="w-full h-auto object-cover" />
                         <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Split view: structured writing on the left, visual flow canvas on the right</p>
@@ -431,7 +435,11 @@ export default function Home() {
                   {expandedFeature === "community" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-3">Discover people and connect with your team.</p>
-                      <p className="text-black/70 text-sm mb-2">Chat directly with workspace members. See when someone is typing and how many unread messages you have. Search for people by username or email, open their profile, and send a message or invite them to a workspace. Browse public projects, workspaces, and recent activity.</p>
+                      <p className="text-black/70 text-sm mb-4">Chat directly with workspace members. See when someone is typing and how many unread messages you have. Search for people by username or email, open their profile, and send a message or invite them to a workspace. Browse public projects, workspaces, and recent activity.</p>
+                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
+                        <Image src="/stratabin-chat.png" alt="Direct chat with workspace members" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Direct messaging with workspace members. See who is online and get quick updates.</p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -464,7 +472,11 @@ export default function Home() {
                   {expandedFeature === "profile" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-3">Your public page. Shows your username, avatar, bio, streak, progress points, public projects, and recent activity.</p>
-                      <p className="text-black/70 text-sm">You can edit your own bio. Others can message you, send an invite, or open your profile from the community.</p>
+                      <p className="text-black/70 text-sm mb-4">You can edit your own bio. Others can message you, send an invite, or open your profile from the community.</p>
+                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
+                        <Image src="/stratabin-profile.png" alt="User profile with streak, projects, and activity" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Profile with streak, progress points, public projects, and recent activity</p>
+                      </div>
                     </div>
                   )}
                 </div>
