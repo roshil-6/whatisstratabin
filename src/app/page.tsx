@@ -44,37 +44,57 @@ const FEATURE_TABS = [
   { id: "extras", label: "Extras", icon: "◎" },
 ];
 
+const NAV_LINKS = [
+  { href: "#what-is-stratabin", label: "What is Stratabin" },
+  { href: "#features", label: "Features" },
+  { href: "#faq", label: "FAQ" },
+  { href: "#about", label: "About Us" },
+  { href: "#about", label: "Founders" },
+];
+
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [featureTab, setFeatureTab] = useState("compare");
   const [expandedFeature, setExpandedFeature] = useState<string | null>(null);
+  const [navOpen, setNavOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-black">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-black/[0.04] shadow-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="text-lg font-bold text-black tracking-tight hover:text-orange-500 transition-colors">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+          <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="text-base sm:text-lg font-bold text-black tracking-tight hover:text-orange-500 transition-colors">
             STRATABIN
           </a>
-          <div className="flex gap-10">
-            <a href="#what-is-stratabin" className="text-sm font-medium text-black/70 hover:text-orange-500 transition-colors relative group">
-              What is Stratabin <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300" />
-            </a>
-            <a href="#features" className="text-sm font-medium text-black/70 hover:text-orange-500 transition-colors relative group">
-              Features <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300" />
-            </a>
-            <a href="#faq" className="text-sm font-medium text-black/70 hover:text-orange-500 transition-colors relative group">
-              FAQ <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300" />
-            </a>
-            <a href="#about" className="text-sm font-medium text-black/70 hover:text-orange-500 transition-colors relative group">
-              About Us <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300" />
-            </a>
-            <a href="#about" className="text-sm font-medium text-black/70 hover:text-orange-500 transition-colors relative group">
-              Founders <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300" />
-            </a>
+          {/* Desktop nav */}
+          <div className="hidden md:flex gap-6 lg:gap-10">
+            {NAV_LINKS.map((link) => (
+              <a key={link.label} href={link.href} className="text-sm font-medium text-black/70 hover:text-orange-500 transition-colors relative group">
+                {link.label} <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300" />
+              </a>
+            ))}
           </div>
+          {/* Mobile menu button */}
+          <button onClick={() => setNavOpen(!navOpen)} className="md:hidden w-10 h-10 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 hover:bg-orange-200 transition-colors" aria-label="Toggle menu">
+            {navOpen ? (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            ) : (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+            )}
+          </button>
         </div>
+        {/* Mobile nav dropdown */}
+        {navOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-black/5 shadow-lg">
+            <div className="px-4 py-4 flex flex-col gap-1">
+              {NAV_LINKS.map((link) => (
+                <a key={link.label} href={link.href} onClick={() => setNavOpen(false)} className="py-3 px-4 rounded-lg text-sm font-medium text-black/80 hover:bg-orange-50 hover:text-orange-600 transition-colors">
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero */}
