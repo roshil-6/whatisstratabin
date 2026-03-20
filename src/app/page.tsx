@@ -261,7 +261,7 @@ export default function Home() {
                 <h3 className="text-3xl font-bold text-black">
                   Abhinand Antony <span className="text-gradient">aka Roschil</span>
                 </h3>
-                <p className="text-orange-600 font-semibold text-lg">Self-taught T-shaped Dev / System Architect</p>
+                <p className="text-orange-600 font-semibold text-lg">Self-taught AI augmented dev / System Architect</p>
                 <p className="text-black/80 text-lg">Automotive / Aerospace Devotee</p>
                 <p className="text-black/70 leading-relaxed">
                   Building Stratabin to help people move from thinking to doing. Passionate about structured systems, clean architecture, and turning complex ideas into actionable plans.
