@@ -8,7 +8,7 @@ import ManIcon from "@/components/ManIcon";
 const FAQ_ITEMS = [
   { q: "What is Stratabin?", a: "Stratabin is a structured workspace that helps you turn scattered ideas into clear plans and actionable execution. Instead of writing notes that go nowhere, you organize ideas, visualize them as a flow, create tasks, and track progress—all in one place." },
   { q: "How is Stratabin different from note-taking apps?", a: "Most note apps let you write—few help you structure and act. Stratabin combines writing, planning, flow visualization, and task execution in one system. You can break ideas into sections, see how steps connect, and track what you've actually completed." },
-  { q: "Can I use Stratabin with my team?", a: "Yes. Stratabin has a Team Workspace where you can create shared folders, invite members, and collaborate on projects. Everyone gets shared editing, structured collaboration, and aligned goals and progress tracking." },
+  { q: "Can I use Stratabin with my team?", a: "Yes. Stratabin has a Team Workspace where you can create shared folders, invite members, and collaborate on projects. Admins can assign roles (Admin or Member) to team members. There's also a Daily Tasks feature where you can add tasks for the day, assign them to team members (or yourself), and track progress with checkboxes. Admins can manage everyone's tasks; members see and manage their own." },
   { q: "What is Strab AI?", a: "Strab AI is Stratabin's built-in AI assistant. It helps organize messy thoughts, highlight key points, and improve clarity when your ideas aren't structured. It works inside your projects and can also assist team plans." },
   { q: "Is Stratabin free?", a: "Stratabin is continuously evolving. Check the official Stratabin website for current pricing and availability." },
 ];
@@ -165,6 +165,8 @@ export default function Home() {
                 <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> Shared editing and structured collaboration</li>
                 <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> Shared goals and progress tracking</li>
                 <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> Strab AI for team insights</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> <strong>Team roles</strong> — Admins can set who is Admin or Member; the workspace owner stays fixed</li>
+                <li className="flex items-start gap-2"><span className="text-orange-500 mt-0.5">▸</span> <strong>Daily tasks</strong> — Add tasks by date, assign to team members (or yourself), mark them done, and filter to see only your tasks</li>
               </ul>
             </div>
           </div>
