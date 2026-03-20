@@ -220,7 +220,11 @@ export default function Home() {
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-3">Your main home screen. See your streak, progress points, how many projects you have, and tasks you have done.</p>
                       <p className="text-black/70 text-sm mb-2">Switch between Writing and Flow, Task Lists, Timelines, Calendar, Weekly Planner, Reports, and STRAB AI.</p>
-                      <p className="text-black/70 text-sm">From the sidebar you can open your projects, folders, team workspaces, profile, feed, and community. Pin projects, mark your current focus, or merge two projects into one.</p>
+                      <p className="text-black/70 text-sm mb-4">From the sidebar you can open your projects, folders, team workspaces, profile, feed, and community. Pin projects, mark your current focus, or merge two projects into one.</p>
+                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
+                        <Image src="/stratabin-dashboard.png" alt="Stratabin dashboard with project cards and sidebar" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Writing and Flow view with project cards, sidebar, and quick actions</p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -237,7 +241,7 @@ export default function Home() {
                   {expandedFeature === "workspaces" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-4">Where you keep your projects and work with others.</p>
-                      <div className="grid md:grid-cols-2 gap-6">
+                      <div className="grid md:grid-cols-2 gap-6 mb-4">
                         <div className="p-4 rounded-xl bg-orange-50/50">
                           <p className="font-semibold text-black mb-2">For yourself</p>
                           <p className="text-black/70 text-sm">Your own private space. Only you can see it. Add as many projects as you need.</p>
@@ -246,6 +250,10 @@ export default function Home() {
                           <p className="font-semibold text-black mb-2">For your team</p>
                           <p className="text-black/70 text-sm">Invite people by email or username. Admins can invite others and manage daily tasks. Members can work on shared projects. Choose if the workspace is private or visible to others. Assign projects to team members and add daily tasks with checkboxes.</p>
                         </div>
+                      </div>
+                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
+                        <Image src="/stratabin-split-workspace.png" alt="Split workspace with writing and flow canvas" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Split view: structured writing on the left, visual flow canvas on the right</p>
                       </div>
                     </div>
                   )}
@@ -263,7 +271,9 @@ export default function Home() {
                   {expandedFeature === "projects" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-3">Each project is one thing you are working on. Mark it as an idea, in planning, in progress, or done.</p>
-                      <p className="text-black/70 text-sm mb-2">In a team workspace you can assign a project to someone. Put projects in folders, pin the ones you use most, or merge two projects together. Each project card shows how many tasks are done, when you last updated it, and your streak.</p>
+                      <p className="text-black/70 text-sm mb-4">In a team workspace you can assign a project to someone. Put projects in folders, pin the ones you use most, or merge two projects together.</p>
+                      <p className="text-black/70 text-sm font-medium mb-2">What each project card shows</p>
+                      <p className="text-black/70 text-sm mb-4">Each card gives you a quick overview. See when you last edited it, how many tasks are done, and your word count. A progress bar shows completed versus total tasks. The card also shows how many connected ideas you have and a preview of your strategy. Use the icons to duplicate, move to a folder, favorite, edit, or delete. Click Open to go deeper into that project.</p>
                     </div>
                   )}
                 </div>
@@ -286,6 +296,12 @@ export default function Home() {
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-3">A visual board where you map out your strategy. Add boxes for ideas, questions, decisions, or notes. Add images or link to other projects.</p>
                       <p className="text-black/70 text-sm mb-2">Split one idea into multiple paths, or create Option A and Option B. Connect boxes with lines to show how they relate. Write longer text in the writing area. Link to other canvases or combine several into one view.</p>
+                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg my-4">
+                        <Image src="/stratabin-split-workspace.png" alt="Writing and flow canvas side by side" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Writing planner on the left, flow canvas on the right. Add ideas, questions, and decisions, then connect them.</p>
+                      </div>
+                      <p className="text-black/70 text-sm font-medium mb-2">How the workflow works</p>
+                      <p className="text-black/70 text-sm mb-2">On the left you write your strategy in sections like Target Audience, Unique Value Proposition, and Acquisition Channels. On the right you build a visual flow with cards for each step. Use Idea cards for concepts, Question cards for things you need to figure out, and Decision cards for choices you have made. Dotted lines connect the cards so you can see the flow from start to finish. Use the Add toolbar to drop new ideas, questions, decisions, or notes onto the canvas. You can split the screen or branch the document to explore different versions of your plan.</p>
                     </div>
                   )}
                 </div>
@@ -377,7 +393,11 @@ export default function Home() {
                   {expandedFeature === "reports" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-3">AI-generated summaries of your project. Get a snapshot, canvas analysis, tasks, writing, timeline, risks, and suggested next actions.</p>
-                      <p className="text-black/70 text-sm">Open reports from the main Reports area or from the STRAB AI tab inside a project.</p>
+                      <p className="text-black/70 text-sm mb-4">Open reports from the main Reports area or from the STRAB AI tab inside a project.</p>
+                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
+                        <Image src="/stratabin-reports.png" alt="STRAB AI Reports project selection" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Choose a project to see AI analysis, gaps, and actionable recommendations</p>
+                      </div>
                     </div>
                   )}
                 </div>
