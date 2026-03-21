@@ -261,14 +261,24 @@ export default function Home() {
                   {expandedFeature === "workspaces" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
                       <p className="text-black/80 mb-4">Where you keep your projects and work with others.</p>
-                      <div className="grid md:grid-cols-2 gap-6 mb-4">
+                      <div className="space-y-8 mb-4">
                         <div className="p-4 rounded-xl bg-orange-50/50">
-                          <p className="font-semibold text-black mb-2">For yourself</p>
-                          <p className="text-black/70 text-sm">Your own private space. Only you can see it. Add as many projects as you need.</p>
+                          <p className="font-semibold text-black mb-2">Individual workspace</p>
+                          <p className="text-black/70 text-sm mb-4">Your own private space. Only you can see it. Add as many projects as you need.</p>
+                          <div className="rounded-xl overflow-hidden border border-black/5 bg-black/5 aspect-video">
+                            <video src="/videos/strtabin%20ad%203.mp4" controls className="w-full h-full object-cover" playsInline>
+                              Your browser does not support the video tag.
+                            </video>
+                          </div>
                         </div>
                         <div className="p-4 rounded-xl bg-orange-50/50">
-                          <p className="font-semibold text-black mb-2">For your team</p>
-                          <p className="text-black/70 text-sm">Invite people by email or username. Admins can invite others and manage daily tasks. Members can work on shared projects. Choose if the workspace is private or visible to others. Assign projects to team members and add daily tasks with checkboxes.</p>
+                          <p className="font-semibold text-black mb-2">Team workspace</p>
+                          <p className="text-black/70 text-sm mb-4">Invite people by email or username. Admins can invite others and manage daily tasks. Members can work on shared projects. Choose if the workspace is private or visible to others. Assign projects to team members and add daily tasks with checkboxes.</p>
+                          <div className="rounded-xl overflow-hidden border border-black/5 bg-black/5 aspect-video">
+                            <video src="/videos/workspace%20stratabin.mp4" controls className="w-full h-full object-cover" playsInline>
+                              Your browser does not support the video tag.
+                            </video>
+                          </div>
                         </div>
                       </div>
                       <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg mb-4">
