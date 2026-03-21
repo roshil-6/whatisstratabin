@@ -66,18 +66,28 @@ export default function ChatAssistant() {
 
   return (
     <>
-      {/* Floating button */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-2xl shadow-[0_8px_32px_rgba(249,115,22,0.25)] flex items-center justify-center overflow-hidden bg-white border-2 border-orange-200/60 hover:scale-105 hover:shadow-[0_12px_40px_rgba(249,115,22,0.35)] hover:border-orange-300/80 transition-all duration-300"
-        aria-label="Open chat assistant"
-      >
-        <Image src={EMOJI_URL} alt="Chat" width={64} height={64} className="object-cover w-full h-full" />
-      </button>
+      {/* Floating button with tag */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+        {!open && (
+          <div className="flex items-center gap-2">
+            <span className="px-3 py-2 rounded-full bg-orange-500 text-white text-sm font-semibold shadow-lg shadow-orange-500/30 whitespace-nowrap">
+              Click me to know what is Stratabin quickly
+            </span>
+            <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
+          </div>
+        )}
+        <button
+          onClick={() => setOpen(!open)}
+          className="w-20 h-20 rounded-2xl shadow-[0_12px_40px_rgba(249,115,22,0.4)] flex items-center justify-center overflow-hidden bg-white border-2 border-orange-400 ring-4 ring-orange-200/50 hover:scale-110 hover:shadow-[0_16px_48px_rgba(249,115,22,0.5)] hover:border-orange-500 hover:ring-orange-300/60 transition-all duration-300"
+          aria-label="Open chat assistant"
+        >
+          <Image src={EMOJI_URL} alt="Chat" width={80} height={80} className="object-cover w-full h-full" />
+        </button>
+      </div>
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-28 right-6 z-50 w-[calc(100vw-3rem)] max-w-[420px] rounded-3xl bg-white/95 backdrop-blur-xl border border-orange-200/30 shadow-[0_24px_80px_-12px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.03)] overflow-hidden flex flex-col max-h-[72vh] animate-slide-up">
+        <div className="fixed bottom-36 right-6 z-50 w-[calc(100vw-3rem)] max-w-[420px] rounded-3xl bg-white/95 backdrop-blur-xl border border-orange-200/30 shadow-[0_24px_80px_-12px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.03)] overflow-hidden flex flex-col max-h-[72vh] animate-slide-up">
           {/* Header */}
           <div className="relative px-5 py-4 bg-gradient-to-br from-orange-50 via-amber-50/80 to-orange-100/60 border-b border-orange-200/40">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(249,115,22,0.08)_0%,_transparent_60%)]" />
