@@ -9,7 +9,7 @@ import ChatAssistant from "@/components/ChatAssistant";
 const FAQ_ITEMS = [
   { q: "What is Stratabin?", a: "Stratabin is a structured workspace that helps you turn scattered ideas into clear plans and actionable execution. Instead of writing notes that go nowhere, you organize ideas, visualize them as a flow, create tasks, and track progress—all in one place." },
   { q: "How is Stratabin different from note-taking apps?", a: "Most note apps let you write—few help you structure and act. Stratabin combines writing, planning, flow visualization, and task execution in one system. You can break ideas into sections, see how steps connect, and track what you've actually completed." },
-  { q: "Can I use Stratabin with my team?", a: "Yes. Stratabin has a Team Workspace where you can create shared folders, invite members, and collaborate on projects. Admins can assign roles (Admin or Member) to team members. There's also a Daily Tasks feature where you can add tasks for the day, assign them to team members (or yourself), and track progress with checkboxes. Admins can manage everyone's tasks; members see and manage their own." },
+  { q: "Can I use Stratabin with my team?", a: "Yes. Stratabin has a Team Workspace where you can create shared folders, invite members via email or an admin link, and collaborate on projects. When someone joins via the admin link, they are automatically added to the workspace group chat. Admins can assign roles (Admin or Member) to team members. There's also a Daily Tasks feature where you can add tasks for the day, assign them to team members (or yourself), and track progress with checkboxes. Admins can manage everyone's tasks; members see and manage their own." },
   { q: "What is Strab AI?", a: "Strab AI is Stratabin's built-in AI assistant. It helps organize messy thoughts, highlight key points, and improve clarity when your ideas aren't structured. It works inside your projects and can also assist team plans." },
   { q: "Is Stratabin free?", a: "Stratabin is continuously evolving. Check the official Stratabin website for current pricing and availability." },
 ];
@@ -29,7 +29,7 @@ const FaqItem = ({ question, answer, isOpen, onClick }: { question: string; answ
 const COMPARE_ROWS = [
   { aspect: "Workspace", individual: "One private workspace", team: "Team workspace with members" },
   { aspect: "Projects", individual: "Personal projects", team: "Shared projects you can assign" },
-  { aspect: "Chat", individual: "Not available", team: "Direct chat with team members" },
+  { aspect: "Chat", individual: "Not available", team: "Group chat (auto-added when joining via admin link)" },
   { aspect: "Invitations", individual: "Not available", team: "Invite by email or username" },
   { aspect: "Daily tasks", individual: "Not available", team: "Assign and track daily tasks" },
   { aspect: "Roles", individual: "Not available", team: "Admin or Member" },
@@ -445,50 +445,95 @@ export default function Home() {
 
             {featureTab === "community" && (
               <div className="space-y-4 animate-fade-in">
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "community" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "community" ? "border-orange-200 shadow-glow" : "border-black/[0.06] hover:border-orange-200/50"}`}>
                   <button onClick={() => setExpandedFeature(expandedFeature === "community" ? null : "community")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◈</span>
-                      <h4 className="text-lg font-bold text-black">Community</h4>
+                    <div className="flex items-center gap-4">
+                      <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-100 to-amber-100 text-orange-600 flex items-center justify-center shadow-sm">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                      </span>
+                      <div>
+                        <h4 className="text-lg font-bold text-black">Community</h4>
+                        <p className="text-sm text-black/50 mt-0.5">Group chat, messaging & discovery</p>
+                      </div>
                     </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "community" ? "rotate-180" : ""}`}>
+                    <span className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center bg-orange-100 text-orange-600 transition-all duration-300 ${expandedFeature === "community" ? "rotate-180 bg-orange-200" : ""}`}>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                     </span>
                   </button>
                   {expandedFeature === "community" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">Discover people and connect with your team.</p>
-                      <p className="text-black/70 text-sm mb-4">Chat directly with workspace members. See when someone is typing and how many unread messages you have. Search for people by username or email, open their profile, and send a message or invite them to a workspace. Browse public projects, workspaces, and recent activity.</p>
-                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
-                        <Image src="/stratabin-chat.png" alt="Direct chat with workspace members" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Direct messaging with workspace members. See who is online and get quick updates.</p>
+                      <p className="text-black/80 mb-5 font-medium">Discover people and connect with your team.</p>
+                      <div className="grid sm:grid-cols-2 gap-4 mb-6">
+                        <div className="p-4 rounded-xl bg-gradient-to-br from-orange-50/80 to-amber-50/60 border border-orange-200/30">
+                          <div className="w-10 h-10 rounded-xl bg-orange-200/40 flex items-center justify-center mb-3">
+                            <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                          </div>
+                          <h5 className="font-semibold text-black mb-1">Group chat</h5>
+                          <p className="text-black/65 text-sm">Each workspace has a group chat. Join via admin link and you&apos;re auto-added. See typing indicators and unread counts.</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-gradient-to-br from-orange-50/80 to-amber-50/60 border border-orange-200/30">
+                          <div className="w-10 h-10 rounded-xl bg-orange-200/40 flex items-center justify-center mb-3">
+                            <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                          </div>
+                          <h5 className="font-semibold text-black mb-1">Search & connect</h5>
+                          <p className="text-black/65 text-sm">Find people by username or email. Open profiles, send DMs, or invite them to a workspace.</p>
+                        </div>
+                      </div>
+                      <div className="rounded-2xl overflow-hidden border border-black/6 shadow-lg ring-1 ring-black/5">
+                        <Image src="/stratabin-chat.png" alt="Group chat with workspace members" width={800} height={450} className="w-full h-auto object-cover" />
+                        <p className="p-4 bg-gradient-to-r from-black/[0.02] to-black/[0.04] text-black/55 text-sm text-center font-medium">Group chat with workspace members — join via admin link to get auto-added</p>
                       </div>
                     </div>
                   )}
                 </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "feed" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "feed" ? "border-orange-200 shadow-glow" : "border-black/[0.06] hover:border-orange-200/50"}`}>
                   <button onClick={() => setExpandedFeature(expandedFeature === "feed" ? null : "feed")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📰</span>
-                      <h4 className="text-lg font-bold text-black">Feed</h4>
+                    <div className="flex items-center gap-4">
+                      <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 text-orange-600 flex items-center justify-center shadow-sm">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+                      </span>
+                      <div>
+                        <h4 className="text-lg font-bold text-black">Feed</h4>
+                        <p className="text-sm text-black/50 mt-0.5">Public activity & discovery</p>
+                      </div>
                     </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "feed" ? "rotate-180" : ""}`}>
+                    <span className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center bg-orange-100 text-orange-600 transition-all duration-300 ${expandedFeature === "feed" ? "rotate-180 bg-orange-200" : ""}`}>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                     </span>
                   </button>
                   {expandedFeature === "feed" && (
                     <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">See what is public. Browse projects and workspaces that others have shared, plus recent activity with timestamps.</p>
+                      <p className="text-black/80 mb-4 font-medium">See what&apos;s happening across Stratabin.</p>
+                      <div className="grid sm:grid-cols-3 gap-4 mb-4">
+                        <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200/40">
+                          <p className="text-2xl font-bold text-orange-600 mb-1">Projects</p>
+                          <p className="text-black/65 text-sm">Browse public projects others have shared</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200/40">
+                          <p className="text-2xl font-bold text-orange-600 mb-1">Workspaces</p>
+                          <p className="text-black/65 text-sm">Discover public workspaces to explore</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200/40">
+                          <p className="text-2xl font-bold text-orange-600 mb-1">Activity</p>
+                          <p className="text-black/65 text-sm">Recent updates with timestamps</p>
+                        </div>
+                      </div>
+                      <p className="text-black/65 text-sm">Scroll through the feed to find inspiration, see what others are building, and stay in the loop with community activity.</p>
                     </div>
                   )}
                 </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "profile" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
+                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "profile" ? "border-orange-200 shadow-glow" : "border-black/[0.06] hover:border-orange-200/50"}`}>
                   <button onClick={() => setExpandedFeature(expandedFeature === "profile" ? null : "profile")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">👤</span>
-                      <h4 className="text-lg font-bold text-black">Profile</h4>
+                    <div className="flex items-center gap-4">
+                      <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-100 to-amber-100 text-orange-600 flex items-center justify-center shadow-sm">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                      </span>
+                      <div>
+                        <h4 className="text-lg font-bold text-black">Profile</h4>
+                        <p className="text-sm text-black/50 mt-0.5">Your public page</p>
+                      </div>
                     </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "profile" ? "rotate-180" : ""}`}>
+                    <span className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center bg-orange-100 text-orange-600 transition-all duration-300 ${expandedFeature === "profile" ? "rotate-180 bg-orange-200" : ""}`}>
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                     </span>
                   </button>
