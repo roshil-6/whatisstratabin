@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { AboutParticlesWrapper } from "@/components/SceneWrapper";
 import ManIcon from "@/components/ManIcon";
+import ChatAssistant from "@/components/ChatAssistant";
 
 const FAQ_ITEMS = [
   { q: "What is Stratabin?", a: "Stratabin is a structured workspace that helps you turn scattered ideas into clear plans and actionable execution. Instead of writing notes that go nowhere, you organize ideas, visualize them as a flow, create tasks, and track progress—all in one place." },
@@ -264,21 +265,13 @@ export default function Home() {
                       <div className="space-y-8 mb-4">
                         <div className="p-4 rounded-xl bg-orange-50/50">
                           <p className="font-semibold text-black mb-2">Individual workspace</p>
-                          <p className="text-black/70 text-sm mb-4">Your own private space. Only you can see it. Add as many projects as you need.</p>
-                          <div className="rounded-xl overflow-hidden border border-black/5 bg-black/5 aspect-video">
-                            <video src="/videos/strtabin%20ad%203.mp4" controls className="w-full h-full object-cover" playsInline>
-                              Your browser does not support the video tag.
-                            </video>
-                          </div>
+                          <p className="text-black/70 text-sm mb-2">Your own private space. Only you can see it. Add as many projects as you need.</p>
+                          <p className="text-black/70 text-xs italic">Watch the individual workspace demo in the chat assistant (bottom-right).</p>
                         </div>
                         <div className="p-4 rounded-xl bg-orange-50/50">
                           <p className="font-semibold text-black mb-2">Team workspace</p>
-                          <p className="text-black/70 text-sm mb-4">Invite people by email or username. Admins can invite others and manage daily tasks. Members can work on shared projects. Choose if the workspace is private or visible to others. Assign projects to team members and add daily tasks with checkboxes.</p>
-                          <div className="rounded-xl overflow-hidden border border-black/5 bg-black/5 aspect-video">
-                            <video src="/videos/workspace%20stratabin.mp4" controls className="w-full h-full object-cover" playsInline>
-                              Your browser does not support the video tag.
-                            </video>
-                          </div>
+                          <p className="text-black/70 text-sm mb-2">Invite people by email or username. Admins can invite others and manage daily tasks. Members can work on shared projects. Choose if the workspace is private or visible to others. Assign projects to team members and add daily tasks with checkboxes.</p>
+                          <p className="text-black/70 text-xs italic">Watch the team workspace demo in the chat assistant (bottom-right).</p>
                         </div>
                       </div>
                       <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg mb-4">
@@ -687,6 +680,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Chat assistant */}
+      <ChatAssistant />
 
       {/* Footer */}
       <footer className="py-14 px-6 bg-black text-white">
