@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useRef, useEffect } from "react";
 import { AboutParticlesWrapper } from "@/components/SceneWrapper";
 import ManIcon from "@/components/ManIcon";
 import ChatAssistant from "@/components/ChatAssistant";
@@ -26,23 +25,26 @@ const FaqItem = ({ question, answer, isOpen, onClick }: { question: string; answ
   </div>
 );
 
-const COMPARE_ROWS = [
-  { aspect: "Workspace", individual: "One private workspace", team: "Team workspace with members" },
-  { aspect: "Projects", individual: "Personal projects", team: "Shared projects you can assign" },
-  { aspect: "Chat", individual: "Not available", team: "Group chat (auto-added when joining via admin link)" },
-  { aspect: "Invitations", individual: "Not available", team: "Invite by email or username" },
-  { aspect: "Daily tasks", individual: "Not available", team: "Assign and track daily tasks" },
-  { aspect: "Roles", individual: "Not available", team: "Admin or Member" },
-  { aspect: "Visibility", individual: "Always private", team: "Private or public" },
+const PERSONAL_FEATURES = [
+  { title: "Private workspace", desc: "Your own space. Only you can see it. Add as many projects as you need—ideas, plans, and tasks stay yours.", icon: "◉" },
+  { title: "Writing & Flow canvas", desc: "Structure ideas in sections, then map them visually. Add Idea, Question, and Decision cards. Connect steps with lines to see the full flow.", icon: "◇" },
+  { title: "Task list", desc: "Break your strategy into clear tasks. Add, check off, or remove. Strikethrough shows what you’ve completed.", icon: "✓" },
+  { title: "Timeline", desc: "Phases, milestones, and timeframes. Mark as planned, active, or done. Expand or collapse to focus.", icon: "⏱" },
+  { title: "Calendar & planner", desc: "Month or week view. Add events, set times, get reminders. See what you did today and what’s next.", icon: "📅" },
+  { title: "STRAB AI", desc: "AI assistant that knows your project. Ask what to do next, get reports, or organize messy thoughts into clear plans.", icon: "✦" },
+  { title: "Dashboard", desc: "Streak, progress points, project count, tasks done. Pin projects, mark focus, switch between views in one place.", icon: "◐" },
+  { title: "Reports", desc: "AI-generated snapshot: canvas summary, tasks, timeline, risks, and suggested next actions for any project.", icon: "📊" },
 ];
 
-const FEATURE_TABS = [
-  { id: "compare", label: "Individual vs Team", icon: "⇄" },
-  { id: "workspace", label: "Workspace", icon: "◉" },
-  { id: "strategy", label: "Strategy", icon: "◇" },
-  { id: "ai", label: "AI & Reports", icon: "✦" },
-  { id: "community", label: "Community", icon: "◈" },
-  { id: "extras", label: "Extras", icon: "◎" },
+const TEAM_FEATURES = [
+  { title: "Shared workspace", desc: "Invite members by email or username. Work on shared projects. Choose private or public visibility.", icon: "◈" },
+  { title: "Group chat", desc: "Join via admin link and you’re auto-added. See typing indicators, unread counts, and stay in sync.", icon: "💬" },
+  { title: "Daily tasks", desc: "Add tasks for the day, assign to members or yourself. Checkboxes to track. Admins manage everyone; members see their own.", icon: "☑" },
+  { title: "Roles & permissions", desc: "Admin or Member. Admins invite, assign, manage daily tasks. Members collaborate on shared projects.", icon: "👤" },
+  { title: "Project assignment", desc: "Assign projects to team members. See who owns what. Merge projects when paths converge.", icon: "➜" },
+  { title: "Activity feed", desc: "Recent updates across the workspace. Who did what, when. Stay in the loop without extra meetings.", icon: "📡" },
+  { title: "Community & discovery", desc: "Find people by username. Open profiles, send DMs, invite to workspaces. Browse public projects for inspiration.", icon: "🔍" },
+  { title: "Visibility control", desc: "Workspaces can be private or public. Control what others see. Share when you’re ready.", icon: "🔒" },
 ];
 
 const NAV_LINKS = [
@@ -55,9 +57,15 @@ const NAV_LINKS = [
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [featureTab, setFeatureTab] = useState("compare");
-  const [expandedFeature, setExpandedFeature] = useState<string | null>(null);
   const [navOpen, setNavOpen] = useState(false);
+  const featuresRef = useRef<HTMLElement>(null);
+  const [featuresVisible, setFeaturesVisible] = useState(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setFeaturesVisible(true); }, { threshold: 0.1 });
+    const el = featuresRef.current;
+    if (el) obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -134,7 +142,7 @@ export default function Home() {
               { title: "Action-oriented", desc: "Create tasks, set timelines, and track progress. Everything you need to execute on your ideas—in one place." },
               { title: "Solo or team", desc: "Work alone or invite your team. Shared workspaces, group chat, daily tasks, and roles—all built in." },
             ].map((card, i) => (
-              <div key={i} className="p-8 rounded-2xl bg-black/[0.02] border border-black/[0.04] hover:border-orange-200/50 hover:bg-orange-50/30 transition-all duration-300">
+              <div key={i} className="p-8 rounded-2xl bg-black/[0.02] border border-black/[0.04] hover:border-orange-200/50 hover:bg-orange-50/30 hover:shadow-drop hover:-translate-y-1 transition-all duration-400">
                 <span className="text-3xl font-display font-bold text-orange-500/60">0{i + 1}</span>
                 <h3 className="mt-4 font-display text-xl font-bold text-black mb-3">{card.title}</h3>
                 <p className="text-black/70 leading-relaxed">{card.desc}</p>
@@ -187,420 +195,69 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features - Osmo component-style */}
-      <section id="features" className="py-28 px-6 bg-white scroll-mt-24">
+      {/* Features - reactive cards, Personal & Team */}
+      <section id="features" ref={featuresRef} className="py-28 px-6 bg-gradient-to-b from-white to-[#fafafa] scroll-mt-24 overflow-hidden">
         <div className="max-w-6xl mx-auto">
           <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold tracking-widest uppercase mb-4">Features</span>
           <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-4">
             Explore Stratabin
           </h2>
-          <p className="text-black/60 mb-12 max-w-2xl text-lg">
-            From solo planning to team collaboration—discover everything Stratabin offers. Build faster, ship smarter.
+          <p className="text-black/60 mb-16 max-w-2xl text-lg">
+            From solo planning to team collaboration—reactive cards for every capability.
           </p>
 
-          {/* Tab bar */}
-          <div className="flex flex-wrap gap-2 mb-10">
-            {FEATURE_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => { setFeatureTab(tab.id); setExpandedFeature(null); }}
-                className={`px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 ${
-                  featureTab === tab.id
-                    ? "bg-orange-500 text-white shadow-lg shadow-orange-500/25"
-                    : "bg-white border border-black/10 text-black/70 hover:border-orange-200 hover:text-orange-600"
-                }`}
-              >
-                <span className="mr-2 opacity-80">{tab.icon}</span>
-                {tab.label}
-              </button>
-            ))}
+          {/* Personal Workspace */}
+          <div className="mb-24">
+            <h3 className="font-display text-xl md:text-2xl font-bold text-black mb-2 flex items-center gap-3">
+              <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-sm">◉</span>
+              Personal Workspace
+            </h3>
+            <p className="text-black/60 mb-8 max-w-xl">Your private space. Organize ideas, structure plans, and execute—all yours.</p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {PERSONAL_FEATURES.map((f, i) => (
+                <div
+                  key={i}
+                  className={`group relative p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-black/[0.06] shadow-drop hover:shadow-drop-lg hover:-translate-y-2 hover:scale-[1.02] transition-all duration-400 ease-out ${featuresVisible ? "animate-card-in" : "opacity-0"}`}
+                  style={featuresVisible ? { animationDelay: `${i * 60}ms`, animationFillMode: "forwards" } : undefined}
+                >
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+                  <span className="inline-flex w-11 h-11 rounded-xl bg-orange-100 text-orange-600 items-center justify-center font-bold text-lg mb-4 group-hover:scale-110 transition-transform duration-400">
+                    {f.icon}
+                  </span>
+                  <h4 className="font-display font-bold text-black mb-2 group-hover:text-orange-600 transition-colors duration-300">{f.title}</h4>
+                  <p className="text-black/65 text-sm leading-relaxed">{f.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Tab content */}
-          <div className="min-h-[480px]">
-            {featureTab === "compare" && (
-              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-card overflow-hidden animate-fade-in">
-                <div className="grid grid-cols-3 gap-0 border-b border-black/5">
-                  <div className="p-4 font-semibold text-black/60 text-sm">What</div>
-                  <div className="p-4 font-semibold text-orange-600 text-sm bg-orange-50/50">Just you</div>
-                  <div className="p-4 font-semibold text-orange-600 text-sm bg-orange-50/50">With your team</div>
+          {/* Team Workspace */}
+          <div>
+            <h3 className="font-display text-xl md:text-2xl font-bold text-black mb-2 flex items-center gap-3">
+              <span className="w-10 h-10 rounded-xl bg-orange-200/60 text-orange-600 flex items-center justify-center font-bold text-sm">◈</span>
+              Team Workspace
+            </h3>
+            <p className="text-black/60 mb-8 max-w-xl">Share, collaborate, and ship together. Invite your team and build in sync.</p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {TEAM_FEATURES.map((f, i) => (
+                <div
+                  key={i}
+                  className={`group relative p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-black/[0.06] shadow-drop hover:shadow-drop-lg hover:-translate-y-2 hover:scale-[1.02] transition-all duration-400 ease-out ${featuresVisible ? "animate-card-in" : "opacity-0"}`}
+                  style={featuresVisible ? { animationDelay: `${(PERSONAL_FEATURES.length + i) * 60}ms`, animationFillMode: "forwards" } : undefined}
+                >
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+                  <span className="inline-flex w-11 h-11 rounded-xl bg-orange-100 text-orange-600 items-center justify-center font-bold text-lg mb-4 group-hover:scale-110 transition-transform duration-400">
+                    {f.icon}
+                  </span>
+                  <h4 className="font-display font-bold text-black mb-2 group-hover:text-orange-600 transition-colors duration-300">{f.title}</h4>
+                  <p className="text-black/65 text-sm leading-relaxed">{f.desc}</p>
                 </div>
-                {COMPARE_ROWS.map((row, i) => (
-                  <div key={i} className={`grid grid-cols-3 gap-0 border-b border-black/5 last:border-0 hover:bg-orange-50/30 transition-colors ${i % 2 ? "bg-black/[0.02]" : ""}`}>
-                    <div className="p-4 font-medium text-black text-sm">{row.aspect}</div>
-                    <div className="p-4 text-black/70 text-sm">{row.individual}</div>
-                    <div className="p-4 text-black/70 text-sm">{row.team}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {featureTab === "workspace" && (
-              <div className="space-y-4 animate-fade-in">
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "dashboard" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "dashboard" ? null : "dashboard")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold">1</span>
-                      <h4 className="text-lg font-bold text-black">Dashboard</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "dashboard" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "dashboard" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">Your main home screen. See your streak, progress points, how many projects you have, and tasks you have done.</p>
-                      <p className="text-black/70 text-sm mb-2">Switch between Writing and Flow, Task Lists, Timelines, Calendar, Weekly Planner, Reports, and STRAB AI.</p>
-                      <p className="text-black/70 text-sm mb-4">From the sidebar you can open your projects, folders, team workspaces, profile, feed, and community. Pin projects, mark your current focus, or merge two projects into one.</p>
-                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
-                        <Image src="/stratabin-dashboard.png" alt="Stratabin dashboard with project cards and sidebar" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Writing and Flow view with project cards, sidebar, and quick actions</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "workspaces" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "workspaces" ? null : "workspaces")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold">2</span>
-                      <h4 className="text-lg font-bold text-black">Workspaces</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "workspaces" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "workspaces" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-4">Where you keep your projects and work with others.</p>
-                      <div className="space-y-8 mb-4">
-                        <div className="p-4 rounded-xl bg-orange-50/50">
-                          <p className="font-semibold text-black mb-2">Individual workspace</p>
-                          <p className="text-black/70 text-sm mb-2">Your own private space. Only you can see it. Add as many projects as you need.</p>
-                          <p className="text-black/70 text-xs italic">Watch the individual workspace demo in the chat assistant (bottom-right).</p>
-                        </div>
-                        <div className="p-4 rounded-xl bg-orange-50/50">
-                          <p className="font-semibold text-black mb-2">Team workspace</p>
-                          <p className="text-black/70 text-sm mb-2">Invite people by email or username. Admins can invite others and manage daily tasks. Members can work on shared projects. Choose if the workspace is private or visible to others. Assign projects to team members and add daily tasks with checkboxes.</p>
-                          <p className="text-black/70 text-xs italic">Watch the team workspace demo in the chat assistant (bottom-right).</p>
-                        </div>
-                      </div>
-                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg mb-4">
-                        <Image src="/stratabin-team-workspace.png" alt="Team workspace with projects, members, daily tasks, and activity" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Team workspace: projects, members with roles, daily tasks, and activity feed</p>
-                      </div>
-                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
-                        <Image src="/stratabin-split-workspace.png" alt="Split workspace with writing and flow canvas" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Split view: structured writing on the left, visual flow canvas on the right</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "projects" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "projects" ? null : "projects")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold">3</span>
-                      <h4 className="text-lg font-bold text-black">Projects</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "projects" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "projects" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">Each project is one thing you are working on. Mark it as an idea, in planning, in progress, or done.</p>
-                      <p className="text-black/70 text-sm mb-4">In a team workspace you can assign a project to someone. Put projects in folders, pin the ones you use most, or merge two projects together.</p>
-                      <p className="text-black/70 text-sm font-medium mb-2">What each project card shows</p>
-                      <p className="text-black/70 text-sm mb-4">Each card gives you a quick overview. See when you last edited it, how many tasks are done, and your word count. A progress bar shows completed versus total tasks. The card also shows how many connected ideas you have and a preview of your strategy. Use the icons to duplicate, move to a folder, favorite, edit, or delete. Click Open to go deeper into that project.</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {featureTab === "strategy" && (
-              <div className="space-y-4 animate-fade-in">
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "canvas" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "canvas" ? null : "canvas")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◇</span>
-                      <h4 className="text-lg font-bold text-black">Canvas (Writing and Flow)</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "canvas" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "canvas" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">A visual board where you map out your strategy. Add boxes for ideas, questions, decisions, or notes. Add images or link to other projects.</p>
-                      <p className="text-black/70 text-sm mb-2">Split one idea into multiple paths, or create Option A and Option B. Connect boxes with lines to show how they relate. Write longer text in the writing area. Link to other canvases or combine several into one view.</p>
-                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg my-4">
-                        <Image src="/stratabin-split-workspace.png" alt="Writing and flow canvas side by side" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Writing planner on the left, flow canvas on the right. Add ideas, questions, and decisions, then connect them.</p>
-                      </div>
-                      <p className="text-black/70 text-sm font-medium mb-2">How the workflow works</p>
-                      <p className="text-black/70 text-sm mb-2">On the left you write your strategy in sections like Target Audience, Unique Value Proposition, and Acquisition Channels. On the right you build a visual flow with cards for each step. Use Idea cards for concepts, Question cards for things you need to figure out, and Decision cards for choices you have made. Dotted lines connect the cards so you can see the flow from start to finish. Use the Add toolbar to drop new ideas, questions, decisions, or notes onto the canvas. You can split the screen or branch the document to explore different versions of your plan.</p>
-                    </div>
-                  )}
-                </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "timeline" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "timeline" ? null : "timeline")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">⏱</span>
-                      <h4 className="text-lg font-bold text-black">Timeline</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "timeline" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "timeline" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">Break your project into phases and milestones. Each phase has a name, timeframe, and description.</p>
-                      <p className="text-black/70 text-sm mb-4">Mark phases as planned, active, or done. Add or remove phases and expand or collapse them to focus on what matters.</p>
-                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
-                        <Image src="/stratabin-timeline.png" alt="Timeline view with phases" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Organize your project into phases with status badges and progress tracking</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "todo" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "todo" ? null : "todo")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">✓</span>
-                      <h4 className="text-lg font-bold text-black">Task List</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "todo" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "todo" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">A simple list of tasks for each project. Add a task, tick it when done, or remove it.</p>
-                      <p className="text-black/70 text-sm mb-4">Tasks stay short and clear. When you complete one, it gets a strikethrough so you can see your progress.</p>
-                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
-                        <Image src="/stratabin-task-list.png" alt="Task list view" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Add tasks, check them off, or delete them. Break your strategy into actionable steps.</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "calendar" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "calendar" ? null : "calendar")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📅</span>
-                      <h4 className="text-lg font-bold text-black">Calendar</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "calendar" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "calendar" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">View your schedule by month or week. Add events, mark them done, or remove them.</p>
-                      <p className="text-black/70 text-sm mb-4">Pick times like All Day, 9am, 2pm, or 6pm. Use it for one project or across everything. See what you did today, what is blocking you, and what to do tomorrow. Get reminders and see how many tasks you have for the month.</p>
-                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
-                        <Image src="/stratabin-calendar.png" alt="Weekly planner with daily check-in" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Weekly planner with daily check-in, seven-day grid, and quick task entry</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {featureTab === "ai" && (
-              <div className="space-y-4 animate-fade-in">
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "strab" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "strab" ? null : "strab")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 text-white flex items-center justify-center text-sm">✦</span>
-                      <h4 className="text-lg font-bold text-black">STRAB AI</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "strab" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "strab" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-4">Your built-in AI assistant. Use it in general or inside a specific project.</p>
-                      <p className="text-black/70 text-sm mb-2">In general mode you can chat and ask it to create canvases, tasks, or writing for you. Inside a project it knows your ideas, tasks, writing, and timeline. Ask things like What should I do next? or What are my biggest risks? or What is the top action for tomorrow?</p>
-                      <p className="text-black/70 text-sm mb-2">It can generate reports with a snapshot, canvas summary, tasks, writing, timeline, risks, and next actions. You can also set goals with a label, current value, target, and unit.</p>
-                      <p className="text-black/60 text-xs">Guests have limited messages. Pro users get a set number of messages per day.</p>
-                    </div>
-                  )}
-                </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "reports" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "reports" ? null : "reports")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">📊</span>
-                      <h4 className="text-lg font-bold text-black">Reports</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "reports" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "reports" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">AI-generated summaries of your project. Get a snapshot, canvas analysis, tasks, writing, timeline, risks, and suggested next actions.</p>
-                      <p className="text-black/70 text-sm mb-4">Open reports from the main Reports area or from the STRAB AI tab inside a project.</p>
-                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
-                        <Image src="/stratabin-reports.png" alt="STRAB AI Reports project selection" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Choose a project to see AI analysis, gaps, and actionable recommendations</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {featureTab === "community" && (
-              <div className="space-y-4 animate-fade-in">
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "community" ? "border-orange-200 shadow-glow" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "community" ? null : "community")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-100 to-amber-100 text-orange-600 flex items-center justify-center shadow-sm">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                      </span>
-                      <div>
-                        <h4 className="text-lg font-bold text-black">Community</h4>
-                        <p className="text-sm text-black/50 mt-0.5">Group chat, messaging & discovery</p>
-                      </div>
-                    </div>
-                    <span className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center bg-orange-100 text-orange-600 transition-all duration-300 ${expandedFeature === "community" ? "rotate-180 bg-orange-200" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "community" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-5 font-medium">Discover people and connect with your team.</p>
-                      <div className="grid sm:grid-cols-2 gap-4 mb-6">
-                        <div className="p-4 rounded-xl bg-gradient-to-br from-orange-50/80 to-amber-50/60 border border-orange-200/30">
-                          <div className="w-10 h-10 rounded-xl bg-orange-200/40 flex items-center justify-center mb-3">
-                            <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                          </div>
-                          <h5 className="font-semibold text-black mb-1">Group chat</h5>
-                          <p className="text-black/65 text-sm">Each workspace has a group chat. Join via admin link and you&apos;re auto-added. See typing indicators and unread counts.</p>
-                        </div>
-                        <div className="p-4 rounded-xl bg-gradient-to-br from-orange-50/80 to-amber-50/60 border border-orange-200/30">
-                          <div className="w-10 h-10 rounded-xl bg-orange-200/40 flex items-center justify-center mb-3">
-                            <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                          </div>
-                          <h5 className="font-semibold text-black mb-1">Search & connect</h5>
-                          <p className="text-black/65 text-sm">Find people by username or email. Open profiles, send DMs, or invite them to a workspace.</p>
-                        </div>
-                      </div>
-                      <div className="rounded-2xl overflow-hidden border border-black/6 shadow-lg ring-1 ring-black/5">
-                        <Image src="/stratabin-chat.png" alt="Group chat with workspace members" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-4 bg-gradient-to-r from-black/[0.02] to-black/[0.04] text-black/55 text-sm text-center font-medium">Group chat with workspace members — join via admin link to get auto-added</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "feed" ? "border-orange-200 shadow-glow" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "feed" ? null : "feed")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-orange-100 text-orange-600 flex items-center justify-center shadow-sm">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
-                      </span>
-                      <div>
-                        <h4 className="text-lg font-bold text-black">Feed</h4>
-                        <p className="text-sm text-black/50 mt-0.5">Public activity & discovery</p>
-                      </div>
-                    </div>
-                    <span className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center bg-orange-100 text-orange-600 transition-all duration-300 ${expandedFeature === "feed" ? "rotate-180 bg-orange-200" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "feed" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-4 font-medium">See what&apos;s happening across Stratabin.</p>
-                      <div className="grid sm:grid-cols-3 gap-4 mb-4">
-                        <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200/40">
-                          <p className="text-2xl font-bold text-orange-600 mb-1">Projects</p>
-                          <p className="text-black/65 text-sm">Browse public projects others have shared</p>
-                        </div>
-                        <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200/40">
-                          <p className="text-2xl font-bold text-orange-600 mb-1">Workspaces</p>
-                          <p className="text-black/65 text-sm">Discover public workspaces to explore</p>
-                        </div>
-                        <div className="p-4 rounded-xl bg-amber-50/60 border border-amber-200/40">
-                          <p className="text-2xl font-bold text-orange-600 mb-1">Activity</p>
-                          <p className="text-black/65 text-sm">Recent updates with timestamps</p>
-                        </div>
-                      </div>
-                      <p className="text-black/65 text-sm">Scroll through the feed to find inspiration, see what others are building, and stay in the loop with community activity.</p>
-                    </div>
-                  )}
-                </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "profile" ? "border-orange-200 shadow-glow" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "profile" ? null : "profile")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <span className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-100 to-amber-100 text-orange-600 flex items-center justify-center shadow-sm">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                      </span>
-                      <div>
-                        <h4 className="text-lg font-bold text-black">Profile</h4>
-                        <p className="text-sm text-black/50 mt-0.5">Your public page</p>
-                      </div>
-                    </div>
-                    <span className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center bg-orange-100 text-orange-600 transition-all duration-300 ${expandedFeature === "profile" ? "rotate-180 bg-orange-200" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "profile" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">Your public page. Shows your username, avatar, bio, streak, progress points, public projects, and recent activity.</p>
-                      <p className="text-black/70 text-sm mb-4">You can edit your own bio. Others can message you, send an invite, or open your profile from the community.</p>
-                      <div className="rounded-xl overflow-hidden border border-black/5 shadow-lg">
-                        <Image src="/stratabin-profile.png" alt="User profile with streak, projects, and activity" width={800} height={450} className="w-full h-auto object-cover" />
-                        <p className="p-3 bg-black/5 text-black/60 text-xs text-center">Profile with streak, progress points, public projects, and recent activity</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {featureTab === "extras" && (
-              <div className="space-y-4 animate-fade-in">
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "folder-map" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "folder-map" ? null : "folder-map")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">🗺</span>
-                      <h4 className="text-lg font-bold text-black">Folder Workflow Map</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "folder-map" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "folder-map" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">A visual map for each folder. Add boxes for each step and connect them with lines to show how your workflow flows.</p>
-                    </div>
-                  )}
-                </div>
-                <div className={`rounded-2xl bg-white border shadow-card transition-all duration-300 overflow-hidden ${expandedFeature === "other" ? "border-orange-200" : "border-black/[0.06] hover:border-orange-200/50"}`}>
-                  <button onClick={() => setExpandedFeature(expandedFeature === "other" ? null : "other")} className="w-full p-6 text-left flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm">◎</span>
-                      <h4 className="text-lg font-bold text-black">Other Tools</h4>
-                    </div>
-                    <span className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedFeature === "other" ? "rotate-180" : ""}`}>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                    </span>
-                  </button>
-                  {expandedFeature === "other" && (
-                    <div className="px-6 pb-6 pt-0 border-t border-black/5">
-                      <p className="text-black/80 mb-3">Switch between light and dark mode. Sign in or sign up. Try the app before upgrading. Get notifications for invites and reminders. Use a username and password if you prefer not to sign in with email.</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
 
-          <div className="mt-12 text-center">
-            <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-orange-100 hover:bg-orange-200 text-orange-600 font-semibold transition-colors">
+          <div className="mt-16 text-center">
+            <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-orange-100 hover:bg-orange-200 text-orange-600 font-semibold transition-all duration-300 hover:scale-105 shadow-sm">
               Try Stratabin
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
             </a>
