@@ -60,94 +60,96 @@ export default function Home() {
   const [navOpen, setNavOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#fafafa] text-black">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-black/[0.04] shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
-          <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="text-base sm:text-lg font-bold text-black tracking-tight hover:text-orange-500 transition-colors">
+    <div className="min-h-screen bg-white text-black">
+      {/* Navigation - Jeton/Osmo style */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-black/[0.06]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+          <a href="/" className="text-lg font-display font-bold text-black tracking-tight">
             Stratabin guide
           </a>
-          {/* Desktop nav */}
-          <div className="hidden md:flex gap-6 lg:gap-10">
+          <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
-              <a key={link.label} href={link.href} className="text-sm font-medium text-black/70 hover:text-orange-500 transition-colors relative group">
-                {link.label} <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 group-hover:w-full transition-all duration-300" />
+              <a key={link.label} href={link.href} className="text-sm font-medium text-black/60 hover:text-black transition-colors">
+                {link.label}
               </a>
             ))}
+            <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm transition-colors">
+              Get Started
+            </a>
           </div>
-          {/* Mobile menu button */}
-          <button onClick={() => setNavOpen(!navOpen)} className="md:hidden w-10 h-10 rounded-lg flex items-center justify-center bg-orange-100 text-orange-600 hover:bg-orange-200 transition-colors" aria-label="Toggle menu">
-            {navOpen ? (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-            ) : (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-            )}
+          <button onClick={() => setNavOpen(!navOpen)} className="md:hidden w-10 h-10 rounded-full flex items-center justify-center bg-black/5 hover:bg-black/10" aria-label="Toggle menu">
+            {navOpen ? <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg> : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>}
           </button>
         </div>
-        {/* Mobile nav dropdown */}
         {navOpen && (
           <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-black/5 shadow-lg">
             <div className="px-4 py-4 flex flex-col gap-1">
               {NAV_LINKS.map((link) => (
-                <a key={link.label} href={link.href} onClick={() => setNavOpen(false)} className="py-3 px-4 rounded-lg text-sm font-medium text-black/80 hover:bg-orange-50 hover:text-orange-600 transition-colors">
+                <a key={link.label} href={link.href} onClick={() => setNavOpen(false)} className="py-3 px-4 rounded-lg text-sm font-medium text-black/80 hover:bg-black/5">
                   {link.label}
                 </a>
               ))}
+              <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" onClick={() => setNavOpen(false)} className="py-3 px-4 rounded-lg text-sm font-medium text-orange-600 hover:bg-orange-50 mt-2">Get Started</a>
             </div>
           </div>
         )}
       </nav>
 
-      {/* Hero */}
-      <section id="what-is-stratabin" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-24 pb-32">
-        <div className="absolute inset-0">
-          <Image
-            src="https://img.freepik.com/free-photo/man-works-dark-room-uses-laptop-night_169016-55093.jpg?semt=ais_hybrid&w=740&q=80"
-            alt="Man working on laptop at night"
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-black/50" />
-        </div>
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white">
-          <div className="mb-8">
-            <div className="logo-no-white inline-block">
-              <Image
-                src="/stratabin-logo.png"
-                alt="Stratabin Logo"
-                width={160}
-                height={160}
-                priority
-                className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain"
-              />
-            </div>
-          </div>
-          <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold mb-8 tracking-tight leading-[1.05]">
-            <span className="text-white/95">Turn Ideas Into </span>
-            <span className="text-orange-400">Action</span>
+      {/* Hero - Jeton/Osmo style: single value prop, bold typography */}
+      <section id="what-is-stratabin" className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden pt-28 pb-24 bg-[#0a0a0a]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(249,115,22,0.15),transparent)]" />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]" />
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+          <p className="text-orange-400 text-sm font-semibold tracking-widest uppercase mb-6">One workspace for ideas that become reality</p>
+          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.05] tracking-tight mb-8">
+            Turn ideas <br className="hidden sm:block" />
+            <span className="text-orange-400">into action</span>
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-8 max-w-2xl mx-auto font-medium">
-            A structured workspace designed to turn scattered ideas into clear plans and actionable execution.
+          <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+            A structured workspace designed to turn scattered ideas into clear plans and actionable execution. Organize, visualize, and execute—all in one place.
           </p>
-          <p className="text-base text-white/80 max-w-xl mx-auto mb-10">
-            Organize, visualize, and execute your ideas in one place—no more disconnected notes.
-          </p>
-          <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold text-base shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/30 transition-all duration-300 hover:scale-[1.02]">
-            Visit stratabin.com
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300">
+              Get Started
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            </a>
+            <a href="#features" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 text-white/90 hover:bg-white/5 font-medium transition-colors">
+              Explore features
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Mission cards - Phamily style: 3 pillars */}
+      <section className="py-24 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold tracking-widest uppercase mb-4">Our Mission</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-4">
+            Beyond note-taking — <span className="text-orange-600">our mission</span>
+          </h2>
+          <p className="text-black/60 max-w-2xl mb-16 text-lg">We help you move from thinking to doing.</p>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { title: "Structured thinking", desc: "Write ideas, break them into clear sections, and see them as a visual flow. No more scattered notes that go nowhere." },
+              { title: "Action-oriented", desc: "Create tasks, set timelines, and track progress. Everything you need to execute on your ideas—in one place." },
+              { title: "Solo or team", desc: "Work alone or invite your team. Shared workspaces, group chat, daily tasks, and roles—all built in." },
+            ].map((card, i) => (
+              <div key={i} className="p-8 rounded-2xl bg-black/[0.02] border border-black/[0.04] hover:border-orange-200/50 hover:bg-orange-50/30 transition-all duration-300">
+                <span className="text-3xl font-display font-bold text-orange-500/60">0{i + 1}</span>
+                <h3 className="mt-4 font-display text-xl font-bold text-black mb-3">{card.title}</h3>
+                <p className="text-black/70 leading-relaxed">{card.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* In Plain Terms */}
-      <section className="py-28 px-6 relative">
-        <div className="absolute inset-0 bg-white" />
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-orange-500 to-orange-300" />
-        <div className="relative max-w-3xl mx-auto pl-8">
+      <section className="py-24 px-6 bg-[#fafafa] relative">
+        <div className="max-w-3xl mx-auto pl-0 md:pl-8 relative">
+          <div className="hidden md:block absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-orange-500 to-orange-300 rounded-full" />
           <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold tracking-widest uppercase mb-6">In Plain Terms</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-8 leading-tight">
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-black mb-6 leading-tight">
             Stratabin is an app that turns your ideas into action
           </h2>
           <p className="text-lg text-black/80 leading-relaxed mb-6">
@@ -159,33 +161,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Vision */}
-      <section className="py-28 px-6 bg-black text-white relative overflow-hidden">
+      {/* Vision + Dual path - Phamily "Et vous?" style */}
+      <section className="py-24 px-6 bg-black text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,_rgba(249,115,22,0.2)_0%,_transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_80%,_rgba(249,115,22,0.1)_0%,_transparent_50%)]" />
-        <div className="relative max-w-3xl mx-auto">
+        <div className="relative max-w-4xl mx-auto">
           <span className="inline-block px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 text-xs font-bold tracking-widest uppercase mb-6">Vision</span>
-          <blockquote className="text-3xl md:text-4xl font-bold mb-8 leading-tight">
+          <blockquote className="font-display text-3xl md:text-4xl font-bold mb-8 leading-tight">
             To help people move from <span className="text-orange-400">thinking to doing</span>.
           </blockquote>
-          <p className="text-lg text-white/90 leading-relaxed mb-6">
-            Most tools let you write ideas—few help you structure and act on them. Stratabin closes that gap by combining writing, planning, visualization, and execution in one system.
+          <p className="text-lg text-white/90 leading-relaxed mb-12">
+            Most tools let you write ideas—few help you structure and act on them. Stratabin closes that gap.
           </p>
-          <p className="text-white/70 leading-relaxed">
-            Whether you&apos;re planning a project, organizing thoughts for a presentation, or turning a side idea into a real plan, Stratabin keeps everything structured and actionable.
-          </p>
+          <div className="grid sm:grid-cols-2 gap-6">
+            <a href="#features" className="group block p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-orange-500/40 hover:bg-white/[0.07] transition-all duration-300">
+              <h4 className="font-display text-xl font-bold mb-2 group-hover:text-orange-400 transition-colors">Solo planning</h4>
+              <p className="text-white/70 text-sm">Your own workspace. Organize ideas, create flows, track tasks—everything private.</p>
+              <span className="inline-flex items-center gap-2 mt-4 text-orange-400 font-medium text-sm">Learn more →</span>
+            </a>
+            <a href="#features" className="group block p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-orange-500/40 hover:bg-white/[0.07] transition-all duration-300">
+              <h4 className="font-display text-xl font-bold mb-2 group-hover:text-orange-400 transition-colors">Team collaboration</h4>
+              <p className="text-white/70 text-sm">Shared workspaces, group chat, daily tasks, and roles. Invite your team and ship together.</p>
+              <span className="inline-flex items-center gap-2 mt-4 text-orange-400 font-medium text-sm">Learn more →</span>
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* Features - Interactive */}
-      <section id="features" className="py-28 px-6 bg-gradient-to-b from-[#fafafa] to-white scroll-mt-24">
+      {/* Features - Osmo component-style */}
+      <section id="features" className="py-28 px-6 bg-white scroll-mt-24">
         <div className="max-w-6xl mx-auto">
           <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold tracking-widest uppercase mb-4">Features</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-4">
             Explore Stratabin
           </h2>
-          <p className="text-black/70 mb-12 max-w-2xl text-lg">
-            From solo planning to team collaboration—discover everything Stratabin offers.
+          <p className="text-black/60 mb-12 max-w-2xl text-lg">
+            From solo planning to team collaboration—discover everything Stratabin offers. Build faster, ship smarter.
           </p>
 
           {/* Tab bar */}
@@ -598,53 +608,67 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How it works */}
+      {/* How it works - Phamily numbered steps 01, 02... */}
       <section className="py-28 px-6 bg-black text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,_rgba(249,115,22,0.08)_0%,_transparent_30%,_transparent_70%,_rgba(249,115,22,0.05)_100%)]" />
         <div className="relative max-w-4xl mx-auto">
           <span className="inline-block px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 text-xs font-bold tracking-widest uppercase mb-4">How it works</span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-16">Five steps from idea to done</h2>
-          <div className="relative">
-            <div className="absolute left-6 top-6 bottom-6 w-px bg-gradient-to-b from-orange-500/50 via-orange-400/30 to-orange-500/50 hidden md:block" />
-            <div className="space-y-0">
-              {[
-                { step: 1, title: "Write your ideas", desc: "Put your thoughts down in a structured format instead of scattered notes." },
-                { step: 2, title: "Structure into sections", desc: "Break content into clear sections and expand each step by step." },
-                { step: 3, title: "Visualize as a flow", desc: "See how each step connects and where your plan is heading." },
-                { step: 4, title: "Plan tasks and timelines", desc: "Create tasks, set phases, and define when things need to happen." },
-                { step: 5, title: "Execute and track progress", desc: "Complete tasks, report progress, and keep everything in one place." },
-              ].map(({ step, title, desc }) => (
-                <div key={step} className="flex gap-8 items-start py-6 relative group">
-                  <span className="relative z-10 flex-shrink-0 w-12 h-12 rounded-xl bg-orange-500/30 flex items-center justify-center text-orange-400 font-bold border-2 border-orange-500/50 group-hover:bg-orange-500/40 transition-colors">
-                    {step}
-                  </span>
-                  <div>
-                    <h4 className="font-semibold text-white text-lg mb-1">{title}</h4>
-                    <p className="text-white/70">{desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Five steps from idea to done</h2>
+          <p className="text-white/60 mb-16 max-w-xl">Everything happens in one place. No switching between tools.</p>
+          <div className="grid md:grid-cols-5 gap-8">
+            {[
+              { step: "01", title: "Write", desc: "Put your thoughts down in a structured format instead of scattered notes." },
+              { step: "02", title: "Structure", desc: "Break content into clear sections and expand each step by step." },
+              { step: "03", title: "Visualize", desc: "See how each step connects and where your plan is heading." },
+              { step: "04", title: "Plan", desc: "Create tasks, set phases, and define when things need to happen." },
+              { step: "05", title: "Execute", desc: "Complete tasks, report progress, and keep everything in one place." },
+            ].map(({ step, title, desc }) => (
+              <div key={step} className="group">
+                <span className="font-display text-4xl font-bold text-orange-500/50 group-hover:text-orange-400 transition-colors">{step}</span>
+                <h4 className="font-display font-bold text-white text-lg mt-2 mb-2">{title}</h4>
+                <p className="text-white/60 text-sm leading-relaxed">{desc}</p>
+              </div>
+            ))}
           </div>
-          <p className="text-white/50 text-sm mt-12 italic">Everything happens in one place. No switching between tools.</p>
         </div>
       </section>
 
-      {/* Summary */}
+      {/* Testimonials - Jeton/Osmo style */}
+      <section className="py-28 px-6 bg-[#fafafa]">
+        <div className="max-w-6xl mx-auto">
+          <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold tracking-widest uppercase mb-4">Hear it from users</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-4">Built for people who ship</h2>
+          <p className="text-black/60 mb-12 max-w-xl">Stratabin helps you move from idea to execution—faster.</p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { quote: "Finally, a workspace that actually helps me turn ideas into action. The flow canvas is a game-changer.", author: "Product manager", tag: "Solo user" },
+              { quote: "Our team uses Stratabin for every project. Daily tasks, shared workspaces, and the AI reports keep us aligned.", author: "Startup founder", tag: "Team" },
+              { quote: "From scattered notes to a clear plan in one place. Stratabin is exactly what I needed.", author: "Writer & consultant", tag: "Solo user" },
+            ].map((t, i) => (
+              <div key={i} className="p-6 rounded-2xl bg-white border border-black/[0.06] shadow-sm hover:shadow-md transition-shadow">
+                <p className="text-black/80 mb-4 leading-relaxed">{t.quote}</p>
+                <span className="text-orange-500 text-xs font-semibold uppercase tracking-wide">{t.tag}</span>
+                <p className="text-black/60 text-sm mt-1">{t.author}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Summary CTA - Jeton style */}
       <section className="py-28 px-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,_rgba(255,255,255,0.2)_0%,_transparent_50%)]" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50" />
         <div className="relative max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">One system for it all</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-6">One system for it all</h2>
           <p className="text-xl text-white/95 mb-8 leading-relaxed">
             Organize thinking · Structure ideas · Plan execution · Track progress · Collaborate
           </p>
           <p className="text-white/80 mb-10">
             Stratabin is evolving—enhanced AI, deeper integrations, and stronger collaboration tools coming soon.
           </p>
-          <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/20 hover:bg-white/30 text-white font-semibold transition-all duration-300 border-2 border-white/30 hover:border-white/50 backdrop-blur-sm">
-            Visit stratabin.com for more details
+          <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-orange-600 hover:bg-white/95 font-semibold transition-all duration-300 shadow-lg">
+            Get started at stratabin.com
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
           </a>
         </div>
@@ -654,7 +678,7 @@ export default function Home() {
       <section id="faq" className="py-28 px-6 bg-white">
         <div className="max-w-2xl mx-auto">
           <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold tracking-widest uppercase mb-4">FAQ</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-12">Frequently asked questions</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-12">Frequently asked questions</h2>
           <div className="space-y-4">
             {FAQ_ITEMS.map((item, i) => (
               <FaqItem key={i} question={item.q} answer={item.a} isOpen={openFaq === i} onClick={() => setOpenFaq(openFaq === i ? null : i)} />
@@ -664,10 +688,10 @@ export default function Home() {
       </section>
 
       {/* About Us */}
-      <section id="about" className="py-28 px-6 bg-gradient-to-b from-[#f5f5f5] to-[#e8e8e8]">
+      <section id="about" className="py-28 px-6 bg-[#f5f5f5]">
         <div className="max-w-5xl mx-auto">
           <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold tracking-widest uppercase mb-4 text-center">About Us</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-black text-center mb-16">Meet the founder</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-black text-center mb-16">Meet the founder</h2>
 
           <div className="relative bg-white rounded-[2rem] shadow-2xl border border-black/[0.04] overflow-hidden">
             <div className="absolute inset-0">
@@ -729,14 +753,24 @@ export default function Home() {
       {/* Chat assistant */}
       <ChatAssistant />
 
-      {/* Footer */}
-      <footer className="py-14 px-6 bg-black text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-orange-400 hover:text-orange-300 font-semibold text-lg transition-colors">
-            stratabin.com
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-          </a>
-          <p className="text-white/40 text-sm mt-4">© {new Date().getFullYear()} Stratabin. Built with care.</p>
+      {/* Footer - Jeton/Osmo style */}
+      <footer className="py-16 px-6 bg-black text-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="font-display font-bold text-white hover:text-orange-400 transition-colors">
+              stratabin.com
+            </a>
+            <div className="flex flex-wrap gap-8 justify-center text-sm text-white/50">
+              <a href="#what-is-stratabin" className="hover:text-white transition-colors">Product</a>
+              <a href="#features" className="hover:text-white transition-colors">Features</a>
+              <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+              <a href="#about" className="hover:text-white transition-colors">About</a>
+            </div>
+            <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm transition-colors">
+              Get Started
+            </a>
+          </div>
+          <p className="text-white/40 text-sm mt-10 text-center">© {new Date().getFullYear()} Stratabin. Built with care.</p>
         </div>
       </footer>
     </div>
