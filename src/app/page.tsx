@@ -239,42 +239,58 @@ export default function Home() {
       return tl;
     };
 
-    /** Pinned “same screen” chapter: 3D card stack + particle field + crossfading copy (reference-style). */
+    /** Pinned chapter: progress rail, watermarks, blur-to-sharp type, two-phase 3D, glow + floor parallax. */
     const setupImmersiveStory = (opts: { end: string; pin: boolean; scrub: number }) => {
       gsap.set(".immersive-slide-1", { autoAlpha: 1, y: 0 });
-      gsap.set([".immersive-slide-2", ".immersive-slide-3"], { autoAlpha: 0, y: 52 });
-      gsap.set(".immersive-scroll-hint", { autoAlpha: 0, y: 14 });
+      gsap.set([".immersive-slide-2", ".immersive-slide-3"], { autoAlpha: 0, y: 64 });
+      gsap.set(".immersive-scroll-hint", { autoAlpha: 0, y: 20 });
+      gsap.set(".immersive-progress-fill", { scaleY: 0, transformOrigin: "top center", force3D: true });
+      gsap.set(".immersive-step", { opacity: 0.28 });
+      gsap.set(".immersive-step-1", { opacity: 1 });
+      gsap.set(".immersive-chapter-mark-1", { autoAlpha: 0.09 });
+      gsap.set([".immersive-chapter-mark-2", ".immersive-chapter-mark-3"], { autoAlpha: 0 });
+      gsap.set(".immersive-slide-1 .immersive-slide-title", { filter: "blur(0px)", y: 0 });
+      gsap.set(".immersive-slide-2 .immersive-slide-title, .immersive-slide-3 .immersive-slide-title", {
+        filter: "blur(18px)",
+        y: 28,
+      });
+      gsap.set(".immersive-slide-2 .immersive-slide-body, .immersive-slide-3 .immersive-slide-body", {
+        autoAlpha: 0,
+        y: 22,
+      });
+      gsap.set(".immersive-floor", { opacity: 0.28, y: 24 });
 
       if (opts.pin) {
         gsap.set(".immersive-scene-rotate", {
-          transformPerspective: 1400,
-          rotationY: -26,
-          rotationX: 5,
-          z: -200,
+          transformPerspective: 1600,
+          rotationY: -32,
+          rotationX: 8,
+          rotationZ: -2,
+          z: -220,
           force3D: true,
         });
         gsap.set(".immersive-card-a", {
-          x: -88,
-          y: 44,
-          z: 130,
-          rotationY: -40,
+          x: -96,
+          y: 52,
+          z: 145,
+          rotationY: -46,
           transformOrigin: "50% 50%",
           force3D: true,
         });
         gsap.set(".immersive-card-b", {
           x: 0,
           y: 0,
-          z: 24,
+          z: 28,
           rotationY: 0,
-          scale: 1.05,
+          scale: 1.06,
           transformOrigin: "50% 50%",
           force3D: true,
         });
         gsap.set(".immersive-card-c", {
-          x: 92,
-          y: -38,
-          z: -85,
-          rotationY: 44,
+          x: 102,
+          y: -44,
+          z: -95,
+          rotationY: 48,
           transformOrigin: "50% 50%",
           force3D: true,
         });
@@ -291,33 +307,83 @@ export default function Home() {
         },
       });
 
-      tl.to(".immersive-slide-1", { autoAlpha: 0, y: -44, duration: 0.14, ease: "power2.in" }, 0.2)
-        .to(".immersive-slide-2", { autoAlpha: 1, y: 0, duration: 0.22, ease: "power2.out" }, 0.26)
-        .to(".immersive-slide-2", { autoAlpha: 0, y: -44, duration: 0.14, ease: "power2.in" }, 0.46)
-        .to(".immersive-slide-3", { autoAlpha: 1, y: 0, duration: 0.22, ease: "power2.out" }, 0.52)
-        .to(".immersive-scroll-hint", { autoAlpha: 1, y: 0, duration: 0.2, ease: "power2.out" }, 0.72);
+      tl.to(".immersive-progress-fill", { scaleY: 1, duration: 1, ease: "none" }, 0)
+        .to(
+          ".immersive-glow",
+          {
+            duration: 0.55,
+            ease: "none",
+            "--gx": "62%",
+            "--gy": "52%",
+          } as gsap.TweenVars,
+          0
+        )
+        .to(
+          ".immersive-glow",
+          {
+            duration: 0.45,
+            ease: "none",
+            "--gx": "38%",
+            "--gy": "36%",
+          } as gsap.TweenVars,
+          0.55
+        )
+        .to(".immersive-floor", { opacity: 0.52, y: -12, duration: 1, ease: "none" }, 0)
+        .to(".immersive-chapter-mark-1", { autoAlpha: 0, duration: 0.2, ease: "power2.in" }, 0.18)
+        .to(".immersive-chapter-mark-2", { autoAlpha: 0.11, duration: 0.28, ease: "power2.out" }, 0.22)
+        .to(".immersive-slide-1", { autoAlpha: 0, y: -56, duration: 0.2, ease: "power2.in" }, 0.2)
+        .to(".immersive-slide-2", { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.26)
+        .to(".immersive-slide-2 .immersive-slide-title", { filter: "blur(0px)", y: 0, duration: 0.38, ease: "power2.out" }, 0.28)
+        .to(".immersive-slide-2 .immersive-slide-body", { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" }, 0.34)
+        .to(".immersive-step-1", { opacity: 0.3, duration: 0.12 }, 0.2)
+        .to(".immersive-step-2", { opacity: 1, duration: 0.2 }, 0.24)
+        .to(".immersive-chapter-mark-2", { autoAlpha: 0, duration: 0.18, ease: "power2.in" }, 0.42)
+        .to(".immersive-chapter-mark-3", { autoAlpha: 0.11, duration: 0.28, ease: "power2.out" }, 0.46)
+        .to(".immersive-slide-2", { autoAlpha: 0, y: -56, duration: 0.18, ease: "power2.in" }, 0.44)
+        .to(".immersive-slide-3", { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.5)
+        .to(".immersive-slide-3 .immersive-slide-title", { filter: "blur(0px)", y: 0, duration: 0.38, ease: "power2.out" }, 0.52)
+        .to(".immersive-slide-3 .immersive-slide-body", { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" }, 0.58)
+        .to(".immersive-step-2", { opacity: 0.3, duration: 0.12 }, 0.44)
+        .to(".immersive-step-3", { opacity: 1, duration: 0.2 }, 0.48)
+        .to(".immersive-scroll-hint", { autoAlpha: 1, y: 0, duration: 0.28, ease: "power2.out" }, 0.74);
 
       if (opts.pin) {
         tl.to(
           ".immersive-scene-rotate",
-          { rotationY: 36, rotationX: -9, z: 55, duration: 1, ease: "none" },
+          { rotationY: 8, rotationX: -14, z: -40, rotationZ: 1, duration: 0.52, ease: "none" },
           0
-        )
-          .to(
-            ".immersive-card-a",
-            { x: -135, y: 28, z: 210, rotationY: -58, duration: 1, ease: "none" },
-            0
-          )
-          .to(
-            ".immersive-card-b",
-            { rotationY: 16, z: 110, y: -14, scale: 1, duration: 1, ease: "none" },
-            0
-          )
-          .to(
-            ".immersive-card-c",
-            { x: 125, y: 30, z: -130, rotationY: 32, duration: 1, ease: "none" },
-            0
-          );
+        ).to(
+          ".immersive-scene-rotate",
+          { rotationY: 44, rotationX: -5, z: 95, rotationZ: -3, duration: 0.48, ease: "none" },
+          0.52
+        );
+        tl.to(
+          ".immersive-card-a",
+          { x: -152, y: 22, z: 240, rotationY: -62, duration: 0.52, ease: "none" },
+          0
+        ).to(
+          ".immersive-card-a",
+          { x: -118, y: 8, z: 180, rotationY: -48, duration: 0.48, ease: "none" },
+          0.52
+        );
+        tl.to(
+          ".immersive-card-b",
+          { rotationY: 22, z: 130, y: -22, scale: 0.98, duration: 0.52, ease: "none" },
+          0
+        ).to(
+          ".immersive-card-b",
+          { rotationY: 8, z: 95, y: -8, scale: 1, duration: 0.48, ease: "none" },
+          0.52
+        );
+        tl.to(
+          ".immersive-card-c",
+          { x: 138, y: 36, z: -150, rotationY: 38, duration: 0.52, ease: "none" },
+          0
+        ).to(
+          ".immersive-card-c",
+          { x: 108, y: 18, z: -105, rotationY: 28, duration: 0.48, ease: "none" },
+          0.52
+        );
       }
 
       return tl;
@@ -329,11 +395,11 @@ export default function Home() {
       mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
         setupHeroScrollStory({ end: "+=120%", pin: true, scrub: 0.65 });
-        setupImmersiveStory({ end: "+=155%", pin: true, scrub: 0.55 });
+        setupImmersiveStory({ end: "+=200%", pin: true, scrub: 0.38 });
       });
       mm.add("(max-width: 767px)", () => {
         setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.85 });
-        setupImmersiveStory({ end: "+=95%", pin: false, scrub: 0.88 });
+        setupImmersiveStory({ end: "+=115%", pin: false, scrub: 0.82 });
       });
     } else {
       gsap.set(
@@ -354,6 +420,18 @@ export default function Home() {
           ".immersive-card-a",
           ".immersive-card-b",
           ".immersive-card-c",
+          ".immersive-progress-fill",
+          ".immersive-step",
+          ".immersive-step-1",
+          ".immersive-step-2",
+          ".immersive-step-3",
+          ".immersive-chapter-mark-1",
+          ".immersive-chapter-mark-2",
+          ".immersive-chapter-mark-3",
+          ".immersive-slide-title",
+          ".immersive-slide-body",
+          ".immersive-floor",
+          ".immersive-glow",
         ],
         { clearProps: "all" }
       );
@@ -560,10 +638,11 @@ export default function Home() {
 
       <ImmersiveStage />
 
-      <div className="section-line" />
-
-      {/* ══════════ MISSION ══════════ */}
-      <section id="mission" className="py-32 px-6 lg:px-24 scroll-mt-24">
+      {/* ══════════ MISSION ══════════ (top blends from immersive tail — no harsh divider) */}
+      <section
+        id="mission"
+        className="scroll-mt-24 bg-[#050505] px-6 pb-32 pt-6 md:px-24 md:pt-8 lg:pt-10"
+      >
         <div className="max-w-6xl mx-auto lg:pl-16">
           <span className="reveal-up block text-orange-400/20 font-display text-8xl md:text-9xl font-bold leading-none select-none">02</span>
           <h2 className="reveal-up font-display text-4xl md:text-5xl font-bold -mt-6 mb-4">Our Mission</h2>
