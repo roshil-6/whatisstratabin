@@ -9,6 +9,7 @@ import Lenis from "lenis";
 import ManIcon from "@/components/ManIcon";
 import ChatAssistant from "@/components/ChatAssistant";
 import CardTilt from "@/components/CardTilt";
+import ImmersiveStage from "@/components/ImmersiveStage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -238,15 +239,101 @@ export default function Home() {
       return tl;
     };
 
+    /** Pinned “same screen” chapter: 3D card stack + particle field + crossfading copy (reference-style). */
+    const setupImmersiveStory = (opts: { end: string; pin: boolean; scrub: number }) => {
+      gsap.set(".immersive-slide-1", { autoAlpha: 1, y: 0 });
+      gsap.set([".immersive-slide-2", ".immersive-slide-3"], { autoAlpha: 0, y: 52 });
+      gsap.set(".immersive-scroll-hint", { autoAlpha: 0, y: 14 });
+
+      if (opts.pin) {
+        gsap.set(".immersive-scene-rotate", {
+          transformPerspective: 1400,
+          rotationY: -26,
+          rotationX: 5,
+          z: -200,
+          force3D: true,
+        });
+        gsap.set(".immersive-card-a", {
+          x: -88,
+          y: 44,
+          z: 130,
+          rotationY: -40,
+          transformOrigin: "50% 50%",
+          force3D: true,
+        });
+        gsap.set(".immersive-card-b", {
+          x: 0,
+          y: 0,
+          z: 24,
+          rotationY: 0,
+          scale: 1.05,
+          transformOrigin: "50% 50%",
+          force3D: true,
+        });
+        gsap.set(".immersive-card-c", {
+          x: 92,
+          y: -38,
+          z: -85,
+          rotationY: 44,
+          transformOrigin: "50% 50%",
+          force3D: true,
+        });
+      }
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#immersive-inner",
+          start: "top top",
+          end: opts.end,
+          pin: opts.pin,
+          scrub: opts.scrub,
+          anticipatePin: 1,
+        },
+      });
+
+      tl.to(".immersive-slide-1", { autoAlpha: 0, y: -44, duration: 0.14, ease: "power2.in" }, 0.2)
+        .to(".immersive-slide-2", { autoAlpha: 1, y: 0, duration: 0.22, ease: "power2.out" }, 0.26)
+        .to(".immersive-slide-2", { autoAlpha: 0, y: -44, duration: 0.14, ease: "power2.in" }, 0.46)
+        .to(".immersive-slide-3", { autoAlpha: 1, y: 0, duration: 0.22, ease: "power2.out" }, 0.52)
+        .to(".immersive-scroll-hint", { autoAlpha: 1, y: 0, duration: 0.2, ease: "power2.out" }, 0.72);
+
+      if (opts.pin) {
+        tl.to(
+          ".immersive-scene-rotate",
+          { rotationY: 36, rotationX: -9, z: 55, duration: 1, ease: "none" },
+          0
+        )
+          .to(
+            ".immersive-card-a",
+            { x: -135, y: 28, z: 210, rotationY: -58, duration: 1, ease: "none" },
+            0
+          )
+          .to(
+            ".immersive-card-b",
+            { rotationY: 16, z: 110, y: -14, scale: 1, duration: 1, ease: "none" },
+            0
+          )
+          .to(
+            ".immersive-card-c",
+            { x: 125, y: 30, z: -130, rotationY: 32, duration: 1, ease: "none" },
+            0
+          );
+      }
+
+      return tl;
+    };
+
     let mm: ReturnType<typeof gsap.matchMedia> | null = null;
 
     if (!prefersReduced) {
       mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
         setupHeroScrollStory({ end: "+=120%", pin: true, scrub: 0.65 });
+        setupImmersiveStory({ end: "+=155%", pin: true, scrub: 0.55 });
       });
       mm.add("(max-width: 767px)", () => {
         setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.85 });
+        setupImmersiveStory({ end: "+=95%", pin: false, scrub: 0.88 });
       });
     } else {
       gsap.set(
@@ -259,6 +346,14 @@ export default function Home() {
           ".hero-cta",
           ".hero-scroll",
           ".hero-image-motion",
+          ".immersive-slide-1",
+          ".immersive-slide-2",
+          ".immersive-slide-3",
+          ".immersive-scroll-hint",
+          ".immersive-scene-rotate",
+          ".immersive-card-a",
+          ".immersive-card-b",
+          ".immersive-card-c",
         ],
         { clearProps: "all" }
       );
@@ -460,6 +555,10 @@ export default function Home() {
           <div className="w-px h-12 bg-gradient-to-b from-white/20 to-transparent" />
         </div>
       </section>
+
+      <div className="section-line" />
+
+      <ImmersiveStage />
 
       <div className="section-line" />
 
