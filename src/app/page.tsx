@@ -214,8 +214,18 @@ export default function Home() {
       {/* Top Header */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-[#050505]/80 backdrop-blur-xl border-b border-white/[0.04]">
         <div className="flex justify-between items-center px-6 lg:px-12 py-5">
-          <a href="/" className="font-display font-bold text-lg text-white hover:text-orange-400 transition-colors">
-            Stratabin
+          <a href="/" className="flex items-center gap-2.5 group">
+            <Image
+              src="/stratabin-logo.png"
+              alt="Stratabin"
+              width={36}
+              height={36}
+              className="object-contain rounded-xl shrink-0"
+              priority
+            />
+            <span className="font-display font-bold text-lg text-white group-hover:text-orange-400 transition-colors">
+              Stratabin
+            </span>
           </a>
           <div className="hidden md:flex items-center gap-8">
             <a href="#mission" className="text-sm text-white/40 hover:text-white transition-colors">Mission</a>
