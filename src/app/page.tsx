@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { AboutParticlesWrapper } from "@/components/SceneWrapper";
 import ManIcon from "@/components/ManIcon";
 import ChatAssistant from "@/components/ChatAssistant";
@@ -49,10 +50,17 @@ const TEAM_FEATURES = [
 
 const NAV_LINKS = [
   { href: "#what-is-stratabin", label: "What is Stratabin" },
+  { href: "#mission", label: "Mission" },
   { href: "#features", label: "Features" },
   { href: "#faq", label: "FAQ" },
   { href: "#about", label: "About Us" },
   { href: "#about", label: "Founders" },
+];
+
+const MISSION_CARDS = [
+  { id: "structured-thinking", title: "Structured thinking", desc: "Write ideas, break them into clear sections, and see them as a visual flow. No more scattered notes that go nowhere.", anchor: "#structured-thinking" },
+  { id: "action-oriented", title: "Action-oriented", desc: "Create tasks, set timelines, and track progress. Everything you need to execute on your ideas—in one place.", anchor: "#action-oriented" },
+  { id: "solo-or-team", title: "Solo or team", desc: "Work alone or invite your team. Shared workspaces, group chat, daily tasks, and roles—all built in.", anchor: "#solo-or-team" },
 ];
 
 export default function Home() {
@@ -60,10 +68,19 @@ export default function Home() {
   const [navOpen, setNavOpen] = useState(false);
   const featuresRef = useRef<HTMLElement>(null);
   const [featuresVisible, setFeaturesVisible] = useState(false);
+  const [visibleSections, setVisibleSections] = useState<Record<string, boolean>>({});
   useEffect(() => {
     const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setFeaturesVisible(true); }, { threshold: 0.1 });
     const el = featuresRef.current;
     if (el) obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  useEffect(() => {
+    const ids = ["structured-thinking", "action-oriented", "solo-or-team"];
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) setVisibleSections((s) => ({ ...s, [e.target.id]: true })); });
+    }, { threshold: 0.15 });
+    ids.forEach((id) => { const el = document.getElementById(id); if (el) obs.observe(el); });
     return () => obs.disconnect();
   }, []);
 
@@ -72,8 +89,9 @@ export default function Home() {
       {/* Navigation - Jeton/Osmo style */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-          <a href="/" className="text-lg font-display font-bold text-black tracking-tight">
-            Stratabin guide
+          <a href="/" className="flex items-center gap-2.5">
+            <span className="w-9 h-9 rounded-xl bg-orange-500 flex items-center justify-center text-white font-display font-bold text-sm">S</span>
+            <span className="text-lg font-display font-bold text-black tracking-tight">Stratabin guide</span>
           </a>
           <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
@@ -128,8 +146,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Mission cards - Phamily style: 3 pillars */}
-      <section className="py-24 px-6 bg-white">
+      {/* Mission cards - clickable, fading, transitional */}
+      <section id="mission" className="py-24 px-6 bg-white scroll-mt-24">
         <div className="max-w-6xl mx-auto">
           <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold tracking-widest uppercase mb-4">Our Mission</span>
           <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-4">
@@ -137,18 +155,135 @@ export default function Home() {
           </h2>
           <p className="text-black/60 max-w-2xl mb-16 text-lg">We help you move from thinking to doing.</p>
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { title: "Structured thinking", desc: "Write ideas, break them into clear sections, and see them as a visual flow. No more scattered notes that go nowhere." },
-              { title: "Action-oriented", desc: "Create tasks, set timelines, and track progress. Everything you need to execute on your ideas—in one place." },
-              { title: "Solo or team", desc: "Work alone or invite your team. Shared workspaces, group chat, daily tasks, and roles—all built in." },
-            ].map((card, i) => (
-              <div key={i} className="p-8 rounded-2xl bg-black/[0.02] border border-black/[0.04] hover:border-orange-200/50 hover:bg-orange-50/30 hover:shadow-drop hover:-translate-y-1 transition-all duration-400">
-                <span className="text-3xl font-display font-bold text-orange-500/60">0{i + 1}</span>
-                <h3 className="mt-4 font-display text-xl font-bold text-black mb-3">{card.title}</h3>
-                <p className="text-black/70 leading-relaxed">{card.desc}</p>
-              </div>
+            {MISSION_CARDS.map((card, i) => (
+              <a
+                key={card.id}
+                href={card.anchor}
+                className="group block p-8 rounded-2xl bg-white/60 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/60 hover:bg-orange-50/40 hover:shadow-drop hover:-translate-y-2 hover:scale-[1.02] transition-all duration-500 ease-out opacity-0 animate-fade-in"
+                style={{ animationDelay: `${(i + 1) * 150}ms`, animationFillMode: "forwards" }}
+              >
+                <span className="text-3xl font-display font-bold text-orange-500/60 group-hover:text-orange-600 transition-colors">0{i + 1}</span>
+                <h3 className="mt-4 font-display text-xl font-bold text-black mb-3 group-hover:text-orange-600 transition-colors">{card.title}</h3>
+                <p className="text-black/70 leading-relaxed mb-4">{card.desc}</p>
+                <span className="inline-flex items-center gap-1.5 text-orange-500 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Learn more <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                </span>
+              </a>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* 01 — Structured thinking (detailed) */}
+      <section id="structured-thinking" className="py-24 px-6 bg-gradient-to-b from-orange-50/30 to-white scroll-mt-24">
+        <div className="max-w-5xl mx-auto">
+          <span className="text-4xl font-display font-bold text-orange-500/50">01</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-6">Structured thinking</h2>
+          <p className="text-lg text-black/80 mb-10 max-w-2xl">Move from messy notes to a clear, visible strategy.</p>
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3]">
+              <Image
+                src="https://img.freepik.com/free-photo/businesswoman-writing-whiteboard-office_1098-1783.jpg?w=800&q=80"
+                alt="Structured thinking - mind map and strategy"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            </div>
+            <div className="space-y-4">
+              {[
+                { title: "Visual flow", desc: "Ideas live on a canvas as nodes, with connections so you see relationships (e.g. “Marketing” → “Launch plan” → “Tasks”)." },
+                { title: "Organized writing", desc: "Long-form editor (Writing Section) lets you break thoughts into sections, which you can map onto the canvas." },
+                { title: "Branching & merging", desc: "Split one idea into branches or merge multiple projects into one strategy." },
+                { title: "Strategy map", desc: "Nodes map your logic; writing section holds the explanation." },
+                { title: "No more scatter", desc: "One place to capture ideas, structure them, and see how they connect." },
+              ].map((item, i) => (
+                <div key={i} className={`p-5 rounded-xl bg-white/80 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/50 hover:shadow-drop transition-all duration-400 ${visibleSections["structured-thinking"] ? "animate-slide-up" : "opacity-0"}`} style={visibleSections["structured-thinking"] ? { animationDelay: `${i * 80}ms`, animationFillMode: "forwards" } : undefined}>
+                  <h4 className="font-display font-bold text-black mb-1">{item.title}</h4>
+                  <p className="text-black/65 text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="text-orange-600 font-semibold">Summary: Visual structure for ideas instead of scattered notes.</p>
+        </div>
+      </section>
+
+      {/* 02 — Action-oriented (detailed) */}
+      <section id="action-oriented" className="py-24 px-6 bg-white scroll-mt-24">
+        <div className="max-w-5xl mx-auto">
+          <span className="text-4xl font-display font-bold text-orange-500/50">02</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-6">Action-oriented</h2>
+          <p className="text-lg text-black/80 mb-10 max-w-2xl">Turn strategy into execution, in one place.</p>
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="space-y-4 order-2 lg:order-1">
+              {[
+                { title: "Tasks", desc: "To-do lists tied to each project; completion tracked and shown on cards." },
+                { title: "Timelines", desc: "Timeline view for phases, milestones, and dependencies." },
+                { title: "Calendar", desc: "Strategic calendar for long-term planning; Weekly Planner for day-by-day execution." },
+                { title: "“What did I execute today?”", desc: "Monitor view for today’s output, blockers, and tomorrow’s focus." },
+                { title: "Progress", desc: "Tasks done %, node counts, word counts, streaks, and execution logs." },
+                { title: "STRAB AI", desc: "Analysis, reports, and recommendations to spot gaps and next steps." },
+                { title: "Reports", desc: "AI-powered project reports, insights, and recommendations." },
+              ].map((item, i) => (
+                <div key={i} className={`p-5 rounded-xl bg-white border border-black/[0.04] hover:border-orange-200/50 hover:shadow-drop hover:-translate-y-0.5 transition-all duration-400 ${visibleSections["action-oriented"] ? "animate-slide-up" : "opacity-0"}`} style={visibleSections["action-oriented"] ? { animationDelay: `${i * 60}ms`, animationFillMode: "forwards" } : undefined}>
+                  <h4 className="font-display font-bold text-black mb-1">{item.title}</h4>
+                  <p className="text-black/65 text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3] order-1 lg:order-2">
+              <Image
+                src="https://img.freepik.com/free-photo/woman-writing-notebook-desk_23-2148192381.jpg?w=800&q=80"
+                alt="Action-oriented - task execution"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            </div>
+          </div>
+          <p className="text-orange-600 font-semibold">Summary: Built-in tasks, timelines, calendar, and execution tracking.</p>
+        </div>
+      </section>
+
+      {/* 03 — Solo or team (detailed) */}
+      <section id="solo-or-team" className="py-24 px-6 bg-gradient-to-b from-[#fafafa] to-orange-50/20 scroll-mt-24">
+        <div className="max-w-5xl mx-auto">
+          <span className="text-4xl font-display font-bold text-orange-500/50">03</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-6">Solo or team</h2>
+          <p className="text-lg text-black/80 mb-10 max-w-2xl">Use the same system for personal work and team collaboration.</p>
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3]">
+              <Image
+                src="https://img.freepik.com/free-photo/diverse-businesspeople-having-meeting_53876-101845.jpg?w=800&q=80"
+                alt="Solo or team - collaboration"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {[
+                { title: "Solo", desc: "Personal projects, folders, and a clean workspace." },
+                { title: "Team workspaces", desc: "Create workspaces, invite members, and assign roles (e.g. admin)." },
+                { title: "Projects", desc: "Shared projects with status (Idea, Planning, Executing, Completed)." },
+                { title: "Daily tasks", desc: "Shared task lists and daily tasks by team member." },
+                { title: "Community", desc: "Feed, People, and Chats for activity, connections, and messaging." },
+                { title: "Profiles", desc: "LinkedIn-style profiles focused on projects and work." },
+                { title: "Chat", desc: "DM any team member or connect via workspaces." },
+                { title: "Join flow", desc: "Workspace ID or join link to onboard new members." },
+              ].map((item, i) => (
+                <div key={i} className={`p-4 rounded-xl bg-white/90 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/50 hover:shadow-drop transition-all duration-400 ${visibleSections["solo-or-team"] ? "animate-card-in" : "opacity-0"}`} style={visibleSections["solo-or-team"] ? { animationDelay: `${i * 70}ms`, animationFillMode: "forwards" } : undefined}>
+                  <h4 className="font-display font-bold text-black text-sm mb-1">{item.title}</h4>
+                  <p className="text-black/65 text-xs leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="text-orange-600 font-semibold">Summary: Works for individuals and teams with shared workspaces, chat, and community.</p>
         </div>
       </section>
 
@@ -419,6 +554,7 @@ export default function Home() {
             </a>
             <div className="flex flex-wrap gap-8 justify-center text-sm text-white/50">
               <a href="#what-is-stratabin" className="hover:text-white transition-colors">Product</a>
+              <a href="#mission" className="hover:text-white transition-colors">Mission</a>
               <a href="#features" className="hover:text-white transition-colors">Features</a>
               <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
               <a href="#about" className="hover:text-white transition-colors">About</a>
