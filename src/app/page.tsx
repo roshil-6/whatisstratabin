@@ -156,13 +156,113 @@ export default function Home() {
   }, []);
 
   useGSAP(() => {
-    const tl = gsap.timeline({ delay: 0.3 });
-    tl.from(".hero-tag", { autoAlpha: 0, y: 20, duration: 0.8, ease: "power3.out" })
-      .from(".hero-title", { autoAlpha: 0, y: 50, duration: 1.2, ease: "power3.out" }, "-=0.4")
-      .from(".hero-desc", { autoAlpha: 0, y: 30, duration: 0.8, ease: "power3.out" }, "-=0.7")
-      .from(".hero-cta", { autoAlpha: 0, y: 20, duration: 0.8, ease: "power3.out" }, "-=0.5")
-      .from(".hero-image", { autoAlpha: 0, scale: 0.9, duration: 1.5, ease: "power2.out" }, "-=1.2")
-      .from(".hero-scroll", { autoAlpha: 0, duration: 0.6 }, "-=0.3");
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const setupHeroScrollStory = (opts: { end: string; pin: boolean; scrub: number }) => {
+      const introWords = gsap.utils.toArray<HTMLElement>(".hero-intro-word-inner");
+
+      gsap.set(introWords, { yPercent: 118, autoAlpha: 0.15 });
+      gsap.set(".hero-tag", { y: 28, autoAlpha: 0.25 });
+      gsap.set(".hero-title-line-inner", { yPercent: 105, autoAlpha: 0.2 });
+      gsap.set(".hero-title-line-2-inner", { yPercent: 105, autoAlpha: 0.2 });
+      gsap.set(".hero-desc", { y: 36, autoAlpha: 0 });
+      gsap.set(".hero-cta", { y: 28, autoAlpha: 0 });
+      gsap.set(".hero-scroll", { autoAlpha: 0 });
+      gsap.set(".hero-image-motion", {
+        y: 72,
+        scale: 1.14,
+        rotateY: -14,
+        filter: "blur(22px)",
+        autoAlpha: 0.06,
+        transformOrigin: "55% 50%",
+        force3D: true,
+      });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#hero",
+          start: "top top",
+          end: opts.end,
+          pin: opts.pin,
+          scrub: opts.scrub,
+          anticipatePin: 1,
+        },
+      });
+
+      tl.to(
+        introWords,
+        {
+          yPercent: 0,
+          autoAlpha: 1,
+          duration: 0.42,
+          stagger: 0.055,
+          ease: "power3.out",
+        },
+        0
+      )
+        .to(".hero-tag", { y: 0, autoAlpha: 1, duration: 0.38, ease: "power2.out" }, 0.08)
+        .to(".hero-title-line-inner", { yPercent: 0, autoAlpha: 1, duration: 0.48, ease: "power3.out" }, 0.14)
+        .to(".hero-title-line-2-inner", { yPercent: 0, autoAlpha: 1, duration: 0.52, ease: "power3.out" }, 0.22)
+        .to(".hero-desc", { y: 0, autoAlpha: 1, duration: 0.42, ease: "power2.out" }, 0.34)
+        .to(".hero-cta", { y: 0, autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 0.44)
+        .to(".hero-scroll", { autoAlpha: 1, duration: 0.35, ease: "power2.out" }, 0.52)
+        .to(
+          ".hero-image-motion",
+          {
+            keyframes: [
+              {
+                y: opts.pin ? 24 : 0,
+                scale: 1,
+                rotateY: 0,
+                filter: "blur(0px)",
+                autoAlpha: 0.22,
+                duration: 0.88,
+                ease: "power2.out",
+              },
+              {
+                y: opts.pin ? 140 : 100,
+                scale: opts.pin ? 0.94 : 1.02,
+                rotateY: opts.pin ? 6 : 2,
+                filter: "blur(0px)",
+                autoAlpha: opts.pin ? 0.12 : 0.18,
+                duration: 0.48,
+                ease: "power2.in",
+              },
+            ],
+          },
+          0
+        );
+
+      return tl;
+    };
+
+    let mm: ReturnType<typeof gsap.matchMedia> | null = null;
+
+    if (!prefersReduced) {
+      mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        setupHeroScrollStory({ end: "+=120%", pin: true, scrub: 0.65 });
+      });
+      mm.add("(max-width: 767px)", () => {
+        setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.85 });
+      });
+    } else {
+      gsap.set(
+        [
+          ".hero-intro-word-inner",
+          ".hero-tag",
+          ".hero-title-line-inner",
+          ".hero-title-line-2-inner",
+          ".hero-desc",
+          ".hero-cta",
+          ".hero-scroll",
+          ".hero-image-motion",
+        ],
+        { clearProps: "all" }
+      );
+    }
 
     gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
       gsap.fromTo(
@@ -183,17 +283,6 @@ export default function Home() {
       );
     });
 
-    gsap.to(".hero-image", {
-      y: 120,
-      ease: "none",
-      scrollTrigger: {
-        trigger: "#hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
-
     NAV_SECTIONS.forEach(({ id }) => {
       ScrollTrigger.create({
         trigger: `#${id}`,
@@ -204,6 +293,10 @@ export default function Home() {
         },
       });
     });
+
+    return () => {
+      mm?.revert();
+    };
   }, { scope: mainRef });
 
   useEffect(() => {
@@ -303,29 +396,51 @@ export default function Home() {
       </header>
 
       {/* ══════════ HERO ══════════ */}
-      <section id="hero" className="relative min-h-screen flex items-center overflow-hidden pt-20">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(249,115,22,0.08),transparent)]" />
+      <section
+        id="hero"
+        className="relative min-h-screen flex items-center overflow-hidden pt-20 [perspective:1400px]"
+      >
+        {/* Oceanic ambient layers */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+          <div className="hero-ocean-blob hero-ocean-blob-a absolute -left-[20%] -top-[25%] h-[85vw] w-[85vw] max-w-[900px] max-h-[900px] rounded-full bg-orange-500/[0.12] blur-[100px] md:blur-[120px]" />
+          <div className="hero-ocean-blob hero-ocean-blob-b absolute -right-[15%] bottom-[-20%] h-[75vw] w-[75vw] max-w-[780px] max-h-[780px] rounded-full bg-sky-500/[0.07] blur-[90px] md:blur-[110px]" />
+          <div className="hero-ocean-blob hero-ocean-blob-c absolute left-1/2 top-1/2 h-[55vw] w-[55vw] max-w-[520px] max-h-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-400/[0.06] blur-[80px] md:blur-[100px]" />
+        </div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(249,115,22,0.1),transparent)]" />
 
-        <div className="hero-image absolute right-[2%] top-1/2 -translate-y-1/2 w-[50vw] max-w-[650px] aspect-square opacity-[0.15] pointer-events-none select-none">
-          <Image
-            src="https://blog.iqmatrix.com/wp-content/uploads/2009/03/How-to-Mind-Map-2000px.jpg"
-            alt="Mind map visualization"
-            fill
-            className="object-contain rounded-3xl"
-            sizes="50vw"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-[#050505]/40 to-[#050505]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/60 via-transparent to-[#050505]/60" />
+        <div className="hero-image pointer-events-none absolute right-[2%] top-1/2 z-[1] w-[50vw] max-w-[650px] -translate-y-1/2 select-none [transform-style:preserve-3d]">
+          <div className="hero-image-motion relative aspect-square w-full will-change-transform">
+            <Image
+              src="https://blog.iqmatrix.com/wp-content/uploads/2009/03/How-to-Mind-Map-2000px.jpg"
+              alt="Mind map visualization"
+              fill
+              className="object-contain rounded-3xl"
+              sizes="50vw"
+              priority
+            />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-l from-transparent via-[#050505]/45 to-[#050505]" />
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[#050505]/55 via-transparent to-[#050505]/55" />
+          </div>
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto px-8 lg:px-24 lg:pl-28">
+          <p className="hero-intro font-display mb-6 flex flex-wrap gap-x-[0.35em] gap-y-1 text-2xl font-semibold tracking-tight text-white/90 sm:text-3xl md:text-4xl">
+            {["Hey", "—", "meet", "Stratabin."].map((word, i) => (
+              <span key={`intro-${i}-${word}`} className="hero-intro-word inline-block overflow-hidden pb-0.5">
+                <span className="hero-intro-word-inner inline-block">{word}</span>
+              </span>
+            ))}
+          </p>
           <p className="hero-tag text-orange-400 text-sm font-semibold tracking-[0.3em] uppercase mb-8">
             From thinking to doing
           </p>
           <h1 className="hero-title font-display text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold leading-[0.95] tracking-tight mb-8">
-            Turn ideas<br />
-            <span className="text-gradient">into action</span>
+            <span className="block overflow-hidden pb-1">
+              <span className="hero-title-line-inner block">Turn ideas</span>
+            </span>
+            <span className="block overflow-hidden pb-1">
+              <span className="hero-title-line-2-inner block text-gradient">into action</span>
+            </span>
           </h1>
           <p className="hero-desc text-lg sm:text-xl text-white/40 max-w-xl mb-12 leading-relaxed">
             A structured workspace designed to turn scattered ideas into clear plans and actionable execution.
