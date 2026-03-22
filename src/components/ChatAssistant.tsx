@@ -91,13 +91,15 @@ export default function ChatAssistant() {
           role="dialog"
           aria-modal="true"
           aria-label="Stratabin guide"
-          className="fixed z-[100] flex flex-col rounded-3xl bg-[#111]/95 backdrop-blur-xl border border-white/[0.08] shadow-[0_24px_80px_-12px_rgba(0,0,0,0.6)] overflow-hidden animate-slide-up
+          /** Lenis (syncTouch) steals touch/wheel unless we opt this subtree out */
+          data-lenis-prevent
+          className="chat-assistant-panel fixed z-[100] flex min-h-0 flex-col overflow-hidden rounded-3xl bg-[#111]/95 backdrop-blur-xl border border-white/[0.08] shadow-[0_24px_80px_-12px_rgba(0,0,0,0.6)] animate-slide-up
             left-3 right-3 w-auto max-w-none
-            max-h-[min(78dvh,calc(100dvh-7rem))]
+            h-[min(78dvh,calc(100dvh-7rem))] max-h-[min(78dvh,calc(100dvh-7rem))]
             bottom-[max(6.25rem,calc(env(safe-area-inset-bottom,0px)+5.5rem))]
-            sm:left-auto sm:right-6 sm:w-[calc(100vw-3rem)] sm:max-w-[420px] sm:max-h-[72vh] sm:bottom-36"
+            sm:left-auto sm:right-6 sm:h-[min(72vh,640px)] sm:max-h-[72vh] sm:w-[calc(100vw-3rem)] sm:max-w-[420px] sm:bottom-36"
         >
-          <div className="relative px-5 py-4 bg-gradient-to-br from-[#1a1a1a] to-[#111] border-b border-white/[0.06]">
+          <div className="relative shrink-0 px-5 py-4 bg-gradient-to-br from-[#1a1a1a] to-[#111] border-b border-white/[0.06]">
             <div className="relative flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 ring-2 ring-orange-500/20 shadow-md">
                 <Image src={EMOJI_URL} alt="Assistant" width={48} height={48} className="object-cover w-full h-full" />
@@ -116,7 +118,9 @@ export default function ChatAssistant() {
             </div>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain p-5 space-y-5 bg-[linear-gradient(180deg,_#0a0a0a_0%,_#0f0f0f_100%)] [-webkit-overflow-scrolling:touch]">
+          <div
+            className="chat-assistant-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain p-5 space-y-5 bg-[linear-gradient(180deg,_#0a0a0a_0%,_#0f0f0f_100%)] [-webkit-overflow-scrolling:touch] touch-pan-y"
+          >
             {messages.length === 0 && (
               <div className="space-y-5">
                 <div className="flex items-start gap-3">
@@ -187,7 +191,7 @@ export default function ChatAssistant() {
           </div>
 
           {messages.length > 0 && (
-            <div className="p-4 pt-2 border-t border-white/[0.06] bg-[#0a0a0a]/80">
+            <div className="shrink-0 p-4 pt-2 border-t border-white/[0.06] bg-[#0a0a0a]/80">
               <p className="text-xs font-medium text-white/25 mb-2">More to explore</p>
               <div className="flex flex-wrap gap-2">
                 {FIXED_QUESTIONS.filter((q) => !revealed.has(q.id)).map((q) => (
