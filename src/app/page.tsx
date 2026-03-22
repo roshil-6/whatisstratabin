@@ -604,8 +604,8 @@ export default function Home() {
 
       {/* Top Header — glass + warm tint to match hero / site atmosphere */}
       <header className="site-header fixed top-0 left-0 right-0 z-40">
-        <div className="relative overflow-hidden border-b border-white/[0.05] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
-          {/* Base wash — fades into page (no solid slab) */}
+        <div className="relative overflow-hidden">
+          {/* Base wash — fades into page (no solid slab); no border/hairline so it blends with content below */}
           <div
             className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050505]/88 via-[#050505]/45 to-transparent backdrop-blur-2xl backdrop-saturate-150"
             aria-hidden
@@ -617,11 +617,6 @@ export default function Home() {
           />
           <div
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_80%_at_80%_-20%,rgba(251,191,36,0.05),transparent_45%)] mix-blend-soft-light"
-            aria-hidden
-          />
-          {/* Hairline edge — dissolves at sides */}
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent"
             aria-hidden
           />
 
@@ -666,7 +661,7 @@ export default function Home() {
           </div>
         </div>
         {navOpen && (
-          <div className="md:hidden relative overflow-hidden border-b border-white/[0.05] border-t border-white/[0.04]">
+          <div className="md:hidden relative overflow-hidden">
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050505]/95 via-[#050505]/85 to-[#050505]/70 backdrop-blur-2xl" aria-hidden />
             <div
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_80%_at_50%_0%,rgba(249,115,22,0.08),transparent_55%)] mix-blend-soft-light"
