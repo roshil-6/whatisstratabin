@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -103,19 +103,45 @@ export default function Home() {
   const [expandedTeamSection, setExpandedTeamSection] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState("hero");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const lenis = new Lenis({
       duration: 1.05,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      /** Without this, touch scrolling stays on the “native” path and scrub timelines (immersive) desync on phones. */
+      syncTouch: true,
+      touchMultiplier: 0.92,
     });
     lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
+
+    ScrollTrigger.scrollerProxy(document.documentElement, {
+      scrollTop(value) {
+        if (arguments.length && typeof value === "number") {
+          lenis.scrollTo(value, { immediate: true });
+        }
+        return lenis.animatedScroll;
+      },
+      getBoundingClientRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
+      },
+    });
+    ScrollTrigger.refresh();
 
     const raf = (time: number) => {
       lenis.raf(time * 1000);
     };
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
+
+    const onVpResize = () => {
+      ScrollTrigger.refresh();
+    };
+    window.visualViewport?.addEventListener("resize", onVpResize);
 
     /** Lenis no-ops when target === targetScroll; nudge so repeated in-page nav always animates. */
     const smoothScrollToHash = (href: string, opts: { offset?: number; duration?: number } = {}) => {
@@ -151,9 +177,27 @@ export default function Home() {
 
     return () => {
       document.removeEventListener("click", handleClick, true);
+      window.visualViewport?.removeEventListener("resize", onVpResize);
       gsap.ticker.remove(raf);
       lenisRef.current = null;
       lenis.destroy();
+      ScrollTrigger.scrollerProxy(document.documentElement, {
+        scrollTop(value) {
+          if (arguments.length && typeof value === "number") {
+            window.scrollTo(0, value);
+          }
+          return window.scrollY || document.documentElement.scrollTop;
+        },
+        getBoundingClientRect() {
+          return {
+            top: 0,
+            left: 0,
+            width: window.innerWidth,
+            height: window.innerHeight,
+          };
+        },
+      });
+      ScrollTrigger.refresh();
     };
   }, []);
 
@@ -239,7 +283,12 @@ export default function Home() {
     };
 
     /** Pinned chapter: progress rail, watermarks, blur-to-sharp type, two-phase 3D, glow + floor parallax. */
-    const setupImmersiveStory = (opts: { end: string; pin: boolean; scrub: number }) => {
+    const setupImmersiveStory = (opts: {
+      end: string;
+      pin: boolean;
+      scrub: number;
+      pinType?: "fixed" | "transform";
+    }) => {
       gsap.set(".immersive-slide-1", { autoAlpha: 1, y: 0 });
       gsap.set([".immersive-slide-2", ".immersive-slide-3"], { autoAlpha: 0, y: 64 });
       gsap.set(".immersive-scroll-hint", { autoAlpha: 0, y: 20 });
@@ -304,6 +353,8 @@ export default function Home() {
           scrub: opts.scrub,
           anticipatePin: 1,
           fastScrollEnd: true,
+          invalidateOnRefresh: true,
+          ...(opts.pinType ? { pinType: opts.pinType } : {}),
         },
       });
 
@@ -399,7 +450,13 @@ export default function Home() {
       });
       mm.add("(max-width: 767px)", () => {
         setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.55 });
-        setupImmersiveStory({ end: "+=100%", pin: false, scrub: 0.5 });
+        // Pin on small screens so scrub has room; transform pins behave better on iOS than fixed.
+        setupImmersiveStory({
+          end: "+=230%",
+          pin: true,
+          scrub: 0.65,
+          pinType: "transform",
+        });
       });
     } else {
       gsap.set(

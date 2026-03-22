@@ -51,7 +51,7 @@ export default function ImmersiveStage() {
     >
       <div
         id="immersive-inner"
-        className="relative flex min-h-screen w-full items-center justify-center overflow-hidden py-20 pt-28 md:py-24 md:pt-32"
+        className="relative flex min-h-[100dvh] min-h-screen w-full items-center justify-center overflow-hidden py-20 pt-28 md:py-24 md:pt-32"
       >
         {/* Film grain + vignette */}
         <div
@@ -154,7 +154,7 @@ export default function ImmersiveStage() {
         {SLIDES.map((slide, i) => (
           <div
             key={`mark-${slide.mark}`}
-            className={`immersive-chapter-mark immersive-chapter-mark-${i + 1} pointer-events-none absolute right-[4%] top-1/2 z-[4] -translate-y-1/2 font-display text-[clamp(6rem,22vw,14rem)] font-bold leading-none text-white/[0.03] select-none md:right-[6%]`}
+            className={`immersive-chapter-mark immersive-chapter-mark-${i + 1} pointer-events-none absolute right-[4%] top-1/2 z-[4] -translate-y-1/2 font-display text-[clamp(4.5rem,36vw,14rem)] font-bold leading-none text-white/[0.025] select-none max-md:top-[42%] md:right-[6%] md:text-[clamp(6rem,22vw,14rem)] md:text-white/[0.03]`}
             aria-hidden
           >
             {slide.mark}
@@ -167,7 +167,7 @@ export default function ImmersiveStage() {
             Stratabin · one workspace
           </p>
 
-          <div className="relative min-h-[240px] md:min-h-[300px]">
+          <div className="relative min-h-[min(52vh,380px)] md:min-h-[300px]">
             {SLIDES.map((slide, i) => (
               <div
                 key={slide.kicker}
