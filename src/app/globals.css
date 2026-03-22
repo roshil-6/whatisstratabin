@@ -3,67 +3,78 @@
 @tailwind utilities;
 
 :root {
-  --background: #fafafa;
-  --foreground: #0a0a0a;
-  --orange: #f97316;
-  --orange-light: #fb923c;
-  --orange-dark: #ea580c;
-  --black: #0a0a0a;
-  --white: #ffffff;
+  --background: #050505;
+  --foreground: #e5e5e5;
+  --accent: #f97316;
+}
+
+html {
+  background: #050505;
+  color-scheme: dark;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: var(--font-dm-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(249, 115, 22, 0.3);
+  color: #fff;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-orange-400 to-orange-600;
-  }
-  .section-header {
-    @apply text-3xl md:text-4xl font-bold tracking-tight;
-    letter-spacing: -0.02em;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-orange-500 to-amber-400;
   }
 }
 
-/* Smooth scroll */
-html {
-  scroll-behavior: smooth;
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
-/* Logo - remove white background via blend */
-.logo-no-white {
-  mix-blend-mode: multiply;
+.reveal-up {
+  will-change: transform, opacity;
 }
 
-/* Decorative gradient orbs */
-.gradient-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.4;
-  pointer-events: none;
+.section-line {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.06), transparent);
 }
 
-/* Transitional cards - 3D perspective, smooth hover */
-.card-transitional {
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    border-color 0.4s ease,
-    background-color 0.4s ease;
-  will-change: transform;
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.4s ease;
 }
-.card-transitional:hover {
-  transform: perspective(1000px) rotateX(-4deg) rotateY(2deg) translateY(-12px) scale(1.02);
-}
-.card-transitional-inner {
-  transform: translateZ(20px);
-  transition: transform 0.3s ease;
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(249, 115, 22, 0.2);
 }

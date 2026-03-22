@@ -12,9 +12,13 @@ const nextConfig = {
         hostname: "thumbs.dreamstime.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "blog.iqmatrix.com",
+        pathname: "/**",
+      },
     ],
   },
-  // Prevent cached HTML from requesting stale chunks
   async headers() {
     return [
       {

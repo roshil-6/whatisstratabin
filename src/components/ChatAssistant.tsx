@@ -11,16 +11,16 @@ const FIXED_QUESTIONS = [
   {
     id: "stratabin",
     label: "Know about Stratabin!",
-    content: "Stratabin is a structured workspace that helps you turn scattered ideas into clear plans and actionable execution. Instead of writing notes that go nowhere, you organize ideas, visualize them as a flow, create tasks, and track progress—all in one place.",
+    content: "Stratabin is a structured workspace that helps you turn scattered ideas into clear plans and actionable execution. Instead of writing notes that go nowhere, you organize ideas, visualize them as a flow, create tasks, and track progress\u2014all in one place.",
     followUps: [
-      { label: "How is it different from note apps?", content: "Most note apps let you write—few help you structure and act. Stratabin combines writing, planning, flow visualization, and task execution in one system. You can break ideas into sections, see how steps connect, and track what you've actually completed." },
-      { label: "What can I do with it?", content: "Create projects, map strategies on a visual canvas, add tasks with checkboxes, use AI (Strab AI) to organize messy thoughts, and collaborate with teams. You get workspaces, timelines, reports, and a community—all in one platform." },
+      { label: "How is it different from note apps?", content: "Most note apps let you write\u2014few help you structure and act. Stratabin combines writing, planning, flow visualization, and task execution in one system. You can break ideas into sections, see how steps connect, and track what you\u2019ve actually completed." },
+      { label: "What can I do with it?", content: "Create projects, map strategies on a visual canvas, add tasks with checkboxes, use AI (Strab AI) to organize messy thoughts, and collaborate with teams. You get workspaces, timelines, reports, and a community\u2014all in one platform." },
     ],
   },
   {
     id: "features",
     label: "What are the main features?",
-    content: "Stratabin offers: (1) Workspaces — Individual (private) or Team (shared with members). Team workspaces include a group chat; anyone who joins via the admin link is auto-added to it. (2) Strategy — Writing planner + flow canvas to map ideas, questions, and decisions. (3) Projects — Organize work with folders, statuses, and progress tracking. (4) AI & Reports — Strab AI helps clarify ideas; reports show progress. (5) Community — Connect with other Stratabin users. (6) Extras — Calendar, tasks, timeline, and more.",
+    content: "Stratabin offers: (1) Workspaces \u2014 Individual (private) or Team (shared with members). Team workspaces include a group chat; anyone who joins via the admin link is auto-added to it. (2) Strategy \u2014 Writing planner + flow canvas to map ideas, questions, and decisions. (3) Projects \u2014 Organize work with folders, statuses, and progress tracking. (4) AI & Reports \u2014 Strab AI helps clarify ideas; reports show progress. (5) Community \u2014 Connect with other Stratabin users. (6) Extras \u2014 Calendar, tasks, timeline, and more.",
   },
   {
     id: "individual",
@@ -31,13 +31,13 @@ const FIXED_QUESTIONS = [
   {
     id: "team",
     label: "Team workspace breakdown",
-    content: "Invite people by email or username, or share an admin-provided link. When someone joins via that link, they are automatically added to the workspace and to its group chat. Admins can invite others and manage daily tasks. Members can work on shared projects and chat together. Choose if the workspace is private or visible to others. Assign projects to team members and add daily tasks with checkboxes.",
+    content: "Invite people by email or username, or share an admin-provided link. When someone joins via that link, they are automatically added to the workspace and to its group chat. Admins can invite others and manage daily tasks. Members can work on shared projects and chat together.",
     video: "/videos/workspace%20stratabin.mp4",
   },
   {
     id: "get-started",
     label: "How do I get started?",
-    content: "Visit stratabin.com to sign up and create your first workspace. Start with an Individual workspace to explore projects, the flow canvas, and tasks. When you're ready, create a Team workspace to collaborate with others.",
+    content: "Visit stratabin.com to sign up and create your first workspace. Start with an Individual workspace to explore projects, the flow canvas, and tasks. When you\u2019re ready, create a Team workspace to collaborate with others.",
   },
 ];
 
@@ -47,16 +47,9 @@ export default function ChatAssistant() {
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
 
   const handleQuestionClick = (q: (typeof FIXED_QUESTIONS)[0]) => {
-    const alreadyRevealed = revealed.has(q.id);
-    if (alreadyRevealed) return;
-
+    if (revealed.has(q.id)) return;
     setRevealed((prev) => new Set(prev).add(q.id));
-    const msg: ChatMessage = {
-      role: "bot",
-      content: q.content,
-      video: q.video,
-      followUps: q.followUps,
-    };
+    const msg: ChatMessage = { role: "bot", content: q.content, video: q.video, followUps: q.followUps };
     setMessages((prev) => [...prev, { role: "user", content: q.label }, msg]);
   };
 
@@ -66,7 +59,6 @@ export default function ChatAssistant() {
 
   return (
     <>
-      {/* Floating button with tag */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
         {!open && (
           <div className="flex items-center gap-2">
@@ -78,49 +70,45 @@ export default function ChatAssistant() {
         )}
         <button
           onClick={() => setOpen(!open)}
-          className="w-20 h-20 rounded-2xl shadow-[0_12px_40px_rgba(249,115,22,0.4)] flex items-center justify-center overflow-hidden bg-white border-2 border-orange-400 ring-4 ring-orange-200/50 hover:scale-110 hover:shadow-[0_16px_48px_rgba(249,115,22,0.5)] hover:border-orange-500 hover:ring-orange-300/60 transition-all duration-300"
+          className="w-20 h-20 rounded-2xl shadow-[0_12px_40px_rgba(249,115,22,0.4)] flex items-center justify-center overflow-hidden bg-[#111] border-2 border-orange-500/50 ring-4 ring-orange-500/10 hover:scale-110 hover:shadow-[0_16px_48px_rgba(249,115,22,0.5)] hover:border-orange-500 hover:ring-orange-500/20 transition-all duration-300"
           aria-label="Open chat assistant"
         >
           <Image src={EMOJI_URL} alt="Chat" width={80} height={80} className="object-cover w-full h-full" />
         </button>
       </div>
 
-      {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-36 right-6 z-50 w-[calc(100vw-3rem)] max-w-[420px] rounded-3xl bg-white/95 backdrop-blur-xl border border-orange-200/30 shadow-[0_24px_80px_-12px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.03)] overflow-hidden flex flex-col max-h-[72vh] animate-slide-up">
-          {/* Header */}
-          <div className="relative px-5 py-4 bg-gradient-to-br from-orange-50 via-amber-50/80 to-orange-100/60 border-b border-orange-200/40">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(249,115,22,0.08)_0%,_transparent_60%)]" />
+        <div className="fixed bottom-36 right-6 z-50 w-[calc(100vw-3rem)] max-w-[420px] rounded-3xl bg-[#111]/95 backdrop-blur-xl border border-white/[0.08] shadow-[0_24px_80px_-12px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col max-h-[72vh] animate-slide-up">
+          <div className="relative px-5 py-4 bg-gradient-to-br from-[#1a1a1a] to-[#111] border-b border-white/[0.06]">
             <div className="relative flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 ring-2 ring-orange-200/50 shadow-md">
+              <div className="w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 ring-2 ring-orange-500/20 shadow-md">
                 <Image src={EMOJI_URL} alt="Assistant" width={48} height={48} className="object-cover w-full h-full" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-black text-base">Stratabin Guide</p>
-                <p className="text-xs text-black/55 truncate">Tap any question to explore</p>
+                <p className="font-bold text-white text-base">Stratabin Guide</p>
+                <p className="text-xs text-white/40 truncate">Tap any question to explore</p>
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="w-9 h-9 rounded-xl flex items-center justify-center bg-black/5 hover:bg-black/10 text-black/60 hover:text-black transition-all duration-200"
+                className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
           </div>
 
-          {/* Messages area */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-[linear-gradient(180deg,_#fafafa_0%,_#f5f5f5_100%)]">
+          <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-[linear-gradient(180deg,_#0a0a0a_0%,_#0f0f0f_100%)]">
             {messages.length === 0 && (
               <div className="space-y-5">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0 text-lg">👋</div>
+                  <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center flex-shrink-0 text-lg">{"\uD83D\uDC4B"}</div>
                   <div>
-                    <p className="text-black/80 text-sm font-medium">Hi! Ask me anything about Stratabin.</p>
-                    <p className="text-black/50 text-xs mt-1">Choose a question below to get started.</p>
+                    <p className="text-white/70 text-sm font-medium">Hi! Ask me anything about Stratabin.</p>
+                    <p className="text-white/30 text-xs mt-1">Choose a question below to get started.</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-xs font-semibold text-black/50 uppercase tracking-wider">Quick questions</p>
+                  <p className="text-xs font-semibold text-white/30 uppercase tracking-wider">Quick questions</p>
                   <div className="flex flex-wrap gap-2">
                     {FIXED_QUESTIONS.map((q) => (
                       <button
@@ -128,8 +116,8 @@ export default function ChatAssistant() {
                         onClick={() => handleQuestionClick(q)}
                         className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-left ${
                           revealed.has(q.id)
-                            ? "bg-orange-200/40 text-orange-800 border-2 border-orange-300/50 shadow-sm"
-                            : "bg-white text-orange-700 border border-orange-200/50 hover:bg-orange-50 hover:border-orange-300/60 hover:shadow-md shadow-sm"
+                            ? "bg-orange-500/15 text-orange-300 border border-orange-500/25"
+                            : "bg-white/[0.04] text-white/60 border border-white/[0.08] hover:bg-white/[0.06] hover:border-white/[0.12] hover:text-white/80"
                         }`}
                       >
                         {q.label}
@@ -142,28 +130,28 @@ export default function ChatAssistant() {
 
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[88%] ${m.role === "user" ? "order-2" : "order-1"}`}>
+                <div className="max-w-[88%]">
                   {m.role === "user" ? (
                     <div className="px-4 py-2.5 rounded-2xl rounded-br-md bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/20">
                       <p className="text-sm font-medium">{m.content}</p>
                     </div>
                   ) : (
-                    <div className="px-4 py-3 rounded-2xl rounded-bl-md bg-white border border-black/6 shadow-sm">
-                      <p className="text-black/85 text-sm leading-relaxed">{m.content}</p>
+                    <div className="px-4 py-3 rounded-2xl rounded-bl-md bg-white/[0.04] border border-white/[0.06]">
+                      <p className="text-white/70 text-sm leading-relaxed">{m.content}</p>
                       {m.video && (
-                        <div className="rounded-xl overflow-hidden border border-black/8 bg-black/5 aspect-video mt-3 shadow-inner">
+                        <div className="rounded-xl overflow-hidden border border-white/[0.08] bg-black aspect-video mt-3">
                           <video src={m.video} controls className="w-full h-full object-cover" playsInline>
                             Your browser does not support the video tag.
                           </video>
                         </div>
                       )}
                       {m.followUps && m.followUps.length > 0 && (
-                        <div className="flex flex-wrap gap-2 pt-3 mt-2 border-t border-black/5">
+                        <div className="flex flex-wrap gap-2 pt-3 mt-2 border-t border-white/[0.06]">
                           {m.followUps.map((f, j) => (
                             <button
                               key={j}
                               onClick={() => handleFollowUp(f.label, f.content)}
-                              className="px-3 py-2 rounded-lg text-xs font-medium bg-orange-50 text-orange-700 border border-orange-200/50 hover:bg-orange-100 hover:border-orange-300/60 transition-colors"
+                              className="px-3 py-2 rounded-lg text-xs font-medium bg-orange-500/10 text-orange-400 border border-orange-500/15 hover:bg-orange-500/20 transition-colors"
                             >
                               {f.label}
                             </button>
@@ -178,14 +166,14 @@ export default function ChatAssistant() {
           </div>
 
           {messages.length > 0 && (
-            <div className="p-4 pt-2 border-t border-black/5 bg-white/80">
-              <p className="text-xs font-medium text-black/45 mb-2">More to explore</p>
+            <div className="p-4 pt-2 border-t border-white/[0.06] bg-[#0a0a0a]/80">
+              <p className="text-xs font-medium text-white/25 mb-2">More to explore</p>
               <div className="flex flex-wrap gap-2">
                 {FIXED_QUESTIONS.filter((q) => !revealed.has(q.id)).map((q) => (
                   <button
                     key={q.id}
                     onClick={() => handleQuestionClick(q)}
-                    className="px-3 py-2 rounded-lg text-xs font-medium bg-orange-50/80 text-orange-700 border border-orange-200/40 hover:bg-orange-100 hover:border-orange-200/60 transition-colors"
+                    className="px-3 py-2 rounded-lg text-xs font-medium bg-white/[0.04] text-white/50 border border-white/[0.06] hover:bg-white/[0.06] hover:text-white/70 transition-colors"
                   >
                     {q.label}
                   </button>
