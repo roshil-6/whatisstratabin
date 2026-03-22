@@ -260,9 +260,9 @@ export default function Home() {
           end: opts.end,
           pin: opts.pin,
           scrub: opts.scrub,
-          anticipatePin: 1,
+          anticipatePin: opts.pin ? 1 : 0,
           fastScrollEnd: true,
-          ...(opts.pinType ? { pinType: opts.pinType } : {}),
+          ...(opts.pin && opts.pinType ? { pinType: opts.pinType } : {}),
         },
       });
 
@@ -287,7 +287,7 @@ export default function Home() {
       return tl;
     };
 
-    /** Pinned chapter: progress rail, watermarks, blur-to-sharp type, two-phase 3D, glow + floor parallax. */
+    /** Scroll-scrubbed chapter (no pin — page keeps moving naturally). */
     const setupImmersiveStory = (opts: {
       end: string;
       pin: boolean;
@@ -313,41 +313,39 @@ export default function Home() {
       });
       gsap.set(".immersive-floor", { opacity: 0.28, y: 24 });
 
-      if (opts.pin) {
-        gsap.set(".immersive-scene-rotate", {
-          transformPerspective: 1600,
-          rotationY: -32,
-          rotationX: 8,
-          rotationZ: -2,
-          z: -220,
-          force3D: true,
-        });
-        gsap.set(".immersive-card-a", {
-          x: -96,
-          y: 52,
-          z: 145,
-          rotationY: -46,
-          transformOrigin: "50% 50%",
-          force3D: true,
-        });
-        gsap.set(".immersive-card-b", {
-          x: 0,
-          y: 0,
-          z: 28,
-          rotationY: 0,
-          scale: 1.06,
-          transformOrigin: "50% 50%",
-          force3D: true,
-        });
-        gsap.set(".immersive-card-c", {
-          x: 102,
-          y: -44,
-          z: -95,
-          rotationY: 48,
-          transformOrigin: "50% 50%",
-          force3D: true,
-        });
-      }
+      gsap.set(".immersive-scene-rotate", {
+        transformPerspective: 1600,
+        rotationY: -32,
+        rotationX: 8,
+        rotationZ: -2,
+        z: -220,
+        force3D: true,
+      });
+      gsap.set(".immersive-card-a", {
+        x: -96,
+        y: 52,
+        z: 145,
+        rotationY: -46,
+        transformOrigin: "50% 50%",
+        force3D: true,
+      });
+      gsap.set(".immersive-card-b", {
+        x: 0,
+        y: 0,
+        z: 28,
+        rotationY: 0,
+        scale: 1.06,
+        transformOrigin: "50% 50%",
+        force3D: true,
+      });
+      gsap.set(".immersive-card-c", {
+        x: 102,
+        y: -44,
+        z: -95,
+        rotationY: 48,
+        transformOrigin: "50% 50%",
+        force3D: true,
+      });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -356,10 +354,10 @@ export default function Home() {
           end: opts.end,
           pin: opts.pin,
           scrub: opts.scrub,
-          anticipatePin: 1,
+          anticipatePin: opts.pin ? 1 : 0,
           fastScrollEnd: true,
           invalidateOnRefresh: true,
-          ...(opts.pinType ? { pinType: opts.pinType } : {}),
+          ...(opts.pin && opts.pinType ? { pinType: opts.pinType } : {}),
         },
       });
 
@@ -403,44 +401,42 @@ export default function Home() {
         .to(".immersive-step-3", { opacity: 1, duration: 0.2 }, 0.48)
         .to(".immersive-scroll-hint", { autoAlpha: 1, y: 0, duration: 0.28, ease: "power2.out" }, 0.74);
 
-      if (opts.pin) {
-        tl.to(
-          ".immersive-scene-rotate",
-          { rotationY: 8, rotationX: -14, z: -40, rotationZ: 1, duration: 0.52, ease: "none" },
-          0
-        ).to(
-          ".immersive-scene-rotate",
-          { rotationY: 44, rotationX: -5, z: 95, rotationZ: -3, duration: 0.48, ease: "none" },
-          0.52
-        );
-        tl.to(
-          ".immersive-card-a",
-          { x: -152, y: 22, z: 240, rotationY: -62, duration: 0.52, ease: "none" },
-          0
-        ).to(
-          ".immersive-card-a",
-          { x: -118, y: 8, z: 180, rotationY: -48, duration: 0.48, ease: "none" },
-          0.52
-        );
-        tl.to(
-          ".immersive-card-b",
-          { rotationY: 22, z: 130, y: -22, scale: 0.98, duration: 0.52, ease: "none" },
-          0
-        ).to(
-          ".immersive-card-b",
-          { rotationY: 8, z: 95, y: -8, scale: 1, duration: 0.48, ease: "none" },
-          0.52
-        );
-        tl.to(
-          ".immersive-card-c",
-          { x: 138, y: 36, z: -150, rotationY: 38, duration: 0.52, ease: "none" },
-          0
-        ).to(
-          ".immersive-card-c",
-          { x: 108, y: 18, z: -105, rotationY: 28, duration: 0.48, ease: "none" },
-          0.52
-        );
-      }
+      tl.to(
+        ".immersive-scene-rotate",
+        { rotationY: 8, rotationX: -14, z: -40, rotationZ: 1, duration: 0.52, ease: "none" },
+        0
+      ).to(
+        ".immersive-scene-rotate",
+        { rotationY: 44, rotationX: -5, z: 95, rotationZ: -3, duration: 0.48, ease: "none" },
+        0.52
+      );
+      tl.to(
+        ".immersive-card-a",
+        { x: -152, y: 22, z: 240, rotationY: -62, duration: 0.52, ease: "none" },
+        0
+      ).to(
+        ".immersive-card-a",
+        { x: -118, y: 8, z: 180, rotationY: -48, duration: 0.48, ease: "none" },
+        0.52
+      );
+      tl.to(
+        ".immersive-card-b",
+        { rotationY: 22, z: 130, y: -22, scale: 0.98, duration: 0.52, ease: "none" },
+        0
+      ).to(
+        ".immersive-card-b",
+        { rotationY: 8, z: 95, y: -8, scale: 1, duration: 0.48, ease: "none" },
+        0.52
+      );
+      tl.to(
+        ".immersive-card-c",
+        { x: 138, y: 36, z: -150, rotationY: 38, duration: 0.52, ease: "none" },
+        0
+      ).to(
+        ".immersive-card-c",
+        { x: 108, y: 18, z: -105, rotationY: 28, duration: 0.48, ease: "none" },
+        0.52
+      );
 
       return tl;
     };
@@ -450,27 +446,13 @@ export default function Home() {
     if (!prefersReduced) {
       mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
-        setupHeroScrollStory({ end: "+=95%", pin: true, scrub: 0.35 });
-        setupImmersiveStory({ end: "+=150%", pin: true, scrub: 0.28 });
+        /** No pin: continuous scroll; scrub over hero / immersive passing the viewport */
+        setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.45 });
+        setupImmersiveStory({ end: "bottom top", pin: false, scrub: 0.35 });
       });
       mm.add("(max-width: 767px)", () => {
-        /**
-         * Pin hero on mobile too: without pin, end "bottom top" scrubs against a moving section—
-         * one flick scrolls the hero away before “Turn ideas into action” reaches full visibility.
-         * Transform pin matches immersive (better on iOS than position: fixed).
-         */
-        setupHeroScrollStory({
-          end: "+=95%",
-          pin: true,
-          scrub: 0.42,
-          pinType: "transform",
-        });
-        setupImmersiveStory({
-          end: "+=230%",
-          pin: true,
-          scrub: 0.65,
-          pinType: "transform",
-        });
+        setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.5 });
+        setupImmersiveStory({ end: "bottom top", pin: false, scrub: 0.55 });
       });
     } else {
       gsap.set(
