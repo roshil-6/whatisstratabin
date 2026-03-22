@@ -98,7 +98,6 @@ export default function Home() {
   const lenisRef = useRef<Lenis | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [navOpen, setNavOpen] = useState(false);
-  const [expandedMission, setExpandedMission] = useState<string | null>(null);
   const [expandedPersonalFeatures, setExpandedPersonalFeatures] = useState(false);
   const [expandedTeamSection, setExpandedTeamSection] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState("hero");
@@ -174,6 +173,17 @@ export default function Home() {
     };
 
     document.addEventListener("click", handleClick, true);
+
+    /** Deep links / refresh with hash — same one-page behavior as e.g. davidlangarica.dev/#home */
+    const initialHash = typeof window !== "undefined" ? window.location.hash : "";
+    if (initialHash && initialHash.length > 1) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          smoothScrollToHash(initialHash, { offset: -80, duration: 1.2 });
+          ScrollTrigger.refresh();
+        });
+      });
+    }
 
     return () => {
       document.removeEventListener("click", handleClick, true);
@@ -509,30 +519,7 @@ export default function Home() {
 
   useEffect(() => {
     ScrollTrigger.refresh();
-  }, [expandedMission, expandedPersonalFeatures, expandedTeamSection]);
-
-  useEffect(() => {
-    if (!expandedMission) return;
-    const id = expandedMission;
-    const t = setTimeout(() => {
-      const el = document.getElementById(id);
-      const lenis = lenisRef.current;
-      if (!el || !lenis) return;
-      const rect = el.getBoundingClientRect();
-      const dest = rect.top + lenis.animatedScroll - 100;
-      const rounded = Math.round(dest);
-      if (Math.abs(rounded - Math.round(lenis.targetScroll)) < 2) {
-        const nudge = rounded >= lenis.limit - 2 ? -2 : 2;
-        lenis.scrollTo(rounded + nudge, { duration: 0.25, easing: (t2: number) => t2 });
-        requestAnimationFrame(() => {
-          lenisRef.current?.scrollTo(el, { offset: -100, duration: 1.2 });
-        });
-        return;
-      }
-      lenis.scrollTo(el, { offset: -100, duration: 1.2 });
-    }, 100);
-    return () => clearTimeout(t);
-  }, [expandedMission]);
+  }, [expandedPersonalFeatures, expandedTeamSection]);
 
   return (
     <div ref={mainRef} className="min-h-screen bg-[#050505] text-white">
@@ -700,7 +687,6 @@ export default function Home() {
               <CardTilt
                 key={card.id}
                 href={card.anchor}
-                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); setExpandedMission(expandedMission === card.id ? null : card.id); }}
                 className="reveal-up group block p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-orange-500/30 hover:bg-white/[0.04] transition-all duration-500 cursor-pointer"
                 maxTilt={8}
               >
@@ -716,14 +702,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 01 \u2014 Structured thinking */}
-      {expandedMission === "structured-thinking" && (
+      {/* 01 — Structured thinking (always mounted so #anchors + Lenis smooth scroll work) */}
         <section id="structured-thinking" className="py-24 px-6 lg:px-24 scroll-mt-24 border-t border-white/[0.04]">
           <div className="max-w-5xl mx-auto lg:pl-16">
-            <button onClick={() => setExpandedMission(null)} className="mb-8 inline-flex items-center gap-2 text-orange-400 font-medium text-sm hover:text-orange-300 transition-colors">
+            <a href="#mission" className="mb-8 inline-flex items-center gap-2 text-orange-400 font-medium text-sm hover:text-orange-300 transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-              Back
-            </button>
+              Back to Mission
+            </a>
             <div className="mb-8">
               <span className="text-4xl font-display font-bold text-orange-500/30">01</span>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-white mt-2 mb-2">Structured thinking</h2>
@@ -751,16 +736,14 @@ export default function Home() {
             </div>
           </div>
         </section>
-      )}
 
-      {/* 02 \u2014 Action-oriented */}
-      {expandedMission === "action-oriented" && (
+      {/* 02 — Action-oriented */}
         <section id="action-oriented" className="py-24 px-6 lg:px-24 scroll-mt-24 border-t border-white/[0.04]">
           <div className="max-w-5xl mx-auto lg:pl-16">
-            <button onClick={() => setExpandedMission(null)} className="mb-8 inline-flex items-center gap-2 text-orange-400 font-medium text-sm hover:text-orange-300 transition-colors">
+            <a href="#mission" className="mb-8 inline-flex items-center gap-2 text-orange-400 font-medium text-sm hover:text-orange-300 transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-              Back
-            </button>
+              Back to Mission
+            </a>
             <div className="mb-8">
               <span className="text-4xl font-display font-bold text-orange-500/30">02</span>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-white mt-2 mb-2">Action-oriented</h2>
@@ -790,16 +773,14 @@ export default function Home() {
             </div>
           </div>
         </section>
-      )}
 
-      {/* 03 \u2014 Solo or team */}
-      {expandedMission === "solo-or-team" && (
+      {/* 03 — Solo or team */}
         <section id="solo-or-team" className="py-24 px-6 lg:px-24 scroll-mt-24 border-t border-white/[0.04]">
           <div className="max-w-5xl mx-auto lg:pl-16">
-            <button onClick={() => setExpandedMission(null)} className="mb-8 inline-flex items-center gap-2 text-orange-400 font-medium text-sm hover:text-orange-300 transition-colors">
+            <a href="#mission" className="mb-8 inline-flex items-center gap-2 text-orange-400 font-medium text-sm hover:text-orange-300 transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-              Back
-            </button>
+              Back to Mission
+            </a>
             <div className="mb-8">
               <span className="text-4xl font-display font-bold text-orange-500/30">03</span>
               <h2 className="font-display text-3xl md:text-4xl font-bold text-white mt-2 mb-2">Solo or team</h2>
@@ -830,7 +811,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-      )}
 
       <div className="section-line" />
 
