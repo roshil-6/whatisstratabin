@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AboutParticlesWrapper } from "@/components/SceneWrapper";
 import ManIcon from "@/components/ManIcon";
 import ChatAssistant from "@/components/ChatAssistant";
+import CardTilt from "@/components/CardTilt";
 
 const FAQ_ITEMS = [
   { q: "What is Stratabin?", a: "Stratabin is a structured workspace that helps you turn scattered ideas into clear plans and actionable execution. Instead of writing notes that go nowhere, you organize ideas, visualize them as a flow, create tasks, and track progress—all in one place." },
@@ -37,15 +38,34 @@ const PERSONAL_FEATURES = [
   { title: "Reports", desc: "AI-generated snapshot: canvas summary, tasks, timeline, risks, and suggested next actions for any project.", icon: "📊" },
 ];
 
-const TEAM_FEATURES = [
-  { title: "Shared workspace", desc: "Invite members by email or username. Work on shared projects. Choose private or public visibility.", icon: "◈" },
+const TEAM_SECTIONS = [
+  {
+    id: "collab",
+    title: "Collaboration",
+    desc: "Shared workspaces, group chat, daily tasks, and project management.",
+    image: "/stratabin-team-workspace.png",
+    features: [
+      { title: "Shared workspace", desc: "Invite members by email or username. Work on shared projects. Choose private or public visibility.", icon: "◈" },
   { title: "Group chat", desc: "Join via admin link and you’re auto-added. See typing indicators, unread counts, and stay in sync.", icon: "💬" },
   { title: "Daily tasks", desc: "Add tasks for the day, assign to members or yourself. Checkboxes to track. Admins manage everyone; members see their own.", icon: "☑" },
   { title: "Roles & permissions", desc: "Admin or Member. Admins invite, assign, manage daily tasks. Members collaborate on shared projects.", icon: "👤" },
-  { title: "Project assignment", desc: "Assign projects to team members. See who owns what. Merge projects when paths converge.", icon: "➜" },
-  { title: "Activity feed", desc: "Recent updates across the workspace. Who did what, when. Stay in the loop without extra meetings.", icon: "📡" },
-  { title: "Community & discovery", desc: "Find people by username. Open profiles, send DMs, invite to workspaces. Browse public projects for inspiration.", icon: "🔍" },
-  { title: "Visibility control", desc: "Workspaces can be private or public. Control what others see. Share when you’re ready.", icon: "🔒" },
+      { title: "Project assignment", desc: "Assign projects to team members. See who owns what. Merge projects when paths converge.", icon: "➜" },
+      { title: "Activity feed", desc: "Recent updates across the workspace. Who did what, when. Stay in the loop without extra meetings.", icon: "📡" },
+    ],
+  },
+  {
+    id: "community",
+    title: "Community & Connect",
+    desc: "Discover people, open profiles, chat, and control visibility.",
+    image: "/stratabin-chat.png",
+    features: [
+      { title: "Community & discovery", desc: "Find people by username. Open profiles, send DMs, invite to workspaces. Browse public projects for inspiration.", icon: "🔍" },
+      { title: "Profiles", desc: "LinkedIn-style profiles focused on projects and work.", icon: "👤" },
+      { title: "Chat", desc: "DM any team member or connect via workspaces.", icon: "💬" },
+      { title: "Join flow", desc: "Workspace ID or join link to onboard new members.", icon: "🔗" },
+      { title: "Visibility control", desc: "Workspaces can be private or public. Control what others see. Share when you're ready.", icon: "🔒" },
+    ],
+  },
 ];
 
 const NAV_LINKS = [
@@ -68,19 +88,12 @@ export default function Home() {
   const [navOpen, setNavOpen] = useState(false);
   const featuresRef = useRef<HTMLElement>(null);
   const [featuresVisible, setFeaturesVisible] = useState(false);
-  const [visibleSections, setVisibleSections] = useState<Record<string, boolean>>({});
+  const [expandedMission, setExpandedMission] = useState<string | null>(null);
+  const [expandedTeamSection, setExpandedTeamSection] = useState<string | null>(null);
   useEffect(() => {
     const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setFeaturesVisible(true); }, { threshold: 0.1 });
     const el = featuresRef.current;
     if (el) obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  useEffect(() => {
-    const ids = ["structured-thinking", "action-oriented", "solo-or-team"];
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) setVisibleSections((s) => ({ ...s, [e.target.id]: true })); });
-    }, { threshold: 0.15 });
-    ids.forEach((id) => { const el = document.getElementById(id); if (el) obs.observe(el); });
     return () => obs.disconnect();
   }, []);
 
@@ -154,44 +167,47 @@ export default function Home() {
             Beyond note-taking — <span className="text-orange-600">our mission</span>
           </h2>
           <p className="text-black/60 max-w-2xl mb-16 text-lg">We help you move from thinking to doing.</p>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 [perspective:1000px]">
             {MISSION_CARDS.map((card, i) => (
-              <a
+              <CardTilt
                 key={card.id}
                 href={card.anchor}
-                className="group block p-8 rounded-2xl bg-white/60 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/60 hover:bg-orange-50/40 hover:shadow-drop hover:-translate-y-2 hover:scale-[1.02] transition-all duration-500 ease-out opacity-0 animate-fade-in"
-                style={{ animationDelay: `${(i + 1) * 150}ms`, animationFillMode: "forwards" }}
+                onClick={() => setExpandedMission(card.id)}
+                className="group block p-8 rounded-2xl bg-white/60 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/60 hover:bg-orange-50/40 hover:shadow-drop-lg opacity-0 animate-fade-in will-change-transform"
+                style={{ animationDelay: `${(i + 1) * 150}ms`, animationFillMode: "forwards" } as React.CSSProperties}
+                maxTilt={10}
               >
-                <span className="text-3xl font-display font-bold text-orange-500/60 group-hover:text-orange-600 transition-colors">0{i + 1}</span>
-                <h3 className="mt-4 font-display text-xl font-bold text-black mb-3 group-hover:text-orange-600 transition-colors">{card.title}</h3>
+                <span className="text-3xl font-display font-bold text-orange-500/60 group-hover:text-orange-600 transition-colors duration-300">0{i + 1}</span>
+                <h3 className="mt-4 font-display text-xl font-bold text-black mb-3 group-hover:text-orange-600 transition-colors duration-300">{card.title}</h3>
                 <p className="text-black/70 leading-relaxed mb-4">{card.desc}</p>
                 <span className="inline-flex items-center gap-1.5 text-orange-500 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Learn more <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                 </span>
-              </a>
+              </CardTilt>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 01 — Structured thinking (detailed) */}
+      {/* 01 — Structured thinking (expand on touch) */}
       <section id="structured-thinking" className="py-24 px-6 bg-gradient-to-b from-orange-50/30 to-white scroll-mt-24">
         <div className="max-w-5xl mx-auto">
-          <span className="text-4xl font-display font-bold text-orange-500/50">01</span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-6">Structured thinking</h2>
-          <p className="text-lg text-black/80 mb-10 max-w-2xl">Move from messy notes to a clear, visible strategy.</p>
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3]">
-              <Image
-                src="https://img.freepik.com/free-photo/businesswoman-writing-whiteboard-office_1098-1783.jpg?w=800&q=80"
-                alt="Structured thinking - mind map and strategy"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+          <button onClick={() => setExpandedMission(expandedMission === "structured-thinking" ? null : "structured-thinking")} className="w-full text-left">
+            <span className="text-4xl font-display font-bold text-orange-500/50">01</span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-2">Structured thinking</h2>
+            <p className="text-lg text-black/80 max-w-2xl">Move from messy notes to a clear, visible strategy.</p>
+            <span className="inline-flex items-center gap-2 mt-4 text-orange-500 font-medium text-sm">
+              {expandedMission === "structured-thinking" ? "Tap to collapse" : "Tap to reveal details"}
+              <svg className={`w-4 h-4 transition-transform ${expandedMission === "structured-thinking" ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </button>
+          {expandedMission === "structured-thinking" && (
+          <div className="mt-12 grid lg:grid-cols-2 gap-12 items-center mb-16 animate-fade-in">
+            <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3] animate-slide-up" style={{ animationDelay: "0ms", animationFillMode: "forwards" } as React.CSSProperties}>
+              <Image src="/stratabin-split-workspace.png" alt="Writing and flow canvas" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
-            <div className="space-y-4">
+            <div className="space-y-4 [perspective:800px]">
               {[
                 { title: "Visual flow", desc: "Ideas live on a canvas as nodes, with connections so you see relationships (e.g. “Marketing” → “Launch plan” → “Tasks”)." },
                 { title: "Organized writing", desc: "Long-form editor (Writing Section) lets you break thoughts into sections, which you can map onto the canvas." },
@@ -199,25 +215,33 @@ export default function Home() {
                 { title: "Strategy map", desc: "Nodes map your logic; writing section holds the explanation." },
                 { title: "No more scatter", desc: "One place to capture ideas, structure them, and see how they connect." },
               ].map((item, i) => (
-                <div key={i} className={`p-5 rounded-xl bg-white/80 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/50 hover:shadow-drop transition-all duration-400 ${visibleSections["structured-thinking"] ? "animate-slide-up" : "opacity-0"}`} style={visibleSections["structured-thinking"] ? { animationDelay: `${i * 80}ms`, animationFillMode: "forwards" } : undefined}>
+                <div key={i} className="card-transitional p-5 rounded-xl bg-white/80 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/50 hover:shadow-drop animate-slide-up" style={{ animationDelay: `${(i + 1) * 80}ms`, animationFillMode: "forwards" } as React.CSSProperties}>
                   <h4 className="font-display font-bold text-black mb-1">{item.title}</h4>
                   <p className="text-black/65 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
-          <p className="text-orange-600 font-semibold">Summary: Visual structure for ideas instead of scattered notes.</p>
+          )}
+          {expandedMission === "structured-thinking" && <p className="text-orange-600 font-semibold">Summary: Visual structure for ideas instead of scattered notes.</p>}
         </div>
       </section>
 
-      {/* 02 — Action-oriented (detailed) */}
+      {/* 02 — Action-oriented (expand on touch) */}
       <section id="action-oriented" className="py-24 px-6 bg-white scroll-mt-24">
         <div className="max-w-5xl mx-auto">
-          <span className="text-4xl font-display font-bold text-orange-500/50">02</span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-6">Action-oriented</h2>
-          <p className="text-lg text-black/80 mb-10 max-w-2xl">Turn strategy into execution, in one place.</p>
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            <div className="space-y-4 order-2 lg:order-1">
+          <button onClick={() => setExpandedMission(expandedMission === "action-oriented" ? null : "action-oriented")} className="w-full text-left">
+            <span className="text-4xl font-display font-bold text-orange-500/50">02</span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-2">Action-oriented</h2>
+            <p className="text-lg text-black/80 max-w-2xl">Turn strategy into execution, in one place.</p>
+            <span className="inline-flex items-center gap-2 mt-4 text-orange-500 font-medium text-sm">
+              {expandedMission === "action-oriented" ? "Tap to collapse" : "Tap to reveal details"}
+              <svg className={`w-4 h-4 transition-transform ${expandedMission === "action-oriented" ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </button>
+          {expandedMission === "action-oriented" && (
+          <div className="mt-12 grid lg:grid-cols-2 gap-12 items-center mb-16 animate-fade-in">
+            <div className="space-y-4 order-2 lg:order-1 [perspective:800px]">
               {[
                 { title: "Tasks", desc: "To-do lists tied to each project; completion tracked and shown on cards." },
                 { title: "Timelines", desc: "Timeline view for phases, milestones, and dependencies." },
@@ -227,45 +251,41 @@ export default function Home() {
                 { title: "STRAB AI", desc: "Analysis, reports, and recommendations to spot gaps and next steps." },
                 { title: "Reports", desc: "AI-powered project reports, insights, and recommendations." },
               ].map((item, i) => (
-                <div key={i} className={`p-5 rounded-xl bg-white border border-black/[0.04] hover:border-orange-200/50 hover:shadow-drop hover:-translate-y-0.5 transition-all duration-400 ${visibleSections["action-oriented"] ? "animate-slide-up" : "opacity-0"}`} style={visibleSections["action-oriented"] ? { animationDelay: `${i * 60}ms`, animationFillMode: "forwards" } : undefined}>
+                <div key={i} className="card-transitional p-5 rounded-xl bg-white border border-black/[0.04] hover:border-orange-200/50 hover:shadow-drop animate-slide-up" style={{ animationDelay: `${(i + 1) * 60}ms`, animationFillMode: "forwards" } as React.CSSProperties}>
                   <h4 className="font-display font-bold text-black mb-1">{item.title}</h4>
                   <p className="text-black/65 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
-            <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3] order-1 lg:order-2">
-              <Image
-                src="https://img.freepik.com/free-photo/woman-writing-notebook-desk_23-2148192381.jpg?w=800&q=80"
-                alt="Action-oriented - task execution"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+            <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3] order-1 lg:order-2 animate-slide-up" style={{ animationDelay: "0ms", animationFillMode: "forwards" } as React.CSSProperties}>
+              <Image src="/stratabin-dashboard.png" alt="Dashboard and task execution" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
           </div>
-          <p className="text-orange-600 font-semibold">Summary: Built-in tasks, timelines, calendar, and execution tracking.</p>
+          )}
+          {expandedMission === "action-oriented" && <p className="text-orange-600 font-semibold">Summary: Built-in tasks, timelines, calendar, and execution tracking.</p>}
         </div>
       </section>
 
-      {/* 03 — Solo or team (detailed) */}
+      {/* 03 — Solo or team (expand on touch) */}
       <section id="solo-or-team" className="py-24 px-6 bg-gradient-to-b from-[#fafafa] to-orange-50/20 scroll-mt-24">
         <div className="max-w-5xl mx-auto">
-          <span className="text-4xl font-display font-bold text-orange-500/50">03</span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-6">Solo or team</h2>
-          <p className="text-lg text-black/80 mb-10 max-w-2xl">Use the same system for personal work and team collaboration.</p>
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3]">
-              <Image
-                src="https://img.freepik.com/free-photo/diverse-businesspeople-having-meeting_53876-101845.jpg?w=800&q=80"
-                alt="Solo or team - collaboration"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+          <button onClick={() => setExpandedMission(expandedMission === "solo-or-team" ? null : "solo-or-team")} className="w-full text-left">
+            <span className="text-4xl font-display font-bold text-orange-500/50">03</span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-2">Solo or team</h2>
+            <p className="text-lg text-black/80 max-w-2xl">Use the same system for personal work and team collaboration.</p>
+            <span className="inline-flex items-center gap-2 mt-4 text-orange-500 font-medium text-sm">
+              {expandedMission === "solo-or-team" ? "Tap to collapse" : "Tap to reveal details"}
+              <svg className={`w-4 h-4 transition-transform ${expandedMission === "solo-or-team" ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+            </span>
+          </button>
+          {expandedMission === "solo-or-team" && (
+          <div className="mt-12 grid lg:grid-cols-2 gap-12 items-center mb-16 animate-fade-in">
+            <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3] animate-slide-up" style={{ animationDelay: "0ms", animationFillMode: "forwards" } as React.CSSProperties}>
+              <Image src="/stratabin-team-workspace.png" alt="Team workspace" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid sm:grid-cols-2 gap-4 [perspective:800px]">
               {[
                 { title: "Solo", desc: "Personal projects, folders, and a clean workspace." },
                 { title: "Team workspaces", desc: "Create workspaces, invite members, and assign roles (e.g. admin)." },
@@ -276,14 +296,15 @@ export default function Home() {
                 { title: "Chat", desc: "DM any team member or connect via workspaces." },
                 { title: "Join flow", desc: "Workspace ID or join link to onboard new members." },
               ].map((item, i) => (
-                <div key={i} className={`p-4 rounded-xl bg-white/90 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/50 hover:shadow-drop transition-all duration-400 ${visibleSections["solo-or-team"] ? "animate-card-in" : "opacity-0"}`} style={visibleSections["solo-or-team"] ? { animationDelay: `${i * 70}ms`, animationFillMode: "forwards" } : undefined}>
+                <div key={i} className="card-transitional p-4 rounded-xl bg-white/90 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/50 hover:shadow-drop animate-card-in" style={{ animationDelay: `${(i + 1) * 70}ms`, animationFillMode: "forwards" } as React.CSSProperties}>
                   <h4 className="font-display font-bold text-black text-sm mb-1">{item.title}</h4>
                   <p className="text-black/65 text-xs leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
-          <p className="text-orange-600 font-semibold">Summary: Works for individuals and teams with shared workspaces, chat, and community.</p>
+          )}
+          {expandedMission === "solo-or-team" && <p className="text-orange-600 font-semibold">Summary: Works for individuals and teams with shared workspaces, chat, and community.</p>}
         </div>
       </section>
 
@@ -348,12 +369,13 @@ export default function Home() {
               Personal Workspace
             </h3>
             <p className="text-black/60 mb-8 max-w-xl">Your private space. Organize ideas, structure plans, and execute—all yours.</p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 [perspective:1000px]">
               {PERSONAL_FEATURES.map((f, i) => (
-                <div
+                <CardTilt
                   key={i}
-                  className={`group relative p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-black/[0.06] shadow-drop hover:shadow-drop-lg hover:-translate-y-2 hover:scale-[1.02] transition-all duration-400 ease-out ${featuresVisible ? "animate-card-in" : "opacity-0"}`}
+                  className={`group relative p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-black/[0.06] shadow-drop hover:shadow-drop-lg ${featuresVisible ? "animate-card-in" : "opacity-0"}`}
                   style={featuresVisible ? { animationDelay: `${i * 60}ms`, animationFillMode: "forwards" } : undefined}
+                  maxTilt={6}
                 >
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
                   <span className="inline-flex w-11 h-11 rounded-xl bg-orange-100 text-orange-600 items-center justify-center font-bold text-lg mb-4 group-hover:scale-110 transition-transform duration-400">
@@ -361,31 +383,57 @@ export default function Home() {
                   </span>
                   <h4 className="font-display font-bold text-black mb-2 group-hover:text-orange-600 transition-colors duration-300">{f.title}</h4>
                   <p className="text-black/65 text-sm leading-relaxed">{f.desc}</p>
-                </div>
+                </CardTilt>
               ))}
             </div>
           </div>
 
-          {/* Team Workspace */}
+          {/* Team Workspace - section-wise, expand on touch */}
           <div>
             <h3 className="font-display text-xl md:text-2xl font-bold text-black mb-2 flex items-center gap-3">
               <span className="w-10 h-10 rounded-xl bg-orange-200/60 text-orange-600 flex items-center justify-center font-bold text-sm">◈</span>
               Team Workspace
             </h3>
-            <p className="text-black/60 mb-8 max-w-xl">Share, collaborate, and ship together. Invite your team and build in sync.</p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {TEAM_FEATURES.map((f, i) => (
-                <div
-                  key={i}
-                  className={`group relative p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-black/[0.06] shadow-drop hover:shadow-drop-lg hover:-translate-y-2 hover:scale-[1.02] transition-all duration-400 ease-out ${featuresVisible ? "animate-card-in" : "opacity-0"}`}
-                  style={featuresVisible ? { animationDelay: `${(PERSONAL_FEATURES.length + i) * 60}ms`, animationFillMode: "forwards" } : undefined}
-                >
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-                  <span className="inline-flex w-11 h-11 rounded-xl bg-orange-100 text-orange-600 items-center justify-center font-bold text-lg mb-4 group-hover:scale-110 transition-transform duration-400">
-                    {f.icon}
-                  </span>
-                  <h4 className="font-display font-bold text-black mb-2 group-hover:text-orange-600 transition-colors duration-300">{f.title}</h4>
-                  <p className="text-black/65 text-sm leading-relaxed">{f.desc}</p>
+            <p className="text-black/60 mb-8 max-w-xl">Share, collaborate, and ship together. Tap a section to reveal.</p>
+            <div className="space-y-6">
+              {TEAM_SECTIONS.map((sec) => (
+                <div key={sec.id} className="rounded-2xl border border-black/[0.06] overflow-hidden">
+                  <button
+                    onClick={() => setExpandedTeamSection(expandedTeamSection === sec.id ? null : sec.id)}
+                    className="w-full p-6 text-left flex items-center justify-between hover:bg-orange-50/30 transition-colors"
+                  >
+                    <div>
+                      <h4 className="font-display font-bold text-black">{sec.title}</h4>
+                      <p className="text-black/60 text-sm mt-1">{sec.desc}</p>
+                    </div>
+                    <span className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedTeamSection === sec.id ? "rotate-180" : ""}`}>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </span>
+                  </button>
+                  {expandedTeamSection === sec.id && (
+                    <div className="px-6 pb-6 animate-fade-in">
+                      <div className="grid lg:grid-cols-2 gap-8 items-start">
+                        <div className="relative rounded-xl overflow-hidden shadow-drop aspect-[4/3] opacity-0 animate-slide-up" style={{ animationDelay: "0ms", animationFillMode: "forwards" } as React.CSSProperties}>
+                          <Image src={sec.image} alt={sec.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-4 [perspective:800px]">
+                          {sec.features.map((f, i) => (
+                            <CardTilt
+                              key={i}
+                              className="card-transitional group relative p-4 rounded-xl bg-white/90 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/50 hover:shadow-drop opacity-0 animate-card-in"
+                              style={{ animationDelay: `${(i + 1) * 80}ms`, animationFillMode: "forwards" } as React.CSSProperties}
+                              maxTilt={4}
+                            >
+                              <span className="inline-flex w-9 h-9 rounded-lg bg-orange-100 text-orange-600 items-center justify-center font-bold text-sm mb-3">{f.icon}</span>
+                              <h5 className="font-display font-bold text-black text-sm mb-1">{f.title}</h5>
+                              <p className="text-black/65 text-xs leading-relaxed">{f.desc}</p>
+                            </CardTilt>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
