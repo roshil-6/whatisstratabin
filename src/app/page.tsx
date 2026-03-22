@@ -197,17 +197,16 @@ export default function Home() {
       {expandedMission === "structured-thinking" && (
       <section id="structured-thinking" className="py-24 px-6 bg-gradient-to-b from-orange-50/30 to-white scroll-mt-24">
         <div className="max-w-5xl mx-auto">
-          <button onClick={() => setExpandedMission(expandedMission === "structured-thinking" ? null : "structured-thinking")} className="w-full text-left">
+          <button onClick={() => setExpandedMission(null)} className="mb-8 inline-flex items-center gap-2 text-orange-500 font-medium text-sm hover:text-orange-600">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+            Back
+          </button>
+          <div className="mb-8">
             <span className="text-4xl font-display font-bold text-orange-500/50">01</span>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-2">Structured thinking</h2>
             <p className="text-lg text-black/80 max-w-2xl">Move from messy notes to a clear, visible strategy.</p>
-            <span className="inline-flex items-center gap-2 mt-4 text-orange-500 font-medium text-sm">
-              {expandedMission === "structured-thinking" ? "Tap to collapse" : "Tap to reveal details"}
-              <svg className={`w-4 h-4 transition-transform ${expandedMission === "structured-thinking" ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-            </span>
-          </button>
-          {expandedMission === "structured-thinking" && (
-          <div className="mt-12 grid lg:grid-cols-2 gap-12 items-center mb-16 animate-fade-in">
+          </div>
+          <div className="grid lg:grid-cols-2 gap-12 items-center animate-fade-in">
             <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3] animate-slide-up" style={{ animationDelay: "0ms", animationFillMode: "forwards" } as React.CSSProperties}>
               <Image src="/stratabin-split-workspace.png" alt="Writing and flow canvas" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
@@ -227,8 +226,6 @@ export default function Home() {
               ))}
             </div>
           </div>
-          )}
-          {expandedMission === "structured-thinking" && <p className="text-orange-600 font-semibold">Summary: Visual structure for ideas instead of scattered notes.</p>}
         </div>
       </section>
       )}
@@ -237,17 +234,16 @@ export default function Home() {
       {expandedMission === "action-oriented" && (
       <section id="action-oriented" className="py-24 px-6 bg-white scroll-mt-24">
         <div className="max-w-5xl mx-auto">
-          <button onClick={() => setExpandedMission(expandedMission === "action-oriented" ? null : "action-oriented")} className="w-full text-left">
+          <button onClick={() => setExpandedMission(null)} className="mb-8 inline-flex items-center gap-2 text-orange-500 font-medium text-sm hover:text-orange-600">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+            Back
+          </button>
+          <div className="mb-8">
             <span className="text-4xl font-display font-bold text-orange-500/50">02</span>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-2">Action-oriented</h2>
             <p className="text-lg text-black/80 max-w-2xl">Turn strategy into execution, in one place.</p>
-            <span className="inline-flex items-center gap-2 mt-4 text-orange-500 font-medium text-sm">
-              {expandedMission === "action-oriented" ? "Tap to collapse" : "Tap to reveal details"}
-              <svg className={`w-4 h-4 transition-transform ${expandedMission === "action-oriented" ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-            </span>
-          </button>
-          {expandedMission === "action-oriented" && (
-          <div className="mt-12 grid lg:grid-cols-2 gap-12 items-center mb-16 animate-fade-in">
+          </div>
+          <div className="grid lg:grid-cols-2 gap-12 items-center animate-fade-in">
             <div className="space-y-4 order-2 lg:order-1 [perspective:800px]">
               {[
                 { title: "Tasks", desc: "To-do lists tied to each project; completion tracked and shown on cards." },
@@ -269,8 +265,6 @@ export default function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
           </div>
-          )}
-          {expandedMission === "action-oriented" && <p className="text-orange-600 font-semibold">Summary: Built-in tasks, timelines, calendar, and execution tracking.</p>}
         </div>
       </section>
       )}
@@ -279,17 +273,16 @@ export default function Home() {
       {expandedMission === "solo-or-team" && (
       <section id="solo-or-team" className="py-24 px-6 bg-gradient-to-b from-[#fafafa] to-orange-50/20 scroll-mt-24">
         <div className="max-w-5xl mx-auto">
-          <button onClick={() => setExpandedMission(expandedMission === "solo-or-team" ? null : "solo-or-team")} className="w-full text-left">
+          <button onClick={() => setExpandedMission(null)} className="mb-8 inline-flex items-center gap-2 text-orange-500 font-medium text-sm hover:text-orange-600">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+            Back
+          </button>
+          <div className="mb-8">
             <span className="text-4xl font-display font-bold text-orange-500/50">03</span>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-black mt-2 mb-2">Solo or team</h2>
             <p className="text-lg text-black/80 max-w-2xl">Use the same system for personal work and team collaboration.</p>
-            <span className="inline-flex items-center gap-2 mt-4 text-orange-500 font-medium text-sm">
-              {expandedMission === "solo-or-team" ? "Tap to collapse" : "Tap to reveal details"}
-              <svg className={`w-4 h-4 transition-transform ${expandedMission === "solo-or-team" ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-            </span>
-          </button>
-          {expandedMission === "solo-or-team" && (
-          <div className="mt-12 grid lg:grid-cols-2 gap-12 items-center mb-16 animate-fade-in">
+          </div>
+          <div className="grid lg:grid-cols-2 gap-12 items-center animate-fade-in">
             <div className="relative rounded-2xl overflow-hidden shadow-drop-lg aspect-[4/3] animate-slide-up" style={{ animationDelay: "0ms", animationFillMode: "forwards" } as React.CSSProperties}>
               <Image src="/stratabin-team-workspace.png" alt="Team workspace" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
@@ -312,8 +305,6 @@ export default function Home() {
               ))}
             </div>
           </div>
-          )}
-          {expandedMission === "solo-or-team" && <p className="text-orange-600 font-semibold">Summary: Works for individuals and teams with shared workspaces, chat, and community.</p>}
         </div>
       </section>
       )}
