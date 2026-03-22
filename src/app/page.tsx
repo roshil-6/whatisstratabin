@@ -492,24 +492,29 @@ export default function Home() {
       );
     }
 
-    gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
-      gsap.fromTo(
-        el,
-        { y: 60, autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 1,
-          ease: "power3.out",
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-            toggleActions: "restart none none none",
-          },
-        }
-      );
-    });
+    /** once: true avoids “blink” when ScrollTrigger.refresh() runs (mission panels, accordions, etc.) */
+    if (!prefersReduced) {
+      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
+        gsap.fromTo(
+          el,
+          { y: 48, autoAlpha: 0 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.85,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: el,
+              /** Stricter than 85% — sections under Mission don’t reveal until you scroll further */
+              start: "top 92%",
+              once: true,
+            },
+          }
+        );
+      });
+    } else {
+      gsap.set(gsap.utils.toArray<HTMLElement>(".reveal-up"), { clearProps: "all" });
+    }
 
     // Hero + immersive story = one chapter (nav 01) until Mission enters view
     ScrollTrigger.create({
@@ -538,8 +543,18 @@ export default function Home() {
     };
   }, { scope: mainRef });
 
+  /** Defer refresh one frame so layout (e.g. mission panel height) settles before recalculating triggers */
   useEffect(() => {
-    ScrollTrigger.refresh();
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+    });
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
   }, [expandedMission, expandedPersonalFeatures, expandedTeamSection]);
 
   /** After a mission card opens the panel, Lenis smoothly scrolls the new section into view */

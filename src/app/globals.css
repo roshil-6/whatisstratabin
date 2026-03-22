@@ -59,8 +59,22 @@ html.lenis body {
   background: rgba(255, 255, 255, 0.15);
 }
 
+/**
+ * Pre-JS / pre-trigger: stay hidden so content below Mission doesn’t flash before scroll-reveal.
+ * GSAP .reveal-up tweens override; reduced-motion users stay visible via media query.
+ */
 .reveal-up {
   will-change: transform, opacity;
+  opacity: 0;
+  transform: translate3d(0, 48px, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
 }
 
 .section-line {
