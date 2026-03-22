@@ -10,7 +10,7 @@ import ManIcon from "@/components/ManIcon";
 import ChatAssistant from "@/components/ChatAssistant";
 import CardTilt from "@/components/CardTilt";
 import ImmersiveStage from "@/components/ImmersiveStage";
-import { ATMOSPHERE_BLEND_SRC } from "@/lib/atmosphere";
+import { ATMOSPHERE_BLEND_SRC, HERO_OVERLAY_BLEND_SRC } from "@/lib/atmosphere";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -604,9 +604,24 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-br from-[#050505]/70 via-transparent to-[#050505]/80 mix-blend-multiply" />
         </div>
 
+        {/* Procreator blog texture — same soft-light blend language as atmosphere */}
+        <div
+          className="pointer-events-none absolute inset-0 z-[1] overflow-hidden opacity-[0.42] mix-blend-soft-light"
+          aria-hidden
+        >
+          <Image
+            src={HERO_OVERLAY_BLEND_SRC}
+            alt=""
+            fill
+            className="object-cover saturate-[0.72] contrast-[1.02]"
+            sizes="100vw"
+            priority
+          />
+        </div>
+
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(249,115,22,0.1),transparent)]" />
 
-        <div className="hero-image pointer-events-none absolute right-[2%] top-1/2 z-[1] w-[50vw] max-w-[650px] -translate-y-1/2 select-none [transform-style:preserve-3d]">
+        <div className="hero-image pointer-events-none absolute right-[2%] top-1/2 z-[2] w-[50vw] max-w-[650px] -translate-y-1/2 select-none [transform-style:preserve-3d]">
           <div className="hero-image-motion relative aspect-square w-full will-change-transform">
             <Image
               src="https://blog.iqmatrix.com/wp-content/uploads/2009/03/How-to-Mind-Map-2000px.jpg"

@@ -22,6 +22,11 @@ const nextConfig = {
         hostname: "t4.ftcdn.net",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "procreator.design",
+        pathname: "/**",
+      },
     ],
   },
   async headers() {
