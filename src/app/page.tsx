@@ -602,52 +602,99 @@ export default function Home() {
         ))}
       </nav>
 
-      {/* Top Header */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#050505]/80 backdrop-blur-xl border-b border-white/[0.04]">
-        <div className="flex justify-between items-center px-6 lg:px-12 py-5">
-          <a href="/" className="flex items-center gap-2.5 group">
-            <Image
-              src="/stratabin-logo.png"
-              alt="Stratabin"
-              width={36}
-              height={36}
-              className="object-contain rounded-xl shrink-0"
-              priority
-            />
-            <span className="font-display font-bold text-lg text-white group-hover:text-orange-400 transition-colors">
-              Stratabin
-            </span>
-          </a>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#mission" className="text-sm text-white/40 hover:text-white transition-colors">Mission</a>
-            <a href="#features" className="text-sm text-white/40 hover:text-white transition-colors">Features</a>
-            <a href="#faq" className="text-sm text-white/40 hover:text-white transition-colors">FAQ</a>
-            <a href="#about" className="text-sm text-white/40 hover:text-white transition-colors">About</a>
-            <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" className="px-5 py-2 rounded-full bg-white/[0.05] border border-white/10 text-sm font-medium text-white hover:bg-orange-500 hover:border-orange-500 transition-all duration-300">
-              Get Started
+      {/* Top Header — glass + warm tint to match hero / site atmosphere */}
+      <header className="site-header fixed top-0 left-0 right-0 z-40">
+        <div className="relative overflow-hidden border-b border-white/[0.05] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]">
+          {/* Base wash — fades into page (no solid slab) */}
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050505]/88 via-[#050505]/45 to-transparent backdrop-blur-2xl backdrop-saturate-150"
+            aria-hidden
+          />
+          {/* Soft orange bloom (same language as hero radial) */}
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_120%_at_50%_-40%,rgba(249,115,22,0.11),transparent_52%)] opacity-90 mix-blend-soft-light"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_80%_at_80%_-20%,rgba(251,191,36,0.05),transparent_45%)] mix-blend-soft-light"
+            aria-hidden
+          />
+          {/* Hairline edge — dissolves at sides */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent"
+            aria-hidden
+          />
+
+          <div className="relative flex justify-between items-center px-6 lg:px-12 py-5">
+            <a href="/" className="flex items-center gap-2.5 group">
+              <Image
+                src="/stratabin-logo.png"
+                alt="Stratabin"
+                width={36}
+                height={36}
+                className="object-contain rounded-xl shrink-0 ring-1 ring-white/[0.06] shadow-sm shadow-black/20"
+                priority
+              />
+              <span className="font-display font-bold text-lg text-white/95 group-hover:text-orange-400 transition-colors">
+                Stratabin
+              </span>
             </a>
+            <div className="hidden md:flex items-center gap-8">
+              <a href="#mission" className="text-sm text-white/45 hover:text-orange-400/90 transition-colors">Mission</a>
+              <a href="#features" className="text-sm text-white/45 hover:text-orange-400/90 transition-colors">Features</a>
+              <a href="#faq" className="text-sm text-white/45 hover:text-orange-400/90 transition-colors">FAQ</a>
+              <a href="#about" className="text-sm text-white/45 hover:text-orange-400/90 transition-colors">About</a>
+              <a
+                href="https://stratabin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-2 rounded-full text-sm font-medium text-white bg-gradient-to-r from-orange-500/15 to-amber-500/10 border border-orange-500/25 hover:from-orange-500 hover:to-orange-600 hover:border-orange-400 shadow-sm shadow-orange-500/10 hover:shadow-orange-500/25 transition-all duration-300"
+              >
+                Get Started
+              </a>
+            </div>
+            <button
+              onClick={() => setNavOpen(!navOpen)}
+              className="md:hidden relative z-10 w-10 h-10 rounded-xl flex items-center justify-center text-white/90 hover:text-orange-400 bg-white/[0.04] hover:bg-orange-500/10 border border-white/[0.06] transition-colors"
+              aria-label="Toggle menu"
+            >
+              {navOpen
+                ? <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+              }
+            </button>
           </div>
-          <button onClick={() => setNavOpen(!navOpen)} className="md:hidden w-10 h-10 rounded-lg flex items-center justify-center text-white hover:bg-white/5" aria-label="Toggle menu">
-            {navOpen
-              ? <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-              : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-            }
-          </button>
         </div>
         {navOpen && (
-          <div className="md:hidden border-t border-white/[0.04] bg-[#0a0a0a]/95 backdrop-blur-xl">
-            <div className="px-6 py-4 flex flex-col gap-1">
+          <div className="md:hidden relative overflow-hidden border-b border-white/[0.05] border-t border-white/[0.04]">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050505]/95 via-[#050505]/85 to-[#050505]/70 backdrop-blur-2xl" aria-hidden />
+            <div
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_80%_at_50%_0%,rgba(249,115,22,0.08),transparent_55%)] mix-blend-soft-light"
+              aria-hidden
+            />
+            <div className="relative px-6 py-4 flex flex-col gap-1">
               {[
                 { label: "Mission", href: "#mission" },
                 { label: "Features", href: "#features" },
                 { label: "FAQ", href: "#faq" },
                 { label: "About", href: "#about" },
               ].map(({ label, href }) => (
-                <a key={label} href={href} onClick={() => setNavOpen(false)} className="py-3 px-4 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition-colors">
+                <a
+                  key={label}
+                  href={href}
+                  onClick={() => setNavOpen(false)}
+                  className="py-3 px-4 rounded-xl text-sm text-white/55 hover:text-orange-400 hover:bg-orange-500/[0.08] border border-transparent hover:border-orange-500/15 transition-colors"
+                >
                   {label}
                 </a>
               ))}
-              <a href="https://stratabin.com" target="_blank" rel="noopener noreferrer" onClick={() => setNavOpen(false)} className="py-3 px-4 rounded-lg text-sm text-orange-400 hover:bg-orange-500/10 mt-2 transition-colors">
+              <a
+                href="https://stratabin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setNavOpen(false)}
+                className="py-3 px-4 rounded-xl text-sm font-medium text-center text-white bg-gradient-to-r from-orange-500/20 to-amber-500/15 border border-orange-500/30 hover:from-orange-500 hover:to-orange-600 mt-2 transition-all"
+              >
                 Get Started
               </a>
             </div>
