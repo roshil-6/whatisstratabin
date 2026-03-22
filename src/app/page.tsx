@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { AboutParticlesWrapper } from "@/components/SceneWrapper";
 import ManIcon from "@/components/ManIcon";
@@ -86,16 +86,9 @@ const MISSION_CARDS = [
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [navOpen, setNavOpen] = useState(false);
-  const featuresRef = useRef<HTMLElement>(null);
-  const [featuresVisible, setFeaturesVisible] = useState(false);
   const [expandedMission, setExpandedMission] = useState<string | null>(null);
+  const [expandedPersonalFeatures, setExpandedPersonalFeatures] = useState(false);
   const [expandedTeamSection, setExpandedTeamSection] = useState<string | null>(null);
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setFeaturesVisible(true); }, { threshold: 0.1 });
-    const el = featuresRef.current;
-    if (el) obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -352,7 +345,7 @@ export default function Home() {
       </section>
 
       {/* Features - reactive cards, Personal & Team */}
-      <section id="features" ref={featuresRef} className="py-28 px-6 bg-gradient-to-b from-white to-[#fafafa] scroll-mt-24 overflow-hidden">
+      <section id="features" className="py-28 px-6 bg-gradient-to-b from-white to-[#fafafa] scroll-mt-24 overflow-hidden">
         <div className="max-w-6xl mx-auto">
           <span className="inline-block px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold tracking-widest uppercase mb-4">Features</span>
           <h2 className="font-display text-3xl md:text-4xl font-bold text-black mb-4">
@@ -364,27 +357,43 @@ export default function Home() {
 
           {/* Personal Workspace */}
           <div className="mb-24">
-            <h3 className="font-display text-xl md:text-2xl font-bold text-black mb-2 flex items-center gap-3">
-              <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-sm">◉</span>
-              Personal Workspace
-            </h3>
-            <p className="text-black/60 mb-8 max-w-xl">Your private space. Organize ideas, structure plans, and execute—all yours.</p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 [perspective:1000px]">
-              {PERSONAL_FEATURES.map((f, i) => (
-                <CardTilt
-                  key={i}
-                  className={`group relative p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-black/[0.06] shadow-drop hover:shadow-drop-lg ${featuresVisible ? "animate-card-in" : "opacity-0"}`}
-                  style={featuresVisible ? { animationDelay: `${i * 60}ms`, animationFillMode: "forwards" } : undefined}
-                  maxTilt={6}
-                >
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-                  <span className="inline-flex w-11 h-11 rounded-xl bg-orange-100 text-orange-600 items-center justify-center font-bold text-lg mb-4 group-hover:scale-110 transition-transform duration-400">
-                    {f.icon}
-                  </span>
-                  <h4 className="font-display font-bold text-black mb-2 group-hover:text-orange-600 transition-colors duration-300">{f.title}</h4>
-                  <p className="text-black/65 text-sm leading-relaxed">{f.desc}</p>
-                </CardTilt>
-              ))}
+            <div className="rounded-2xl border border-black/[0.06] overflow-hidden">
+              <button
+                onClick={() => setExpandedPersonalFeatures(!expandedPersonalFeatures)}
+                className="w-full p-6 text-left flex items-center justify-between hover:bg-orange-50/30 transition-colors"
+              >
+                <div>
+                  <h3 className="font-display text-xl md:text-2xl font-bold text-black mb-1 flex items-center gap-3">
+                    <span className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-sm">◉</span>
+                    Personal Workspace
+                  </h3>
+                  <p className="text-black/60 max-w-xl">Your private space. Organize ideas, structure plans, and execute—all yours.</p>
+                </div>
+                <span className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-orange-100 text-orange-600 transition-transform ${expandedPersonalFeatures ? "rotate-180" : ""}`}>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </span>
+              </button>
+              {expandedPersonalFeatures && (
+                <div className="px-6 pb-6 animate-fade-in">
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 [perspective:1000px]">
+                    {PERSONAL_FEATURES.map((f, i) => (
+                      <CardTilt
+                        key={i}
+                        className="card-transitional group relative p-6 rounded-2xl bg-white/80 backdrop-blur-sm border border-black/[0.06] shadow-drop hover:shadow-drop-lg opacity-0 animate-card-in"
+                        style={{ animationDelay: `${(i + 1) * 80}ms`, animationFillMode: "forwards" } as React.CSSProperties}
+                        maxTilt={6}
+                      >
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+                        <span className="inline-flex w-11 h-11 rounded-xl bg-orange-100 text-orange-600 items-center justify-center font-bold text-lg mb-4 group-hover:scale-110 transition-transform duration-400">
+                          {f.icon}
+                        </span>
+                        <h4 className="font-display font-bold text-black mb-2 group-hover:text-orange-600 transition-colors duration-300">{f.title}</h4>
+                        <p className="text-black/65 text-sm leading-relaxed">{f.desc}</p>
+                      </CardTilt>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
