@@ -51,7 +51,7 @@ export default function ImmersiveStage() {
     >
       <div
         id="immersive-inner"
-        className="relative flex min-h-[100dvh] min-h-screen w-full items-center justify-center overflow-hidden py-20 pt-28 md:py-24 md:pt-32"
+        className="relative flex min-h-[100dvh] min-h-screen w-full flex-col items-stretch justify-start overflow-hidden py-20 pt-28 md:flex-row md:items-center md:justify-center md:py-24 md:pt-32"
       >
         {/* Film grain + vignette */}
         <div
@@ -106,14 +106,50 @@ export default function ImmersiveStage() {
           aria-hidden
         />
 
-        {/* 3D card stack — visible on mobile (centered + scaled); desktop keeps left rail layout */}
+        {/*
+          Copy first in DOM: on mobile it stacks above the cards (no 3D overlap on headline).
+          Desktop: scene stays position absolute left; copy keeps md:pl-[48%].
+        */}
+        {/* Copy column */}
+        <div className="relative z-[6] mx-auto w-full max-w-6xl shrink-0 px-6 md:z-[5] md:px-8 md:pl-[48%] lg:px-24 lg:pl-[46%]">
+          <p className="mb-6 text-[10px] font-semibold uppercase tracking-[0.45em] text-white/25 md:mb-10">
+            Stratabin · one workspace
+          </p>
+
+          <div className="relative min-h-[min(42vh,320px)] md:min-h-[300px]">
+            {SLIDES.map((slide, i) => (
+              <div
+                key={slide.kicker}
+                className={`immersive-slide immersive-slide-${i + 1} max-w-xl ${i === 0 ? "relative" : "absolute inset-0"}`}
+              >
+                <p className="immersive-slide-kicker mb-4 text-[11px] font-bold uppercase tracking-[0.4em] text-orange-400/90">
+                  {slide.kicker}
+                </p>
+                <h2 className="immersive-slide-title font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-white md:text-[clamp(2.25rem,4.2vw,3.75rem)]">
+                  {slide.title}
+                </h2>
+                <p className="immersive-slide-body mt-6 max-w-md text-base leading-relaxed text-white/40 md:text-lg md:leading-relaxed">
+                  {slide.body}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="immersive-scroll-hint mt-12 flex items-center gap-4 text-white/30 md:mt-20">
+            <div className="h-px w-14 bg-gradient-to-r from-orange-400/60 via-orange-500/30 to-transparent" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.4em]">Scroll to continue</span>
+            <div className="hidden h-1 w-1 animate-pulse rounded-full bg-orange-400/80 sm:block" />
+          </div>
+        </div>
+
+        {/* 3D card stack — mobile: static block below copy (no overlap). Desktop: absolute left rail. */}
         <div
-          className="immersive-scene-shell pointer-events-none absolute z-[4] [perspective:1400px] max-md:left-1/2 max-md:top-[2%] max-md:h-[min(280px,36vh)] max-md:w-[min(100vw-1.5rem,400px)] max-md:-translate-x-1/2 md:inset-y-0 md:left-0 md:top-0 md:w-[54%] md:translate-x-0 lg:w-[50%] md:[perspective:1600px]"
+          className="immersive-scene-shell pointer-events-none relative z-[1] mx-auto mt-2 h-[min(240px,34vh)] w-full max-w-[min(100vw-1.5rem,400px)] shrink-0 [perspective:1400px] max-md:mb-4 md:absolute md:inset-y-0 md:left-0 md:top-0 md:z-[4] md:mt-0 md:h-auto md:max-w-none md:w-[54%] md:translate-x-0 lg:w-[50%] md:[perspective:1600px]"
         >
-          <div className="absolute inset-0 flex items-center justify-center md:pl-4 lg:pl-14">
+          <div className="flex h-full items-center justify-center md:absolute md:inset-0 md:pl-4 lg:pl-14">
             {/* Wrapper scale only — GSAP owns transforms on .immersive-scene-rotate */}
-            <div className="max-md:origin-center max-md:scale-[0.68] [transform-style:preserve-3d] md:scale-100">
-              <div className="immersive-scene-rotate relative h-[min(320px,36vh)] w-full max-w-[min(380px,92vw)] [transform-style:preserve-3d] md:h-[min(460px,58vh)] md:max-w-[440px]">
+            <div className="max-md:origin-center max-md:scale-[0.62] [transform-style:preserve-3d] md:scale-100">
+              <div className="immersive-scene-rotate relative mx-auto h-[min(280px,32vh)] w-full max-w-[min(360px,90vw)] [transform-style:preserve-3d] md:h-[min(460px,58vh)] md:max-w-[440px]">
               {/* Accent ring */}
               <div className="immersive-orbit-ring pointer-events-none absolute left-1/2 top-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-orange-500/[0.12] [transform:translateZ(-80px)]" />
 
@@ -159,44 +195,12 @@ export default function ImmersiveStage() {
         {SLIDES.map((slide, i) => (
           <div
             key={`mark-${slide.mark}`}
-            className={`immersive-chapter-mark immersive-chapter-mark-${i + 1} pointer-events-none absolute right-[4%] top-1/2 z-[4] -translate-y-1/2 font-display text-[clamp(4.5rem,36vw,14rem)] font-bold leading-none text-white/[0.025] select-none max-md:top-[42%] md:right-[6%] md:text-[clamp(6rem,22vw,14rem)] md:text-white/[0.03]`}
+            className={`immersive-chapter-mark immersive-chapter-mark-${i + 1} pointer-events-none absolute right-[4%] top-1/2 z-[4] hidden -translate-y-1/2 font-display text-[clamp(4.5rem,36vw,14rem)] font-bold leading-none text-white/[0.025] select-none md:right-[6%] md:block md:text-[clamp(6rem,22vw,14rem)] md:text-white/[0.03]`}
             aria-hidden
           >
             {slide.mark}
           </div>
         ))}
-
-        {/* Copy column — top padding on small screens so headline clears floating cards */}
-        <div className="relative z-[5] mx-auto w-full max-w-6xl px-8 pt-[min(40vh,320px)] md:pt-0 md:pl-[48%] lg:px-24 lg:pl-[46%]">
-          <p className="mb-10 text-[10px] font-semibold uppercase tracking-[0.45em] text-white/25">
-            Stratabin · one workspace
-          </p>
-
-          <div className="relative min-h-[min(52vh,380px)] md:min-h-[300px]">
-            {SLIDES.map((slide, i) => (
-              <div
-                key={slide.kicker}
-                className={`immersive-slide immersive-slide-${i + 1} max-w-xl ${i === 0 ? "relative" : "absolute inset-0"}`}
-              >
-                <p className="immersive-slide-kicker mb-4 text-[11px] font-bold uppercase tracking-[0.4em] text-orange-400/90">
-                  {slide.kicker}
-                </p>
-                <h2 className="immersive-slide-title font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-white md:text-[clamp(2.25rem,4.2vw,3.75rem)]">
-                  {slide.title}
-                </h2>
-                <p className="immersive-slide-body mt-6 max-w-md text-base leading-relaxed text-white/40 md:text-lg md:leading-relaxed">
-                  {slide.body}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="immersive-scroll-hint mt-20 flex items-center gap-4 text-white/30">
-            <div className="h-px w-14 bg-gradient-to-r from-orange-400/60 via-orange-500/30 to-transparent" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.4em]">Scroll to continue</span>
-            <div className="hidden h-1 w-1 animate-pulse rounded-full bg-orange-400/80 sm:block" />
-          </div>
-        </div>
 
       </div>
 

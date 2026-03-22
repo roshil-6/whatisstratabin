@@ -605,18 +605,18 @@ export default function Home() {
       {/* Top Header — glass + warm tint to match hero / site atmosphere */}
       <header className="site-header fixed top-0 left-0 right-0 z-40">
         <div className="relative overflow-hidden">
-          {/* Base wash — fades into page (no solid slab); no border/hairline so it blends with content below */}
+          {/* Desktop: glass fade. Mobile: solid #050505 — no backdrop-blur (avoids muddy “glassy” bar on phones). */}
           <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050505]/88 via-[#050505]/45 to-transparent backdrop-blur-2xl backdrop-saturate-150"
+            className="pointer-events-none absolute inset-0 bg-[#050505] md:bg-gradient-to-b md:from-[#050505]/88 md:via-[#050505]/45 md:to-transparent md:backdrop-blur-2xl md:backdrop-saturate-150"
             aria-hidden
           />
-          {/* Soft orange bloom (same language as hero radial) */}
+          {/* Soft orange bloom — toned down on mobile */}
           <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_120%_at_50%_-40%,rgba(249,115,22,0.11),transparent_52%)] opacity-90 mix-blend-soft-light"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_120%_at_50%_-40%,rgba(249,115,22,0.11),transparent_52%)] opacity-50 mix-blend-soft-light md:opacity-90"
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_80%_at_80%_-20%,rgba(251,191,36,0.05),transparent_45%)] mix-blend-soft-light"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_80%_at_80%_-20%,rgba(251,191,36,0.05),transparent_45%)] mix-blend-soft-light max-md:opacity-60"
             aria-hidden
           />
 
@@ -661,10 +661,9 @@ export default function Home() {
           </div>
         </div>
         {navOpen && (
-          <div className="md:hidden relative overflow-hidden">
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#050505]/95 via-[#050505]/85 to-[#050505]/70 backdrop-blur-2xl" aria-hidden />
+          <div className="md:hidden relative overflow-hidden bg-[#050505]">
             <div
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_80%_at_50%_0%,rgba(249,115,22,0.08),transparent_55%)] mix-blend-soft-light"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_80%_at_50%_0%,rgba(249,115,22,0.07),transparent_55%)]"
               aria-hidden
             />
             <div className="relative px-6 py-4 flex flex-col gap-1">
