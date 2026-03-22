@@ -108,30 +108,51 @@ export default function Home() {
     });
     lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
-    const raf = (time: number) => lenis.raf(time * 1000);
+
+    const raf = (time: number) => {
+      lenis.raf(time * 1000);
+    };
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
+
+    /** Lenis no-ops when target === targetScroll; nudge so repeated in-page nav always animates. */
+    const smoothScrollToHash = (href: string, opts: { offset?: number; duration?: number } = {}) => {
+      const { offset = -80, duration = 1.5 } = opts;
+      const el = document.querySelector(href) as HTMLElement | null;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const dest = rect.top + lenis.animatedScroll + offset;
+      const rounded = Math.round(dest);
+      if (Math.abs(rounded - Math.round(lenis.targetScroll)) < 2) {
+        const nudge = rounded >= lenis.limit - 2 ? -2 : 2;
+        lenis.scrollTo(rounded + nudge, { duration: 0.25, easing: (t: number) => t });
+        requestAnimationFrame(() => {
+          lenis.scrollTo(el, { offset, duration });
+        });
+        return;
+      }
+      lenis.scrollTo(el, { offset, duration });
+    };
+
+    const handleClick = (e: MouseEvent) => {
+      if (e.defaultPrevented) return;
+      const anchor = (e.target as HTMLElement).closest('a[href^="#"]');
+      if (!anchor) return;
+      const href = anchor.getAttribute("href");
+      if (!href || href.length <= 1) return;
+      e.preventDefault();
+      e.stopPropagation();
+      smoothScrollToHash(href, { offset: -80, duration: 1.5 });
+    };
+
+    document.addEventListener("click", handleClick, true);
+
     return () => {
+      document.removeEventListener("click", handleClick, true);
       gsap.ticker.remove(raf);
       lenisRef.current = null;
       lenis.destroy();
     };
-  }, []);
-
-  // Anchor link handler for Lenis smooth scroll
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (e.defaultPrevented) return;
-      const anchor = (e.target as HTMLElement).closest('a[href^="#"]');
-      if (!anchor || !lenisRef.current) return;
-      const href = anchor.getAttribute("href");
-      if (href && href.length > 1) {
-        e.preventDefault();
-        lenisRef.current.scrollTo(href, { offset: -80, duration: 1.5 });
-      }
-    };
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
   }, []);
 
   useGSAP(() => {
@@ -144,17 +165,22 @@ export default function Home() {
       .from(".hero-scroll", { autoAlpha: 0, duration: 0.6 }, "-=0.3");
 
     gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
-      gsap.from(el, {
-        y: 60,
-        autoAlpha: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: el,
-          start: "top 85%",
-          toggleActions: "play none none none",
-        },
-      });
+      gsap.fromTo(
+        el,
+        { y: 60, autoAlpha: 0 },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 1,
+          ease: "power3.out",
+          immediateRender: false,
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            toggleActions: "restart none none none",
+          },
+        }
+      );
     });
 
     gsap.to(".hero-image", {
@@ -185,14 +211,26 @@ export default function Home() {
   }, [expandedMission, expandedPersonalFeatures, expandedTeamSection]);
 
   useEffect(() => {
-    if (expandedMission) {
-      setTimeout(() => {
-        const el = document.getElementById(expandedMission);
-        if (el && lenisRef.current) {
-          lenisRef.current.scrollTo(el, { offset: -100, duration: 1.2 });
-        }
-      }, 100);
-    }
+    if (!expandedMission) return;
+    const id = expandedMission;
+    const t = setTimeout(() => {
+      const el = document.getElementById(id);
+      const lenis = lenisRef.current;
+      if (!el || !lenis) return;
+      const rect = el.getBoundingClientRect();
+      const dest = rect.top + lenis.animatedScroll - 100;
+      const rounded = Math.round(dest);
+      if (Math.abs(rounded - Math.round(lenis.targetScroll)) < 2) {
+        const nudge = rounded >= lenis.limit - 2 ? -2 : 2;
+        lenis.scrollTo(rounded + nudge, { duration: 0.25, easing: (t2: number) => t2 });
+        requestAnimationFrame(() => {
+          lenisRef.current?.scrollTo(el, { offset: -100, duration: 1.2 });
+        });
+        return;
+      }
+      lenis.scrollTo(el, { offset: -100, duration: 1.2 });
+    }, 100);
+    return () => clearTimeout(t);
   }, [expandedMission]);
 
   return (
