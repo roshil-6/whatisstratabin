@@ -59,26 +59,44 @@ export default function ChatAssistant() {
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+      {/* z-[100]: above header (z-40), side nav (z-50), pinned immersive */}
+      <div className="chat-assistant-fab fixed z-[100] flex flex-col items-end gap-2 bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))] right-[max(1.25rem,env(safe-area-inset-right,0px))] sm:bottom-6 sm:right-6">
         {!open && (
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-2 rounded-full bg-orange-500 text-white text-sm font-semibold shadow-lg shadow-orange-500/30 whitespace-nowrap">
-              Click me to know what is Stratabin quickly
-            </span>
-            <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
-          </div>
+          <>
+            {/* Desktop / tablet: full hint — avoids narrow-screen overflow + tap targets */}
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="px-3 py-2 rounded-full bg-orange-500 text-white text-sm font-semibold shadow-lg shadow-orange-500/30 whitespace-nowrap">
+                Click me to know what is Stratabin quickly
+              </span>
+              <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse shrink-0" aria-hidden />
+            </div>
+            <p className="sm:hidden text-right text-[11px] font-semibold leading-snug text-orange-400/90 max-w-[7.5rem]">
+              Tap for Stratabin guide
+            </p>
+          </>
         )}
         <button
+          type="button"
           onClick={() => setOpen(!open)}
-          className="w-20 h-20 rounded-2xl shadow-[0_12px_40px_rgba(249,115,22,0.4)] flex items-center justify-center overflow-hidden bg-[#111] border-2 border-orange-500/50 ring-4 ring-orange-500/10 hover:scale-110 hover:shadow-[0_16px_48px_rgba(249,115,22,0.5)] hover:border-orange-500 hover:ring-orange-500/20 transition-all duration-300"
+          className="touch-manipulation w-[4.5rem] h-[4.5rem] sm:w-20 sm:h-20 rounded-2xl shadow-[0_12px_40px_rgba(249,115,22,0.4)] flex items-center justify-center overflow-hidden bg-[#111] border-2 border-orange-500/50 ring-4 ring-orange-500/10 active:scale-95 sm:hover:scale-110 sm:hover:shadow-[0_16px_48px_rgba(249,115,22,0.5)] sm:hover:border-orange-500 sm:hover:ring-orange-500/20 transition-transform duration-300"
           aria-label="Open chat assistant"
+          aria-expanded={open}
         >
-          <Image src={EMOJI_URL} alt="Chat" width={80} height={80} className="object-cover w-full h-full" />
+          <Image src={EMOJI_URL} alt="" width={80} height={80} className="object-cover w-full h-full pointer-events-none" />
         </button>
       </div>
 
       {open && (
-        <div className="fixed bottom-36 right-6 z-50 w-[calc(100vw-3rem)] max-w-[420px] rounded-3xl bg-[#111]/95 backdrop-blur-xl border border-white/[0.08] shadow-[0_24px_80px_-12px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col max-h-[72vh] animate-slide-up">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Stratabin guide"
+          className="fixed z-[100] flex flex-col rounded-3xl bg-[#111]/95 backdrop-blur-xl border border-white/[0.08] shadow-[0_24px_80px_-12px_rgba(0,0,0,0.6)] overflow-hidden animate-slide-up
+            left-3 right-3 w-auto max-w-none
+            max-h-[min(78dvh,calc(100dvh-7rem))]
+            bottom-[max(6.25rem,calc(env(safe-area-inset-bottom,0px)+5.5rem))]
+            sm:left-auto sm:right-6 sm:w-[calc(100vw-3rem)] sm:max-w-[420px] sm:max-h-[72vh] sm:bottom-36"
+        >
           <div className="relative px-5 py-4 bg-gradient-to-br from-[#1a1a1a] to-[#111] border-b border-white/[0.06]">
             <div className="relative flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0 ring-2 ring-orange-500/20 shadow-md">
@@ -89,15 +107,16 @@ export default function ChatAssistant() {
                 <p className="text-xs text-white/40 truncate">Tap any question to explore</p>
               </div>
               <button
+                type="button"
                 onClick={() => setOpen(false)}
-                className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all"
+                className="touch-manipulation w-9 h-9 rounded-xl flex items-center justify-center bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-all"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-[linear-gradient(180deg,_#0a0a0a_0%,_#0f0f0f_100%)]">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain p-5 space-y-5 bg-[linear-gradient(180deg,_#0a0a0a_0%,_#0f0f0f_100%)] [-webkit-overflow-scrolling:touch]">
             {messages.length === 0 && (
               <div className="space-y-5">
                 <div className="flex items-start gap-3">
@@ -112,9 +131,10 @@ export default function ChatAssistant() {
                   <div className="flex flex-wrap gap-2">
                     {FIXED_QUESTIONS.map((q) => (
                       <button
+                        type="button"
                         key={q.id}
                         onClick={() => handleQuestionClick(q)}
-                        className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-left ${
+                        className={`touch-manipulation px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-left ${
                           revealed.has(q.id)
                             ? "bg-orange-500/15 text-orange-300 border border-orange-500/25"
                             : "bg-white/[0.04] text-white/60 border border-white/[0.08] hover:bg-white/[0.06] hover:border-white/[0.12] hover:text-white/80"
@@ -149,9 +169,10 @@ export default function ChatAssistant() {
                         <div className="flex flex-wrap gap-2 pt-3 mt-2 border-t border-white/[0.06]">
                           {m.followUps.map((f, j) => (
                             <button
+                              type="button"
                               key={j}
                               onClick={() => handleFollowUp(f.label, f.content)}
-                              className="px-3 py-2 rounded-lg text-xs font-medium bg-orange-500/10 text-orange-400 border border-orange-500/15 hover:bg-orange-500/20 transition-colors"
+                              className="touch-manipulation px-3 py-2 rounded-lg text-xs font-medium bg-orange-500/10 text-orange-400 border border-orange-500/15 hover:bg-orange-500/20 transition-colors"
                             >
                               {f.label}
                             </button>
@@ -171,9 +192,10 @@ export default function ChatAssistant() {
               <div className="flex flex-wrap gap-2">
                 {FIXED_QUESTIONS.filter((q) => !revealed.has(q.id)).map((q) => (
                   <button
+                    type="button"
                     key={q.id}
                     onClick={() => handleQuestionClick(q)}
-                    className="px-3 py-2 rounded-lg text-xs font-medium bg-white/[0.04] text-white/50 border border-white/[0.06] hover:bg-white/[0.06] hover:text-white/70 transition-colors"
+                    className="touch-manipulation px-3 py-2 rounded-lg text-xs font-medium bg-white/[0.04] text-white/50 border border-white/[0.06] hover:bg-white/[0.06] hover:text-white/70 transition-colors"
                   >
                     {q.label}
                   </button>

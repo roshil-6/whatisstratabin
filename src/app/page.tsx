@@ -237,7 +237,12 @@ export default function Home() {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const setupHeroScrollStory = (opts: { end: string; pin: boolean; scrub: number }) => {
+    const setupHeroScrollStory = (opts: {
+      end: string;
+      pin: boolean;
+      scrub: number;
+      pinType?: "fixed" | "transform";
+    }) => {
       const introWords = gsap.utils.toArray<HTMLElement>(".hero-intro-word-inner");
 
       gsap.set(introWords, { yPercent: 118, autoAlpha: 0.15 });
@@ -257,6 +262,7 @@ export default function Home() {
           scrub: opts.scrub,
           anticipatePin: 1,
           fastScrollEnd: true,
+          ...(opts.pinType ? { pinType: opts.pinType } : {}),
         },
       });
 
@@ -448,8 +454,17 @@ export default function Home() {
         setupImmersiveStory({ end: "+=150%", pin: true, scrub: 0.28 });
       });
       mm.add("(max-width: 767px)", () => {
-        setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.55 });
-        // Pin on small screens so scrub has room; transform pins behave better on iOS than fixed.
+        /**
+         * Pin hero on mobile too: without pin, end "bottom top" scrubs against a moving section—
+         * one flick scrolls the hero away before “Turn ideas into action” reaches full visibility.
+         * Transform pin matches immersive (better on iOS than position: fixed).
+         */
+        setupHeroScrollStory({
+          end: "+=95%",
+          pin: true,
+          scrub: 0.42,
+          pinType: "transform",
+        });
         setupImmersiveStory({
           end: "+=230%",
           pin: true,
