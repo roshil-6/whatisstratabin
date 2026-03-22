@@ -69,6 +69,13 @@ const MISSION_CARDS = [
   { id: "solo-or-team", title: "Solo or team", desc: "Work alone or invite your team. Shared workspaces, group chat, daily tasks, and roles\u2014all built in.", anchor: "#solo-or-team" },
 ];
 
+/** Hash links that open mission panels — skipped by document capture so card onClick runs first */
+const MISSION_DETAIL_HASHES = new Set(MISSION_CARDS.map((c) => c.anchor));
+
+const MISSION_HASH_TO_ID: Record<string, string> = Object.fromEntries(
+  MISSION_CARDS.map((c) => [c.anchor, c.id])
+);
+
 const NAV_SECTIONS = [
   { id: "hero", num: "01" },
   { id: "mission", num: "02" },
@@ -100,7 +107,18 @@ export default function Home() {
   const [navOpen, setNavOpen] = useState(false);
   const [expandedPersonalFeatures, setExpandedPersonalFeatures] = useState(false);
   const [expandedTeamSection, setExpandedTeamSection] = useState<string | null>(null);
+  const [expandedMission, setExpandedMission] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState("hero");
+
+  /** Clears mission detail when navigating to #mission (header / back); read inside Lenis click capture */
+  const dismissMissionDetailRef = useRef(() => {});
+  dismissMissionDetailRef.current = () => setExpandedMission(null);
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    const id = MISSION_HASH_TO_ID[window.location.hash];
+    if (id) setExpandedMission(id);
+  }, []);
 
   useLayoutEffect(() => {
     const lenis = new Lenis({
@@ -167,16 +185,19 @@ export default function Home() {
       if (!anchor) return;
       const href = anchor.getAttribute("href");
       if (!href || href.length <= 1) return;
+      /** Let mission cards handle expand + preventDefault in bubble phase */
+      if (MISSION_DETAIL_HASHES.has(href)) return;
       e.preventDefault();
       e.stopPropagation();
+      if (href === "#mission") dismissMissionDetailRef.current();
       smoothScrollToHash(href, { offset: -80, duration: 1.5 });
     };
 
     document.addEventListener("click", handleClick, true);
 
-    /** Deep links / refresh with hash — same one-page behavior as e.g. davidlangarica.dev/#home */
+    /** Deep links — mission panels hydrate via useLayoutEffect + scroll effect; other hashes scroll here */
     const initialHash = typeof window !== "undefined" ? window.location.hash : "";
-    if (initialHash && initialHash.length > 1) {
+    if (initialHash && initialHash.length > 1 && !MISSION_DETAIL_HASHES.has(initialHash)) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           smoothScrollToHash(initialHash, { offset: -80, duration: 1.2 });
@@ -519,7 +540,36 @@ export default function Home() {
 
   useEffect(() => {
     ScrollTrigger.refresh();
-  }, [expandedPersonalFeatures, expandedTeamSection]);
+  }, [expandedMission, expandedPersonalFeatures, expandedTeamSection]);
+
+  /** After a mission card opens the panel, Lenis smoothly scrolls the new section into view */
+  useEffect(() => {
+    if (!expandedMission) return;
+    const lenis = lenisRef.current;
+    if (!lenis) return;
+    let cancelled = false;
+    const ease = (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t));
+    const prefersReduced =
+      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const run = () => {
+      if (cancelled) return;
+      const el = document.getElementById(expandedMission);
+      const L = lenisRef.current;
+      if (!el || !L) return;
+      ScrollTrigger.refresh();
+      L.scrollTo(el, {
+        offset: -88,
+        duration: prefersReduced ? 0 : 1.28,
+        easing: ease,
+      });
+    };
+    requestAnimationFrame(() => {
+      requestAnimationFrame(run);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [expandedMission]);
 
   return (
     <div ref={mainRef} className="min-h-screen bg-[#050505] text-white">
@@ -687,6 +737,10 @@ export default function Home() {
               <CardTilt
                 key={card.id}
                 href={card.anchor}
+                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                  e.preventDefault();
+                  setExpandedMission(card.id);
+                }}
                 className="reveal-up group block p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-orange-500/30 hover:bg-white/[0.04] transition-all duration-500 cursor-pointer"
                 maxTilt={8}
               >
@@ -702,9 +756,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 01 — Structured thinking (always mounted so #anchors + Lenis smooth scroll work) */}
+      {expandedMission === "structured-thinking" && (
         <section id="structured-thinking" className="py-24 px-6 lg:px-24 scroll-mt-24 border-t border-white/[0.04]">
-          <div className="max-w-5xl mx-auto lg:pl-16">
+          <div className="animate-mission-reveal motion-reduce:animate-none max-w-5xl mx-auto lg:pl-16">
             <a href="#mission" className="mb-8 inline-flex items-center gap-2 text-orange-400 font-medium text-sm hover:text-orange-300 transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
               Back to Mission
@@ -736,10 +790,11 @@ export default function Home() {
             </div>
           </div>
         </section>
+      )}
 
-      {/* 02 — Action-oriented */}
+      {expandedMission === "action-oriented" && (
         <section id="action-oriented" className="py-24 px-6 lg:px-24 scroll-mt-24 border-t border-white/[0.04]">
-          <div className="max-w-5xl mx-auto lg:pl-16">
+          <div className="animate-mission-reveal motion-reduce:animate-none max-w-5xl mx-auto lg:pl-16">
             <a href="#mission" className="mb-8 inline-flex items-center gap-2 text-orange-400 font-medium text-sm hover:text-orange-300 transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
               Back to Mission
@@ -773,10 +828,11 @@ export default function Home() {
             </div>
           </div>
         </section>
+      )}
 
-      {/* 03 — Solo or team */}
+      {expandedMission === "solo-or-team" && (
         <section id="solo-or-team" className="py-24 px-6 lg:px-24 scroll-mt-24 border-t border-white/[0.04]">
-          <div className="max-w-5xl mx-auto lg:pl-16">
+          <div className="animate-mission-reveal motion-reduce:animate-none max-w-5xl mx-auto lg:pl-16">
             <a href="#mission" className="mb-8 inline-flex items-center gap-2 text-orange-400 font-medium text-sm hover:text-orange-300 transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
               Back to Mission
@@ -811,6 +867,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+      )}
 
       <div className="section-line" />
 

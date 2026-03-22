@@ -36,9 +36,15 @@ const config: Config = {
         "fade-in": "fadeIn 0.6s ease-out forwards",
         "slide-up": "slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards",
         "card-in": "cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+        /** Mission detail panel — timed to feel aligned with Lenis scroll-to */
+        "mission-reveal": "missionReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both",
         "float": "float 6s ease-in-out infinite",
       },
       keyframes: {
+        missionReveal: {
+          from: { opacity: "0", transform: "translateY(28px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
         fadeIn: { from: { opacity: "0", transform: "translateY(12px)" }, to: { opacity: "1", transform: "translateY(0)" } },
         slideUp: { from: { opacity: "0", transform: "translateY(24px)" }, to: { opacity: "1", transform: "translateY(0)" } },
         cardIn: { from: { opacity: "0", transform: "translateY(28px) scale(0.96)" }, to: { opacity: "1", transform: "translateY(0) scale(1)" } },
