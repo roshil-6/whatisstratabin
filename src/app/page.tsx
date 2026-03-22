@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { AboutParticlesWrapper } from "@/components/SceneWrapper";
 import ManIcon from "@/components/ManIcon";
@@ -90,6 +90,13 @@ export default function Home() {
   const [expandedPersonalFeatures, setExpandedPersonalFeatures] = useState(false);
   const [expandedTeamSection, setExpandedTeamSection] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (expandedMission) {
+      const el = document.getElementById(expandedMission);
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [expandedMission]);
+
   return (
     <div className="min-h-screen bg-white text-black">
       {/* Navigation - Jeton/Osmo style */}
@@ -165,7 +172,7 @@ export default function Home() {
               <CardTilt
                 key={card.id}
                 href={card.anchor}
-                onClick={() => setExpandedMission(card.id)}
+                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); setExpandedMission(card.id); }}
                 className="group block p-8 rounded-2xl bg-white/60 backdrop-blur-sm border border-black/[0.04] hover:border-orange-200/60 hover:bg-orange-50/40 hover:shadow-drop-lg opacity-0 animate-fade-in will-change-transform"
                 style={{ animationDelay: `${(i + 1) * 150}ms`, animationFillMode: "forwards" } as React.CSSProperties}
                 maxTilt={10}
@@ -182,7 +189,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 01 — Structured thinking (expand on touch) */}
+      {/* 01 — Structured thinking (only shown when user selects it) */}
+      {expandedMission === "structured-thinking" && (
       <section id="structured-thinking" className="py-24 px-6 bg-gradient-to-b from-orange-50/30 to-white scroll-mt-24">
         <div className="max-w-5xl mx-auto">
           <button onClick={() => setExpandedMission(expandedMission === "structured-thinking" ? null : "structured-thinking")} className="w-full text-left">
@@ -219,8 +227,10 @@ export default function Home() {
           {expandedMission === "structured-thinking" && <p className="text-orange-600 font-semibold">Summary: Visual structure for ideas instead of scattered notes.</p>}
         </div>
       </section>
+      )}
 
-      {/* 02 — Action-oriented (expand on touch) */}
+      {/* 02 — Action-oriented (only shown when user selects it) */}
+      {expandedMission === "action-oriented" && (
       <section id="action-oriented" className="py-24 px-6 bg-white scroll-mt-24">
         <div className="max-w-5xl mx-auto">
           <button onClick={() => setExpandedMission(expandedMission === "action-oriented" ? null : "action-oriented")} className="w-full text-left">
@@ -259,8 +269,10 @@ export default function Home() {
           {expandedMission === "action-oriented" && <p className="text-orange-600 font-semibold">Summary: Built-in tasks, timelines, calendar, and execution tracking.</p>}
         </div>
       </section>
+      )}
 
-      {/* 03 — Solo or team (expand on touch) */}
+      {/* 03 — Solo or team (only shown when user selects it) */}
+      {expandedMission === "solo-or-team" && (
       <section id="solo-or-team" className="py-24 px-6 bg-gradient-to-b from-[#fafafa] to-orange-50/20 scroll-mt-24">
         <div className="max-w-5xl mx-auto">
           <button onClick={() => setExpandedMission(expandedMission === "solo-or-team" ? null : "solo-or-team")} className="w-full text-left">
@@ -300,6 +312,7 @@ export default function Home() {
           {expandedMission === "solo-or-team" && <p className="text-orange-600 font-semibold">Summary: Works for individuals and teams with shared workspaces, chat, and community.</p>}
         </div>
       </section>
+      )}
 
       {/* In Plain Terms */}
       <section className="py-24 px-6 bg-[#fafafa] relative">
