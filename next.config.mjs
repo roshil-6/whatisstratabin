@@ -7,6 +7,11 @@ const nextConfig = {
         hostname: "img.freepik.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "thumbs.dreamstime.com",
+        pathname: "/**",
+      },
     ],
   },
   // Prevent cached HTML from requesting stale chunks

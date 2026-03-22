@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
-const EMOJI_URL = "https://img.freepik.com/free-psd/3d-rendering-emoji-icon_23-2149878818.jpg?semt=ais_hybrid&w=740&q=80";
+const EMOJI_URL = "https://thumbs.dreamstime.com/b/d-icon-avatar-cartoon-boy-glasses-smiling-wearing-yellow-sweater-concept-happiness-warmth-344043680.jpg";
 
 type ChatMessage = { role: "bot" | "user"; content: string; video?: string; followUps?: { label: string; content: string }[] };
 
