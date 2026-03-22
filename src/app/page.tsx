@@ -103,7 +103,7 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
           <a href="/" className="flex items-center gap-2.5">
-            <span className="w-9 h-9 rounded-xl bg-orange-500 flex items-center justify-center text-white font-display font-bold text-sm">S</span>
+            <Image src="/stratabin-logo.png" alt="Stratabin" width={36} height={36} className="object-contain rounded-xl" />
             <span className="text-lg font-display font-bold text-black tracking-tight">Stratabin guide</span>
           </a>
           <div className="hidden md:flex items-center gap-8">
@@ -136,6 +136,10 @@ export default function Home() {
 
       {/* Hero - Jeton/Osmo style: single value prop, bold typography */}
       <section id="what-is-stratabin" className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden pt-28 pb-24 bg-[#0a0a0a]">
+        <div className="absolute inset-0">
+          <Image src="/stratabin-split-workspace.png" alt="" fill className="object-cover opacity-30" sizes="100vw" priority />
+        </div>
+        <div className="absolute inset-0 bg-[#0a0a0a]/70" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(249,115,22,0.15),transparent)]" />
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
