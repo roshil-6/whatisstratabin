@@ -17,6 +17,11 @@ const nextConfig = {
         hostname: "blog.iqmatrix.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "t4.ftcdn.net",
+        pathname: "/**",
+      },
     ],
   },
   async headers() {

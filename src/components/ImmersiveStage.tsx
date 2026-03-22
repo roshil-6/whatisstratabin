@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Suspense } from "react";
 import HeroScene from "./HeroScene";
+import { ATMOSPHERE_BLEND_SRC } from "@/lib/atmosphere";
 
 function CardLogo({ className = "" }: { className?: string }) {
   return (
@@ -66,15 +67,16 @@ export default function ImmersiveStage() {
           aria-hidden
         />
 
-        {/* WebGL particles */}
+        {/* WebGL particles — lowPower: fewer instances + throttled frames during long pin */}
         <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.36] md:opacity-[0.44]">
           <Suspense fallback={null}>
             <Canvas
               camera={{ position: [0, 0, 5], fov: 48 }}
               className="!h-full !w-full bg-transparent"
-              gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+              dpr={[1, 1.5]}
+              gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
             >
-              <HeroScene />
+              <HeroScene lowPower />
             </Canvas>
           </Suspense>
         </div>
@@ -83,14 +85,26 @@ export default function ImmersiveStage() {
         <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_75%_65%_at_40%_42%,rgba(249,115,22,0.11),transparent_58%)]" />
         <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_50%_40%_at_80%_60%,rgba(56,189,248,0.05),transparent_50%)]" />
 
-        {/* Floor grid hint */}
+        {/* Photo atmosphere — sits above base fills, blends like a reference portfolio wash */}
+        <div className="pointer-events-none absolute inset-0 z-[2] overflow-hidden opacity-[0.42]" aria-hidden>
+          <Image
+            src={ATMOSPHERE_BLEND_SRC}
+            alt=""
+            fill
+            className="object-cover mix-blend-soft-light saturate-[0.72] contrast-[1.02]"
+            sizes="100vw"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#020202]/55 via-transparent to-[#020202]/75 mix-blend-multiply" />
+        </div>
+
+        {/* Floor grid hint (above atmosphere z-[2]) */}
         <div
-          className="immersive-floor pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[38%] bg-[linear-gradient(to_top,rgba(249,115,22,0.04),transparent_55%),repeating-linear-gradient(90deg,transparent,transparent_47px,rgba(255,255,255,0.03)_47px,rgba(255,255,255,0.03)_48px),repeating-linear-gradient(0deg,transparent,transparent_47px,rgba(255,255,255,0.025)_47px,rgba(255,255,255,0.025)_48px)] opacity-40 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(400px)_rotateX(58deg)] [transform-origin:50%_100%]"
+          className="immersive-floor pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[38%] bg-[linear-gradient(to_top,rgba(249,115,22,0.04),transparent_55%),repeating-linear-gradient(90deg,transparent,transparent_47px,rgba(255,255,255,0.03)_47px,rgba(255,255,255,0.03)_48px),repeating-linear-gradient(0deg,transparent,transparent_47px,rgba(255,255,255,0.025)_47px,rgba(255,255,255,0.025)_48px)] opacity-40 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(400px)_rotateX(58deg)] [transform-origin:50%_100%]"
           aria-hidden
         />
 
         {/* 3D card stack */}
-        <div className="immersive-scene-shell pointer-events-none absolute inset-y-0 left-0 z-[2] hidden w-[54%] md:block lg:w-[50%] [perspective:1600px]">
+        <div className="immersive-scene-shell pointer-events-none absolute inset-y-0 left-0 z-[4] hidden w-[54%] md:block lg:w-[50%] [perspective:1600px]">
           <div className="absolute inset-0 flex items-center justify-center pl-4 lg:pl-14">
             <div className="immersive-scene-rotate relative h-[min(460px,58vh)] w-full max-w-[440px] [transform-style:preserve-3d]">
               {/* Accent ring */}
@@ -117,7 +131,7 @@ export default function ImmersiveStage() {
         </div>
 
         {/* Progress rail */}
-        <div className="pointer-events-none absolute left-5 top-1/2 z-[4] hidden -translate-y-1/2 md:block lg:left-8">
+        <div className="pointer-events-none absolute left-5 top-1/2 z-[6] hidden -translate-y-1/2 md:block lg:left-8">
           <div className="flex flex-col items-center gap-5">
             <div className="relative h-52 w-[3px] overflow-hidden rounded-full bg-white/[0.07]">
               <div className="immersive-progress-fill absolute inset-x-0 top-0 h-full origin-top scale-y-0 rounded-full bg-gradient-to-b from-orange-400 via-orange-500 to-amber-500/40 shadow-[0_0_24px_rgba(249,115,22,0.45)]" />
@@ -137,7 +151,7 @@ export default function ImmersiveStage() {
         {SLIDES.map((slide, i) => (
           <div
             key={`mark-${slide.mark}`}
-            className={`immersive-chapter-mark immersive-chapter-mark-${i + 1} pointer-events-none absolute right-[4%] top-1/2 z-[2] -translate-y-1/2 font-display text-[clamp(6rem,22vw,14rem)] font-bold leading-none text-white/[0.03] select-none md:right-[6%]`}
+            className={`immersive-chapter-mark immersive-chapter-mark-${i + 1} pointer-events-none absolute right-[4%] top-1/2 z-[4] -translate-y-1/2 font-display text-[clamp(6rem,22vw,14rem)] font-bold leading-none text-white/[0.03] select-none md:right-[6%]`}
             aria-hidden
           >
             {slide.mark}
@@ -145,7 +159,7 @@ export default function ImmersiveStage() {
         ))}
 
         {/* Copy column */}
-        <div className="relative z-[3] mx-auto w-full max-w-6xl px-8 md:pl-[48%] lg:px-24 lg:pl-[46%]">
+        <div className="relative z-[5] mx-auto w-full max-w-6xl px-8 md:pl-[48%] lg:px-24 lg:pl-[46%]">
           <p className="mb-10 text-[10px] font-semibold uppercase tracking-[0.45em] text-white/25">
             Stratabin · one workspace
           </p>
@@ -177,7 +191,7 @@ export default function ImmersiveStage() {
         </div>
 
         {/* Mobile card hint — logo chips */}
-        <div className="pointer-events-none absolute bottom-10 left-1/2 z-[2] flex -translate-x-1/2 items-center gap-2 md:hidden">
+        <div className="pointer-events-none absolute bottom-10 left-1/2 z-[7] flex -translate-x-1/2 items-center gap-2 md:hidden">
           <div className="flex h-16 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] shadow-lg backdrop-blur-sm">
             <Image src="/stratabin-logo.png" alt="" width={32} height={32} className="object-contain opacity-80" />
           </div>

@@ -10,6 +10,7 @@ import ManIcon from "@/components/ManIcon";
 import ChatAssistant from "@/components/ChatAssistant";
 import CardTilt from "@/components/CardTilt";
 import ImmersiveStage from "@/components/ImmersiveStage";
+import { ATMOSPHERE_BLEND_SRC } from "@/lib/atmosphere";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -104,7 +105,7 @@ export default function Home() {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.05,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
     lenisRef.current = lenis;
@@ -173,10 +174,9 @@ export default function Home() {
       gsap.set(".hero-scroll", { autoAlpha: 0 });
       gsap.set(".hero-image-motion", {
         y: 72,
-        scale: 1.14,
+        scale: 1.1,
         rotateY: -14,
-        filter: "blur(22px)",
-        autoAlpha: 0.06,
+        autoAlpha: 0.05,
         transformOrigin: "55% 50%",
         force3D: true,
       });
@@ -189,6 +189,7 @@ export default function Home() {
           pin: opts.pin,
           scrub: opts.scrub,
           anticipatePin: 1,
+          fastScrollEnd: true,
         },
       });
 
@@ -217,8 +218,7 @@ export default function Home() {
                 y: opts.pin ? 24 : 0,
                 scale: 1,
                 rotateY: 0,
-                filter: "blur(0px)",
-                autoAlpha: 0.22,
+                autoAlpha: 0.24,
                 duration: 0.88,
                 ease: "power2.out",
               },
@@ -226,7 +226,6 @@ export default function Home() {
                 y: opts.pin ? 140 : 100,
                 scale: opts.pin ? 0.94 : 1.02,
                 rotateY: opts.pin ? 6 : 2,
-                filter: "blur(0px)",
                 autoAlpha: opts.pin ? 0.12 : 0.18,
                 duration: 0.48,
                 ease: "power2.in",
@@ -249,10 +248,10 @@ export default function Home() {
       gsap.set(".immersive-step-1", { opacity: 1 });
       gsap.set(".immersive-chapter-mark-1", { autoAlpha: 0.09 });
       gsap.set([".immersive-chapter-mark-2", ".immersive-chapter-mark-3"], { autoAlpha: 0 });
-      gsap.set(".immersive-slide-1 .immersive-slide-title", { filter: "blur(0px)", y: 0 });
+      gsap.set(".immersive-slide-1 .immersive-slide-title", { y: 0, autoAlpha: 1 });
       gsap.set(".immersive-slide-2 .immersive-slide-title, .immersive-slide-3 .immersive-slide-title", {
-        filter: "blur(18px)",
-        y: 28,
+        y: 32,
+        autoAlpha: 0.12,
       });
       gsap.set(".immersive-slide-2 .immersive-slide-body, .immersive-slide-3 .immersive-slide-body", {
         autoAlpha: 0,
@@ -304,6 +303,7 @@ export default function Home() {
           pin: opts.pin,
           scrub: opts.scrub,
           anticipatePin: 1,
+          fastScrollEnd: true,
         },
       });
 
@@ -333,7 +333,7 @@ export default function Home() {
         .to(".immersive-chapter-mark-2", { autoAlpha: 0.11, duration: 0.28, ease: "power2.out" }, 0.22)
         .to(".immersive-slide-1", { autoAlpha: 0, y: -56, duration: 0.2, ease: "power2.in" }, 0.2)
         .to(".immersive-slide-2", { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.26)
-        .to(".immersive-slide-2 .immersive-slide-title", { filter: "blur(0px)", y: 0, duration: 0.38, ease: "power2.out" }, 0.28)
+        .to(".immersive-slide-2 .immersive-slide-title", { y: 0, autoAlpha: 1, duration: 0.38, ease: "power2.out" }, 0.28)
         .to(".immersive-slide-2 .immersive-slide-body", { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" }, 0.34)
         .to(".immersive-step-1", { opacity: 0.3, duration: 0.12 }, 0.2)
         .to(".immersive-step-2", { opacity: 1, duration: 0.2 }, 0.24)
@@ -341,7 +341,7 @@ export default function Home() {
         .to(".immersive-chapter-mark-3", { autoAlpha: 0.11, duration: 0.28, ease: "power2.out" }, 0.46)
         .to(".immersive-slide-2", { autoAlpha: 0, y: -56, duration: 0.18, ease: "power2.in" }, 0.44)
         .to(".immersive-slide-3", { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" }, 0.5)
-        .to(".immersive-slide-3 .immersive-slide-title", { filter: "blur(0px)", y: 0, duration: 0.38, ease: "power2.out" }, 0.52)
+        .to(".immersive-slide-3 .immersive-slide-title", { y: 0, autoAlpha: 1, duration: 0.38, ease: "power2.out" }, 0.52)
         .to(".immersive-slide-3 .immersive-slide-body", { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" }, 0.58)
         .to(".immersive-step-2", { opacity: 0.3, duration: 0.12 }, 0.44)
         .to(".immersive-step-3", { opacity: 1, duration: 0.2 }, 0.48)
@@ -394,12 +394,12 @@ export default function Home() {
     if (!prefersReduced) {
       mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
-        setupHeroScrollStory({ end: "+=120%", pin: true, scrub: 0.65 });
-        setupImmersiveStory({ end: "+=200%", pin: true, scrub: 0.38 });
+        setupHeroScrollStory({ end: "+=95%", pin: true, scrub: 0.35 });
+        setupImmersiveStory({ end: "+=150%", pin: true, scrub: 0.28 });
       });
       mm.add("(max-width: 767px)", () => {
-        setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.85 });
-        setupImmersiveStory({ end: "+=115%", pin: false, scrub: 0.82 });
+        setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.55 });
+        setupImmersiveStory({ end: "+=100%", pin: false, scrub: 0.5 });
       });
     } else {
       gsap.set(
@@ -579,6 +579,20 @@ export default function Home() {
           <div className="hero-ocean-blob hero-ocean-blob-b absolute -right-[15%] bottom-[-20%] h-[75vw] w-[75vw] max-w-[780px] max-h-[780px] rounded-full bg-sky-500/[0.07] blur-[90px] md:blur-[110px]" />
           <div className="hero-ocean-blob hero-ocean-blob-c absolute left-1/2 top-1/2 h-[55vw] w-[55vw] max-w-[520px] max-h-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-400/[0.06] blur-[80px] md:blur-[100px]" />
         </div>
+
+        {/* Subtle photo wash (blend) — same asset as immersive for continuity */}
+        <div className="pointer-events-none absolute inset-0 z-[0] overflow-hidden" aria-hidden>
+          <Image
+            src={ATMOSPHERE_BLEND_SRC}
+            alt=""
+            fill
+            className="object-cover opacity-[0.2] mix-blend-soft-light saturate-[0.72]"
+            sizes="100vw"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#050505]/70 via-transparent to-[#050505]/80 mix-blend-multiply" />
+        </div>
+
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(249,115,22,0.1),transparent)]" />
 
         <div className="hero-image pointer-events-none absolute right-[2%] top-1/2 z-[1] w-[50vw] max-w-[650px] -translate-y-1/2 select-none [transform-style:preserve-3d]">
