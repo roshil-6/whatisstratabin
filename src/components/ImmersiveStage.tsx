@@ -106,10 +106,14 @@ export default function ImmersiveStage() {
           aria-hidden
         />
 
-        {/* 3D card stack */}
-        <div className="immersive-scene-shell pointer-events-none absolute inset-y-0 left-0 z-[4] hidden w-[54%] md:block lg:w-[50%] [perspective:1600px]">
-          <div className="absolute inset-0 flex items-center justify-center pl-4 lg:pl-14">
-            <div className="immersive-scene-rotate relative h-[min(460px,58vh)] w-full max-w-[440px] [transform-style:preserve-3d]">
+        {/* 3D card stack — visible on mobile (centered + scaled); desktop keeps left rail layout */}
+        <div
+          className="immersive-scene-shell pointer-events-none absolute z-[4] [perspective:1400px] max-md:left-1/2 max-md:top-[2%] max-md:h-[min(280px,36vh)] max-md:w-[min(100vw-1.5rem,400px)] max-md:-translate-x-1/2 md:inset-y-0 md:left-0 md:top-0 md:w-[54%] md:translate-x-0 lg:w-[50%] md:[perspective:1600px]"
+        >
+          <div className="absolute inset-0 flex items-center justify-center md:pl-4 lg:pl-14">
+            {/* Wrapper scale only — GSAP owns transforms on .immersive-scene-rotate */}
+            <div className="max-md:origin-center max-md:scale-[0.68] [transform-style:preserve-3d] md:scale-100">
+              <div className="immersive-scene-rotate relative h-[min(320px,36vh)] w-full max-w-[min(380px,92vw)] [transform-style:preserve-3d] md:h-[min(460px,58vh)] md:max-w-[440px]">
               {/* Accent ring */}
               <div className="immersive-orbit-ring pointer-events-none absolute left-1/2 top-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-orange-500/[0.12] [transform:translateZ(-80px)]" />
 
@@ -129,6 +133,7 @@ export default function ImmersiveStage() {
                 </div>
                 <CardLogo className="[&_img]:max-h-[4.5rem] [&_img]:w-auto [&_img]:max-w-[82%]" />
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -161,8 +166,8 @@ export default function ImmersiveStage() {
           </div>
         ))}
 
-        {/* Copy column */}
-        <div className="relative z-[5] mx-auto w-full max-w-6xl px-8 md:pl-[48%] lg:px-24 lg:pl-[46%]">
+        {/* Copy column — top padding on small screens so headline clears floating cards */}
+        <div className="relative z-[5] mx-auto w-full max-w-6xl px-8 pt-[min(40vh,320px)] md:pt-0 md:pl-[48%] lg:px-24 lg:pl-[46%]">
           <p className="mb-10 text-[10px] font-semibold uppercase tracking-[0.45em] text-white/25">
             Stratabin · one workspace
           </p>
@@ -193,18 +198,6 @@ export default function ImmersiveStage() {
           </div>
         </div>
 
-        {/* Mobile card hint — logo chips */}
-        <div className="pointer-events-none absolute bottom-10 left-1/2 z-[7] flex -translate-x-1/2 items-center gap-2 md:hidden">
-          <div className="flex h-16 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] shadow-lg backdrop-blur-sm">
-            <Image src="/stratabin-logo.png" alt="" width={32} height={32} className="object-contain opacity-80" />
-          </div>
-          <div className="flex h-[4.5rem] w-12 -translate-y-2 items-center justify-center rounded-xl border border-orange-500/30 bg-gradient-to-b from-orange-500/15 to-transparent shadow-[0_12px_40px_-10px_rgba(249,115,22,0.35)]">
-            <Image src="/stratabin-logo.png" alt="" width={40} height={40} className="object-contain drop-shadow-md" />
-          </div>
-          <div className="flex h-16 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] shadow-lg backdrop-blur-sm">
-            <Image src="/stratabin-logo.png" alt="" width={32} height={32} className="object-contain opacity-80" />
-          </div>
-        </div>
       </div>
 
       {/* Seamless handoff into Mission (matches page bg #050505) */}
