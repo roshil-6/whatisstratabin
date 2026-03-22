@@ -24,9 +24,9 @@ const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas),
 
 const SLIDES = [
   {
-    kicker: "Structure",
+    kicker: "Same workspace",
     title: "See the whole map",
-    body: "Ideas stop living in scattered notes. Stratabin turns them into a visible flow you can steer before you ship.",
+    body: "That “turn ideas into action” line isn’t a jump to somewhere else—this is where your thoughts become a single map you can follow, not scattered notes.",
     mark: "01",
   },
   {
@@ -45,7 +45,10 @@ const SLIDES = [
 
 export default function ImmersiveStage() {
   return (
-    <section id="immersive" className="relative overflow-hidden bg-[#020202]">
+    <section
+      id="immersive"
+      className="relative overflow-hidden bg-[#050505] bg-gradient-to-b from-[#050505] via-[#060606] to-[#030303]"
+    >
       <div
         id="immersive-inner"
         className="relative flex min-h-screen w-full items-center justify-center overflow-hidden py-20 pt-28 md:py-24 md:pt-32"

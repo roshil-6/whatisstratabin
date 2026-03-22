@@ -456,7 +456,18 @@ export default function Home() {
       );
     });
 
-    NAV_SECTIONS.forEach(({ id }) => {
+    // Hero + immersive story = one chapter (nav 01) until Mission enters view
+    ScrollTrigger.create({
+      trigger: "#hero",
+      start: "top top",
+      endTrigger: "#mission",
+      end: "top center",
+      onToggle: (self) => {
+        if (self.isActive) setActiveSection("hero");
+      },
+    });
+
+    NAV_SECTIONS.filter((s) => s.id !== "hero").forEach(({ id }) => {
       ScrollTrigger.create({
         trigger: `#${id}`,
         start: "top center",
@@ -647,8 +658,6 @@ export default function Home() {
           <div className="w-px h-12 bg-gradient-to-b from-white/20 to-transparent" />
         </div>
       </section>
-
-      <div className="section-line" />
 
       <ImmersiveStage />
 
