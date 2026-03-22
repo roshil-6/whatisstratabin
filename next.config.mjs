@@ -14,11 +14,6 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "blog.iqmatrix.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
         hostname: "t4.ftcdn.net",
         pathname: "/**",
       },

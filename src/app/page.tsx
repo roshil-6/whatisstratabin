@@ -216,14 +216,6 @@ export default function Home() {
       gsap.set(".hero-desc", { y: 36, autoAlpha: 0 });
       gsap.set(".hero-cta", { y: 28, autoAlpha: 0 });
       gsap.set(".hero-scroll", { autoAlpha: 0 });
-      gsap.set(".hero-image-motion", {
-        y: 72,
-        scale: 1.1,
-        rotateY: -14,
-        autoAlpha: 0.05,
-        transformOrigin: "55% 50%",
-        force3D: true,
-      });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -253,31 +245,7 @@ export default function Home() {
         .to(".hero-title-line-2-inner", { yPercent: 0, autoAlpha: 1, duration: 0.52, ease: "power3.out" }, 0.22)
         .to(".hero-desc", { y: 0, autoAlpha: 1, duration: 0.42, ease: "power2.out" }, 0.34)
         .to(".hero-cta", { y: 0, autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 0.44)
-        .to(".hero-scroll", { autoAlpha: 1, duration: 0.35, ease: "power2.out" }, 0.52)
-        .to(
-          ".hero-image-motion",
-          {
-            keyframes: [
-              {
-                y: opts.pin ? 24 : 0,
-                scale: 1,
-                rotateY: 0,
-                autoAlpha: 0.24,
-                duration: 0.88,
-                ease: "power2.out",
-              },
-              {
-                y: opts.pin ? 140 : 100,
-                scale: opts.pin ? 0.94 : 1.02,
-                rotateY: opts.pin ? 6 : 2,
-                autoAlpha: opts.pin ? 0.12 : 0.18,
-                duration: 0.48,
-                ease: "power2.in",
-              },
-            ],
-          },
-          0
-        );
+        .to(".hero-scroll", { autoAlpha: 1, duration: 0.35, ease: "power2.out" }, 0.52);
 
       return tl;
     };
@@ -468,7 +436,6 @@ export default function Home() {
           ".hero-desc",
           ".hero-cta",
           ".hero-scroll",
-          ".hero-image-motion",
           ".immersive-slide-1",
           ".immersive-slide-2",
           ".immersive-slide-3",
@@ -677,21 +644,6 @@ export default function Home() {
         </div>
 
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(249,115,22,0.1),transparent)]" />
-
-        <div className="hero-image pointer-events-none absolute right-[2%] top-1/2 z-[2] w-[50vw] max-w-[650px] -translate-y-1/2 select-none [transform-style:preserve-3d]">
-          <div className="hero-image-motion relative aspect-square w-full will-change-transform">
-            <Image
-              src="https://blog.iqmatrix.com/wp-content/uploads/2009/03/How-to-Mind-Map-2000px.jpg"
-              alt="Mind map visualization"
-              fill
-              className="object-contain rounded-3xl"
-              sizes="50vw"
-              priority
-            />
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-l from-transparent via-[#050505]/45 to-[#050505]" />
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-[#050505]/55 via-transparent to-[#050505]/55" />
-          </div>
-        </div>
 
         <div className="relative z-10 max-w-5xl mx-auto px-8 lg:px-24 lg:pl-28">
           <p className="hero-intro font-display mb-6 flex flex-wrap gap-x-[0.35em] gap-y-1 text-2xl font-semibold tracking-tight text-white/90 sm:text-3xl md:text-4xl">
