@@ -492,21 +492,24 @@ export default function Home() {
       );
     }
 
-    /** once: true avoids “blink” when ScrollTrigger.refresh() runs (mission panels, accordions, etc.) */
+    /**
+     * Scroll reveal: noticeable motion + ease, but once: true so ScrollTrigger.refresh()
+     * (mission panels, accordions) doesn’t replay and cause blink.
+     */
     if (!prefersReduced) {
       gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
         gsap.fromTo(
           el,
-          { y: 48, autoAlpha: 0 },
+          { y: 64, autoAlpha: 0 },
           {
             y: 0,
             autoAlpha: 1,
-            duration: 0.85,
-            ease: "power3.out",
+            duration: 1.15,
+            ease: "power4.out",
             scrollTrigger: {
               trigger: el,
-              /** Stricter than 85% — sections under Mission don’t reveal until you scroll further */
-              start: "top 92%",
+              /** ~85%: reads clearly as you scroll in; not so late that it feels inert */
+              start: "top 86%",
               once: true,
             },
           }
