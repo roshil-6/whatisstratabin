@@ -43,174 +43,185 @@ const SLIDES = [
   },
 ];
 
+/** Mobile: readable cards, no WebGL / 3D / scroll-story DOM hooks */
+function ImmersiveMobileSimple() {
+  return (
+    <div className="relative z-10 border-t border-white/[0.06] bg-[#050505] px-5 py-14 md:hidden">
+      <p className="mb-10 text-[10px] font-semibold uppercase tracking-[0.45em] text-white/35">Stratabin · one workspace</p>
+      <div className="flex flex-col gap-8">
+        {SLIDES.map((slide, i) => (
+          <article
+            key={slide.kicker}
+            className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-sm"
+          >
+            <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-orange-400/90">
+              {String(i + 1).padStart(2, "0")} · {slide.kicker}
+            </span>
+            <h2 className="mt-3 font-display text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
+              {slide.title}
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-white/50">{slide.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function ImmersiveStage() {
   return (
     <section
       id="immersive"
       className="relative overflow-hidden bg-[#050505] bg-gradient-to-b from-[#050505] via-[#060606] to-[#030303]"
     >
-      <div
-        id="immersive-inner"
-        className="relative flex min-h-[100dvh] min-h-screen w-full flex-col items-stretch justify-start overflow-hidden py-20 pt-28 md:flex-row md:items-center md:justify-center md:py-24 md:pt-32"
-      >
-        {/* Film grain + vignette */}
-        <div
-          className="immersive-grain pointer-events-none absolute inset-0 z-[5] opacity-[0.07] mix-blend-overlay"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute inset-0 z-[5] bg-[radial-gradient(ellipse_55%_50%_at_50%_50%,transparent_0%,rgba(0,0,0,0.5)_100%)]"
-          aria-hidden
-        />
+      <div id="immersive-inner" className="relative w-full">
+        <ImmersiveMobileSimple />
 
-        {/* Scroll-linked glow drift */}
-        <div
-          className="immersive-glow pointer-events-none absolute left-1/2 top-1/2 z-[1] h-[140%] w-[140%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle_at_var(--gx,50%)_var(--gy,45%),rgba(249,115,22,0.14)_0%,transparent_42%)] opacity-80"
-          style={{ "--gx": "48%", "--gy": "42%" } as React.CSSProperties}
-          aria-hidden
-        />
-
-        {/* WebGL particles — lowPower: fewer instances + throttled frames during long pin */}
-        <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.36] md:opacity-[0.44]">
-          <Suspense fallback={null}>
-            <Canvas
-              camera={{ position: [0, 0, 5], fov: 48 }}
-              className="!h-full !w-full bg-transparent"
-              dpr={[1, 1.5]}
-              gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
-            >
-              <HeroScene lowPower />
-            </Canvas>
-          </Suspense>
-        </div>
-
-        <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#020202] via-[#030303]/88 to-[#020202]" />
-        <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_75%_65%_at_40%_42%,rgba(249,115,22,0.11),transparent_58%)]" />
-        <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_50%_40%_at_80%_60%,rgba(56,189,248,0.05),transparent_50%)]" />
-
-        {/* Photo atmosphere — sits above base fills, blends like a reference portfolio wash */}
-        <div className="pointer-events-none absolute inset-0 z-[2] overflow-hidden opacity-[0.42]" aria-hidden>
-          <Image
-            src={ATMOSPHERE_BLEND_SRC}
-            alt=""
-            fill
-            className="object-cover mix-blend-soft-light saturate-[0.72] contrast-[1.02]"
-            sizes="100vw"
+        {/* Desktop-only: scroll-linked scene + 3D (classes used by GSAP) */}
+        <div className="relative hidden min-h-[100dvh] min-h-screen w-full flex-col items-stretch justify-start overflow-hidden py-20 pt-28 md:flex md:flex-row md:items-center md:justify-center md:py-24 md:pt-32">
+          {/* Film grain + vignette */}
+          <div
+            className="immersive-grain pointer-events-none absolute inset-0 z-[5] opacity-[0.07] mix-blend-overlay"
+            aria-hidden
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#020202]/55 via-transparent to-[#020202]/75 mix-blend-multiply" />
-        </div>
+          <div
+            className="pointer-events-none absolute inset-0 z-[5] bg-[radial-gradient(ellipse_55%_50%_at_50%_50%,transparent_0%,rgba(0,0,0,0.5)_100%)]"
+            aria-hidden
+          />
 
-        {/* Floor grid hint (above atmosphere z-[2]) */}
-        <div
-          className="immersive-floor pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[38%] bg-[linear-gradient(to_top,rgba(249,115,22,0.04),transparent_55%),repeating-linear-gradient(90deg,transparent,transparent_47px,rgba(255,255,255,0.03)_47px,rgba(255,255,255,0.03)_48px),repeating-linear-gradient(0deg,transparent,transparent_47px,rgba(255,255,255,0.025)_47px,rgba(255,255,255,0.025)_48px)] opacity-40 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(400px)_rotateX(58deg)] [transform-origin:50%_100%]"
-          aria-hidden
-        />
+          <div
+            className="immersive-glow pointer-events-none absolute left-1/2 top-1/2 z-[1] h-[140%] w-[140%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle_at_var(--gx,50%)_var(--gy,45%),rgba(249,115,22,0.14)_0%,transparent_42%)] opacity-80"
+            style={{ "--gx": "48%", "--gy": "42%" } as React.CSSProperties}
+            aria-hidden
+          />
 
-        {/*
-          Copy first in DOM: on mobile it stacks above the cards (no 3D overlap on headline).
-          Desktop: scene stays position absolute left; copy keeps md:pl-[48%].
-        */}
-        {/* Copy column */}
-        <div className="relative z-[6] mx-auto w-full max-w-6xl shrink-0 px-6 md:z-[5] md:px-8 md:pl-[48%] lg:px-24 lg:pl-[46%]">
-          <p className="mb-6 text-[10px] font-semibold uppercase tracking-[0.45em] text-white/25 md:mb-10">
-            Stratabin · one workspace
-          </p>
-
-          <div className="relative min-h-[min(42vh,320px)] md:min-h-[300px]">
-            {SLIDES.map((slide, i) => (
-              <div
-                key={slide.kicker}
-                className={`immersive-slide immersive-slide-${i + 1} max-w-xl ${i === 0 ? "relative" : "absolute inset-0"}`}
+          <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.44]">
+            <Suspense fallback={null}>
+              <Canvas
+                camera={{ position: [0, 0, 5], fov: 48 }}
+                className="!h-full !w-full bg-transparent"
+                dpr={[1, 1.5]}
+                gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
               >
-                <p className="immersive-slide-kicker mb-4 text-[11px] font-bold uppercase tracking-[0.4em] text-orange-400/90">
-                  {slide.kicker}
-                </p>
-                <h2 className="immersive-slide-title font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-white md:text-[clamp(2.25rem,4.2vw,3.75rem)]">
-                  {slide.title}
-                </h2>
-                <p className="immersive-slide-body mt-6 max-w-md text-base leading-relaxed text-white/40 md:text-lg md:leading-relaxed">
-                  {slide.body}
-                </p>
-              </div>
-            ))}
+                <HeroScene lowPower />
+              </Canvas>
+            </Suspense>
           </div>
 
-          <div className="immersive-scroll-hint mt-12 flex items-center gap-4 text-white/30 md:mt-20">
-            <div className="h-px w-14 bg-gradient-to-r from-orange-400/60 via-orange-500/30 to-transparent" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.4em]">Scroll to continue</span>
-            <div className="hidden h-1 w-1 animate-pulse rounded-full bg-orange-400/80 sm:block" />
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#020202] via-[#030303]/88 to-[#020202]" />
+          <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_75%_65%_at_40%_42%,rgba(249,115,22,0.11),transparent_58%)]" />
+          <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_50%_40%_at_80%_60%,rgba(56,189,248,0.05),transparent_50%)]" />
+
+          <div className="pointer-events-none absolute inset-0 z-[2] overflow-hidden opacity-[0.42]" aria-hidden>
+            <Image
+              src={ATMOSPHERE_BLEND_SRC}
+              alt=""
+              fill
+              className="object-cover mix-blend-soft-light saturate-[0.72] contrast-[1.02]"
+              sizes="100vw"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#020202]/55 via-transparent to-[#020202]/75 mix-blend-multiply" />
           </div>
-        </div>
 
-        {/* 3D card stack — mobile: static block below copy (no overlap). Desktop: absolute left rail. */}
-        <div
-          className="immersive-scene-shell pointer-events-none relative z-[1] mx-auto mt-2 h-[min(240px,34vh)] w-full max-w-[min(100vw-1.5rem,400px)] shrink-0 [perspective:1400px] max-md:mb-4 md:absolute md:inset-y-0 md:left-0 md:top-0 md:z-[4] md:mt-0 md:h-auto md:max-w-none md:w-[54%] md:translate-x-0 lg:w-[50%] md:[perspective:1600px]"
-        >
-          <div className="flex h-full items-center justify-center md:absolute md:inset-0 md:pl-4 lg:pl-14">
-            {/* Wrapper scale only — GSAP owns transforms on .immersive-scene-rotate */}
-            <div className="max-md:origin-center max-md:scale-[0.62] [transform-style:preserve-3d] md:scale-100">
-              <div className="immersive-scene-rotate relative mx-auto h-[min(280px,32vh)] w-full max-w-[min(360px,90vw)] [transform-style:preserve-3d] md:h-[min(460px,58vh)] md:max-w-[440px]">
-              {/* Accent ring */}
-              <div className="immersive-orbit-ring pointer-events-none absolute left-1/2 top-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-orange-500/[0.12] [transform:translateZ(-80px)]" />
+          <div
+            className="immersive-floor pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[38%] bg-[linear-gradient(to_top,rgba(249,115,22,0.04),transparent_55%),repeating-linear-gradient(90deg,transparent,transparent_47px,rgba(255,255,255,0.03)_47px,rgba(255,255,255,0.03)_48px),repeating-linear-gradient(0deg,transparent,transparent_47px,rgba(255,255,255,0.025)_47px,rgba(255,255,255,0.025)_48px)] opacity-40 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(400px)_rotateX(58deg)] [transform-origin:50%_100%]"
+            aria-hidden
+          />
 
-              <div className="immersive-card immersive-card-a absolute left-1/2 top-1/2 h-[14rem] w-[10.5rem] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.35rem] border border-orange-400/30 bg-gradient-to-br from-orange-500/[0.22] via-orange-600/[0.08] to-white/[0.02] shadow-[0_32px_100px_-28px_rgba(249,115,22,0.55),inset_0_1px_0_rgba(255,255,255,0.12)] ring-1 ring-white/10 [background-image:linear-gradient(135deg,rgba(255,255,255,0.08)_0%,transparent_50%),repeating-linear-gradient(0deg,transparent,transparent_11px,rgba(255,255,255,0.04)_11px,rgba(255,255,255,0.04)_12px)]">
-                <div className="absolute left-4 top-4 z-10 h-2 w-2 rounded-full bg-orange-400/80 shadow-[0_0_12px_rgba(249,115,22,0.8)]" />
-                <CardLogo className="[&_img]:max-h-[5.5rem] [&_img]:w-auto [&_img]:max-w-[85%]" />
-              </div>
-              <div className="immersive-card immersive-card-b absolute left-1/2 top-1/2 h-[15rem] w-[11.5rem] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.35rem] border border-white/[0.14] bg-white/[0.06] shadow-[0_40px_100px_-40px_rgba(0,0,0,0.9)] backdrop-blur-xl ring-1 ring-white/[0.08] [background-image:repeating-linear-gradient(90deg,transparent,transparent_15px,rgba(255,255,255,0.035)_15px,rgba(255,255,255,0.035)_16px)]">
-                <div className="absolute bottom-5 left-5 right-5 z-10 h-px bg-gradient-to-r from-transparent via-orange-500/40 to-transparent" />
-                <CardLogo className="[&_img]:max-h-[7rem] [&_img]:w-auto [&_img]:max-w-[88%]" />
-              </div>
-              <div className="immersive-card immersive-card-c absolute left-1/2 top-1/2 h-[12rem] w-[9.25rem] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.25rem] border border-white/[0.1] bg-gradient-to-tl from-cyan-500/[0.06] via-white/[0.04] to-transparent opacity-95 shadow-xl ring-1 ring-cyan-400/10 [background-image:linear-gradient(180deg,rgba(255,255,255,0.06),transparent)]">
-                <div className="absolute right-4 top-4 z-10 flex gap-1">
-                  <span className="h-1 w-1 rounded-full bg-white/30" />
-                  <span className="h-1 w-1 rounded-full bg-white/20" />
-                  <span className="h-1 w-1 rounded-full bg-white/15" />
-                </div>
-                <CardLogo className="[&_img]:max-h-[4.5rem] [&_img]:w-auto [&_img]:max-w-[82%]" />
-              </div>
-            </div>
-            </div>
-          </div>
-        </div>
+          <div className="relative z-[6] mx-auto w-full max-w-6xl shrink-0 px-6 md:z-[5] md:px-8 md:pl-[48%] lg:px-24 lg:pl-[46%]">
+            <p className="mb-6 text-[10px] font-semibold uppercase tracking-[0.45em] text-white/25 md:mb-10">
+              Stratabin · one workspace
+            </p>
 
-        {/* Progress rail */}
-        <div className="pointer-events-none absolute left-5 top-1/2 z-[6] hidden -translate-y-1/2 md:block lg:left-8">
-          <div className="flex flex-col items-center gap-5">
-            <div className="relative h-52 w-[3px] overflow-hidden rounded-full bg-white/[0.07]">
-              <div className="immersive-progress-fill absolute inset-x-0 top-0 h-full origin-top scale-y-0 rounded-full bg-gradient-to-b from-orange-400 via-orange-500 to-amber-500/40 shadow-[0_0_24px_rgba(249,115,22,0.45)]" />
-            </div>
-            <div className="flex flex-col gap-2.5">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className={`immersive-step immersive-step-${n} flex items-center gap-2 opacity-35`}>
-                  <span className="immersive-step-dot h-2 w-2 rounded-full border border-white/25 bg-white/10 shadow-inner" />
-                  <span className="font-mono text-[9px] tracking-widest text-white/40">0{n}</span>
+            <div className="relative min-h-[min(52vh,380px)] md:min-h-[300px]">
+              {SLIDES.map((slide, i) => (
+                <div
+                  key={slide.kicker}
+                  className={`immersive-slide immersive-slide-${i + 1} max-w-xl ${i === 0 ? "relative" : "absolute inset-0"}`}
+                >
+                  <p className="immersive-slide-kicker mb-4 text-[11px] font-bold uppercase tracking-[0.4em] text-orange-400/90">
+                    {slide.kicker}
+                  </p>
+                  <h2 className="immersive-slide-title font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-white md:text-[clamp(2.25rem,4.2vw,3.75rem)]">
+                    {slide.title}
+                  </h2>
+                  <p className="immersive-slide-body mt-6 max-w-md text-base leading-relaxed text-white/40 md:text-lg md:leading-relaxed">
+                    {slide.body}
+                  </p>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
 
-        {/* Giant chapter watermark */}
-        {SLIDES.map((slide, i) => (
+            <div className="immersive-scroll-hint mt-12 flex items-center gap-4 text-white/30 md:mt-20">
+              <div className="h-px w-14 bg-gradient-to-r from-orange-400/60 via-orange-500/30 to-transparent" />
+              <span className="text-[10px] font-semibold uppercase tracking-[0.4em]">Scroll to continue</span>
+              <div className="hidden h-1 w-1 animate-pulse rounded-full bg-orange-400/80 sm:block" />
+            </div>
+          </div>
+
           <div
-            key={`mark-${slide.mark}`}
-            className={`immersive-chapter-mark immersive-chapter-mark-${i + 1} pointer-events-none absolute right-[4%] top-1/2 z-[4] hidden -translate-y-1/2 font-display text-[clamp(4.5rem,36vw,14rem)] font-bold leading-none text-white/[0.025] select-none md:right-[6%] md:block md:text-[clamp(6rem,22vw,14rem)] md:text-white/[0.03]`}
-            aria-hidden
+            className="immersive-scene-shell pointer-events-none absolute z-[4] [perspective:1600px] inset-y-0 left-0 top-0 w-[54%] translate-x-0 lg:w-[50%]"
           >
-            {slide.mark}
-          </div>
-        ))}
+            <div className="absolute inset-0 flex items-center justify-center md:pl-4 lg:pl-14">
+              <div className="[transform-style:preserve-3d]">
+                <div className="immersive-scene-rotate relative h-[min(460px,58vh)] w-full max-w-[440px] [transform-style:preserve-3d]">
+                  <div className="immersive-orbit-ring pointer-events-none absolute left-1/2 top-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-orange-500/[0.12] [transform:translateZ(-80px)]" />
 
+                  <div className="immersive-card immersive-card-a absolute left-1/2 top-1/2 h-[14rem] w-[10.5rem] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.35rem] border border-orange-400/30 bg-gradient-to-br from-orange-500/[0.22] via-orange-600/[0.08] to-white/[0.02] shadow-[0_32px_100px_-28px_rgba(249,115,22,0.55),inset_0_1px_0_rgba(255,255,255,0.12)] ring-1 ring-white/10 [background-image:linear-gradient(135deg,rgba(255,255,255,0.08)_0%,transparent_50%),repeating-linear-gradient(0deg,transparent,transparent_11px,rgba(255,255,255,0.04)_11px,rgba(255,255,255,0.04)_12px)]">
+                    <div className="absolute left-4 top-4 z-10 h-2 w-2 rounded-full bg-orange-400/80 shadow-[0_0_12px_rgba(249,115,22,0.8)]" />
+                    <CardLogo className="[&_img]:max-h-[5.5rem] [&_img]:w-auto [&_img]:max-w-[85%]" />
+                  </div>
+                  <div className="immersive-card immersive-card-b absolute left-1/2 top-1/2 h-[15rem] w-[11.5rem] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.35rem] border border-white/[0.14] bg-white/[0.06] shadow-[0_40px_100px_-40px_rgba(0,0,0,0.9)] backdrop-blur-xl ring-1 ring-white/[0.08] [background-image:repeating-linear-gradient(90deg,transparent,transparent_15px,rgba(255,255,255,0.035)_15px,rgba(255,255,255,0.035)_16px)]">
+                    <div className="absolute bottom-5 left-5 right-5 z-10 h-px bg-gradient-to-r from-transparent via-orange-500/40 to-transparent" />
+                    <CardLogo className="[&_img]:max-h-[7rem] [&_img]:w-auto [&_img]:max-w-[88%]" />
+                  </div>
+                  <div className="immersive-card immersive-card-c absolute left-1/2 top-1/2 h-[12rem] w-[9.25rem] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.25rem] border border-white/[0.1] bg-gradient-to-tl from-cyan-500/[0.06] via-white/[0.04] to-transparent opacity-95 shadow-xl ring-1 ring-cyan-400/10 [background-image:linear-gradient(180deg,rgba(255,255,255,0.06),transparent)]">
+                    <div className="absolute right-4 top-4 z-10 flex gap-1">
+                      <span className="h-1 w-1 rounded-full bg-white/30" />
+                      <span className="h-1 w-1 rounded-full bg-white/20" />
+                      <span className="h-1 w-1 rounded-full bg-white/15" />
+                    </div>
+                    <CardLogo className="[&_img]:max-h-[4.5rem] [&_img]:w-auto [&_img]:max-w-[82%]" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="pointer-events-none absolute left-5 top-1/2 z-[6] hidden -translate-y-1/2 md:block lg:left-8">
+            <div className="flex flex-col items-center gap-5">
+              <div className="relative h-52 w-[3px] overflow-hidden rounded-full bg-white/[0.07]">
+                <div className="immersive-progress-fill absolute inset-x-0 top-0 h-full origin-top scale-y-0 rounded-full bg-gradient-to-b from-orange-400 via-orange-500 to-amber-500/40 shadow-[0_0_24px_rgba(249,115,22,0.45)]" />
+              </div>
+              <div className="flex flex-col gap-2.5">
+                {[1, 2, 3].map((n) => (
+                  <div key={n} className={`immersive-step immersive-step-${n} flex items-center gap-2 opacity-35`}>
+                    <span className="immersive-step-dot h-2 w-2 rounded-full border border-white/25 bg-white/10 shadow-inner" />
+                    <span className="font-mono text-[9px] tracking-widest text-white/40">0{n}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {SLIDES.map((slide, i) => (
+            <div
+              key={`mark-${slide.mark}`}
+              className={`immersive-chapter-mark immersive-chapter-mark-${i + 1} pointer-events-none absolute right-[6%] top-1/2 z-[4] -translate-y-1/2 font-display text-[clamp(6rem,22vw,14rem)] font-bold leading-none text-white/[0.03] select-none`}
+              aria-hidden
+            >
+              {slide.mark}
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Seamless handoff into Mission (matches page bg #050505) */}
       <div
         className="immersive-to-mission relative z-[6] w-full bg-gradient-to-b from-transparent via-[#050505]/85 to-[#050505] pt-6 md:pt-10"
         aria-hidden
       >
-        <div className="mx-auto h-px max-w-4xl bg-gradient-to-r from-transparent via-orange-500/20 to-transparent opacity-80" />
-        <div className="h-12 md:h-16" />
+        <div className="mx-auto h-px max-w-4xl bg-gradient-to-r from-transparent via-orange-500/20 to-transparent opacity-80 max-md:opacity-40" />
+        <div className="h-10 md:h-16" />
       </div>
     </section>
   );

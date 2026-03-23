@@ -69,6 +69,15 @@ html.lenis body {
   transform: translate3d(0, 64px, 0);
 }
 
+/* Mobile: no scroll-reveal — stay visible (matches GSAP clearProps on small viewports) */
+@media (max-width: 767px) {
+  .reveal-up {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal-up {
     opacity: 1;
@@ -119,6 +128,13 @@ html.lenis body {
   }
   66% {
     transform: translate(-3%, 2%) scale(0.96);
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-ocean-blob {
+    animation: none;
+    opacity: 0.3;
   }
 }
 

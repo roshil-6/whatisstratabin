@@ -441,18 +441,28 @@ export default function Home() {
       return tl;
     };
 
+    /** Mobile: no scroll-scrub stories — everything readable immediately */
+    const applyMobileHeroStatic = () => {
+      const introWords = gsap.utils.toArray<HTMLElement>(".hero-intro-word-inner");
+      gsap.set(introWords, { yPercent: 0, autoAlpha: 1 });
+      gsap.set(".hero-tag", { y: 0, autoAlpha: 1 });
+      gsap.set(".hero-title-line-inner", { yPercent: 0, autoAlpha: 1 });
+      gsap.set(".hero-title-line-2-inner", { yPercent: 0, autoAlpha: 1 });
+      gsap.set(".hero-desc", { y: 0, autoAlpha: 1 });
+      gsap.set(".hero-cta", { y: 0, autoAlpha: 1 });
+      gsap.set(".hero-scroll", { autoAlpha: 0 });
+    };
+
     let mm: ReturnType<typeof gsap.matchMedia> | null = null;
 
     if (!prefersReduced) {
       mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
-        /** No pin: continuous scroll; scrub over hero / immersive passing the viewport */
         setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.45 });
         setupImmersiveStory({ end: "bottom top", pin: false, scrub: 0.35 });
       });
       mm.add("(max-width: 767px)", () => {
-        setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.5 });
-        setupImmersiveStory({ end: "bottom top", pin: false, scrub: 0.55 });
+        applyMobileHeroStatic();
       });
     } else {
       gsap.set(
@@ -489,28 +499,29 @@ export default function Home() {
       );
     }
 
-    /**
-     * Scroll reveal: noticeable motion + ease, but once: true so ScrollTrigger.refresh()
-     * (mission panels, accordions) doesn’t replay and cause blink.
-     */
-    if (!prefersReduced) {
-      gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
-        gsap.fromTo(
-          el,
-          { y: 64, autoAlpha: 0 },
-          {
-            y: 0,
-            autoAlpha: 1,
-            duration: 1.15,
-            ease: "power4.out",
-            scrollTrigger: {
-              trigger: el,
-              /** ~85%: reads clearly as you scroll in; not so late that it feels inert */
-              start: "top 86%",
-              once: true,
-            },
-          }
-        );
+    /** Scroll reveal — desktop only; mobile uses plain layout (CSS + no GSAP) */
+    if (!prefersReduced && mm) {
+      mm.add("(min-width: 768px)", () => {
+        gsap.utils.toArray<HTMLElement>(".reveal-up").forEach((el) => {
+          gsap.fromTo(
+            el,
+            { y: 64, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 1.15,
+              ease: "power4.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 86%",
+                once: true,
+              },
+            }
+          );
+        });
+      });
+      mm.add("(max-width: 767px)", () => {
+        gsap.set(gsap.utils.toArray<HTMLElement>(".reveal-up"), { clearProps: "all" });
       });
     } else {
       gsap.set(gsap.utils.toArray<HTMLElement>(".reveal-up"), { clearProps: "all" });
@@ -770,7 +781,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="hero-scroll absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+        <div className="hero-scroll absolute bottom-12 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex">
           <span className="text-[10px] tracking-[0.3em] uppercase text-white/20">Scroll</span>
           <div className="w-px h-12 bg-gradient-to-b from-white/20 to-transparent" />
         </div>
