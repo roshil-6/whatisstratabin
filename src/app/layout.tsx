@@ -7,7 +7,7 @@ const syne = Syne({ subsets: ["latin"], variable: "--font-syne" });
 
 export const metadata: Metadata = {
   title: "Stratabin | From Thinking to Doing",
-  description: "Stratabin is a structured workspace designed to turn scattered ideas into clear plans and actionable execution.",
+  description: "See your thinking as a map, write the plan, schedule and do the work—use STRAB from the dashboard or inside each project. guide.stratabin.com for the full story.",
 };
 
 export default function RootLayout({

@@ -10,34 +10,44 @@ type ChatMessage = { role: "bot" | "user"; content: string; video?: string; foll
 const FIXED_QUESTIONS = [
   {
     id: "stratabin",
-    label: "Know about Stratabin!",
-    content: "Stratabin is a structured workspace that helps you turn scattered ideas into clear plans and actionable execution. Instead of writing notes that go nowhere, you organize ideas, visualize them as a flow, create tasks, and track progress\u2014all in one place.",
+    label: "Start here — what is Stratabin?",
+    content: "Bottom line: Stratabin helps you stop losing ideas in random notes. You see your thinking as a map, write the plan, schedule and do the work, and optionally use AI (STRAB) to create new plans or sharpen the one you\u2019re already on\u2014from the dashboard and inside each project. In one sentence: think on the map \u2192 write it down \u2192 turn it into tasks and dates \u2192 use AI to stay on track.",
     followUps: [
-      { label: "How is it different from note apps?", content: "Most note apps let you write\u2014few help you structure and act. Stratabin combines writing, planning, flow visualization, and task execution in one system. You can break ideas into sections, see how steps connect, and track what you\u2019ve actually completed." },
-      { label: "What can I do with it?", content: "Create projects, map strategies on a visual canvas, add tasks with checkboxes, use AI (Strab AI) to organize messy thoughts, and collaborate with teams. You get workspaces, timelines, reports, and a community\u2014all in one platform." },
+      { label: "Dashboard vs inside a project?", content: "The dashboard is your home screen: all projects, folders, STRAB in the header for brand-new AI plans, profile, community, How to use. Inside a project is one workspace for that goal: flow map, writing, tasks, timeline & calendar, and STRAB that knows that project." },
+      { label: "The two STRABs?", content: "STRAB from the main dashboard (header): \u201cI want to start something new and have AI help me build the first version of the plan.\u201d STRAB inside a project: \u201cI\u2019m already working on this\u2014help me improve it, question it, and summarize it.\u201d That\u2019s the main split." },
     ],
   },
   {
-    id: "features",
-    label: "What are the main features?",
-    content: "Stratabin offers: (1) Workspaces \u2014 Individual (private) or Team (shared with members). Team workspaces include a group chat; anyone who joins via the admin link is auto-added to it. (2) Strategy \u2014 Writing planner + flow canvas to map ideas, questions, and decisions. (3) Projects \u2014 Organize work with folders, statuses, and progress tracking. (4) AI & Reports \u2014 Strab AI helps clarify ideas; reports show progress. (5) Community \u2014 Connect with other Stratabin users. (6) Extras \u2014 Calendar, tasks, timeline, and more.",
+    id: "dashboard",
+    label: "Your dashboard (home screen)",
+    content: "This is where you see all your projects. A project is one big goal or idea\u2014like launch a product, plan a wedding, or grow the business. You can start a blank project and fill it in yourself, or use STRAB in the header when you want AI to help create a whole new plan from scratch (ideas, connections, and notes sketched out). You can also sort projects into folders, join team workspaces, open your profile, visit the community, or open How to use for the guide again.",
+  },
+  {
+    id: "inside-project",
+    label: "Inside one project",
+    content: "You get one workspace for that goal. Most people use: Strategy / flow view\u2014a map of ideas (boxes and links), not just a long document. Writing\u2014overview, plans, notes in the same project. Tasks\u2014break work into todos and check them off. Timeline & calendar\u2014dates and phases so there\u2019s a when, not only a what. STRAB for this project knows that workspace: summaries, risks, what to do next, reports\u2014like a coach that\u2019s read your map, tasks, and writing.",
+  },
+  {
+    id: "guide-site",
+    label: "The guide website",
+    content: "guide.stratabin.com is the friendly explanation: what Stratabin is, why it exists, and how it\u2019s meant to help you go from \u201cI have an idea\u201d to \u201cI\u2019m actually doing it.\u201d You can open it from the app whenever you want that story in normal language.",
   },
   {
     id: "individual",
-    label: "Individual workspace breakdown",
+    label: "Individual workspace (video)",
     content: "Your own private space. Only you can see it. Add as many projects as you need. Perfect for solo planning, personal goals, or organizing ideas before sharing with a team.",
     video: "/videos/strtabin%20ad%203.mp4",
   },
   {
     id: "team",
-    label: "Team workspace breakdown",
-    content: "Invite people by email or username, or share an admin-provided link. When someone joins via that link, they are automatically added to the workspace and to its group chat. Admins can invite others and manage daily tasks. Members can work on shared projects and chat together.",
+    label: "Team workspace (video)",
+    content: "With teams you share workspaces: same projects, chat, and daily rhythm together\u2014instead of everyone in separate notes and chats. Invite people by email or username, or share an admin link; joiners are often auto-added to the workspace and group chat.",
     video: "/videos/workspace%20stratabin.mp4",
   },
   {
     id: "get-started",
     label: "How do I get started?",
-    content: "Visit stratabin.com to sign up and create your first workspace. Start with an Individual workspace to explore projects, the flow canvas, and tasks. When you\u2019re ready, create a Team workspace to collaborate with others.",
+    content: "Visit stratabin.com to sign up. Create a project from the dashboard\u2014blank or with STRAB in the header. Open the project to use the map, writing, tasks, and calendar; use STRAB there when you want help on that specific plan.",
   },
 ];
 

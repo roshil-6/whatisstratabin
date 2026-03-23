@@ -15,11 +15,15 @@ import { ATMOSPHERE_BLEND_SRC, HERO_OVERLAY_BLEND_SRC } from "@/lib/atmosphere";
 gsap.registerPlugin(ScrollTrigger);
 
 const FAQ_ITEMS = [
-  { q: "What is Stratabin?", a: "Stratabin is a structured workspace that helps you turn scattered ideas into clear plans and actionable execution. Instead of writing notes that go nowhere, you organize ideas, visualize them as a flow, create tasks, and track progress\u2014all in one place." },
-  { q: "How is Stratabin different from note-taking apps?", a: "Most note apps let you write\u2014few help you structure and act. Stratabin combines writing, planning, flow visualization, and task execution in one system. You can break ideas into sections, see how steps connect, and track what you\u2019ve actually completed." },
-  { q: "Can I use Stratabin with my team?", a: "Yes. Stratabin has a Team Workspace where you can create shared folders, invite members via email or an admin link, and collaborate on projects. Admins can assign roles (Admin or Member) to team members. There\u2019s also a Daily Tasks feature for tracking progress with checkboxes." },
-  { q: "What is Strab AI?", a: "Strab AI is Stratabin\u2019s built-in AI assistant. It helps organize messy thoughts, highlight key points, and improve clarity when your ideas aren\u2019t structured. It works inside your projects and can also assist team plans." },
-  { q: "Is Stratabin free?", a: "Stratabin is continuously evolving. Check the official Stratabin website for current pricing and availability." },
+  { q: "What is Stratabin?", a: "Stratabin helps you stop losing ideas in random notes. You see your thinking as a map, write the plan, schedule and do the work, and optionally use AI to create new plans or sharpen the one you\u2019re already on\u2014through STRAB in the dashboard and in each project." },
+  { q: "What is the dashboard?", a: "Your home screen is where you see all your projects. A project is one big goal or idea\u2014like \u201claunch a product,\u201d \u201cplan a wedding,\u201d or \u201cgrow the business.\u201d You can start a blank project, use STRAB in the header for AI help building a whole new plan, sort projects into folders, join team workspaces, open your profile, visit the community, or open \u201cHow to use\u201d for the guide again." },
+  { q: "What do I do inside a project?", a: "You open one workspace for that goal. Most people move through: Strategy / flow view (a map of ideas\u2014boxes and links, not just a long document), Writing (overview, plans, notes in the same project), Tasks (break work into todos and check them off), Timeline & calendar (dates and phases so the plan has a when). STRAB for that project is AI that knows that workspace\u2014summaries, risks, what to do next, and reports." },
+  { q: "In one sentence, how does Stratabin flow?", a: "Think on the map \u2192 write it down \u2192 turn it into tasks and dates \u2192 use AI to stay on track." },
+  { q: "Are there two different STRABs?", a: "Yes, in the simple version: STRAB from the main dashboard (header) is for starting something new and having AI help build the first version of the plan. STRAB inside a project is for when you\u2019re already working on that thing\u2014help to improve it, question it, and summarize it. That\u2019s the main split to remember." },
+  { q: "How is Stratabin different from note-taking apps?", a: "Most tools let you write ideas\u2014few help you structure and act. Stratabin combines a visual strategy map, writing, tasks, timeline and calendar, and optional AI in one place so you go from \u201cI have an idea\u201d to \u201cI\u2019m actually doing it.\u201d" },
+  { q: "Can I use Stratabin with my team?", a: "Yes. With teams you can share workspaces: same projects, chat, and daily rhythm together\u2014instead of everyone living in separate notes and chats. Invite members, assign roles, and use shared tasks." },
+  { q: "Where is the friendly guide?", a: "guide.stratabin.com explains what Stratabin is, why it exists, and how it\u2019s meant to help\u2014in normal language. You can open it from the app whenever you want that story again." },
+  { q: "Is Stratabin free?", a: "Stratabin is continuously evolving. Check stratabin.com for current pricing and availability." },
 ];
 
 const PERSONAL_FEATURES = [
@@ -29,7 +33,7 @@ const PERSONAL_FEATURES = [
   { title: "Timeline", desc: "Phases, milestones, and timeframes. Mark as planned, active, or done.", icon: "\u23F1" },
   { title: "Calendar & planner", desc: "Month or week view. Add events, set times, get reminders.", icon: "\uD83D\uDCC5" },
   { title: "STRAB AI", desc: "AI assistant that knows your project. Get reports and organize messy thoughts.", icon: "\u2726" },
-  { title: "Dashboard", desc: "Streak, progress, project count, tasks done. Pin projects and switch views.", icon: "\u25D0" },
+  { title: "Dashboard", desc: "All your projects in one place. Folders, STRAB in the header for new plans, profile, community, and How to use.", icon: "\u25D0" },
   { title: "Reports", desc: "AI-generated snapshot: canvas summary, tasks, timeline, risks, and next actions.", icon: "\uD83D\uDCCA" },
 ];
 
@@ -79,9 +83,10 @@ const MISSION_HASH_TO_ID: Record<string, string> = Object.fromEntries(
 const NAV_SECTIONS = [
   { id: "hero", num: "01" },
   { id: "mission", num: "02" },
-  { id: "features", num: "03" },
-  { id: "faq", num: "04" },
-  { id: "about", num: "05" },
+  { id: "complete-guide", num: "03" },
+  { id: "features", num: "04" },
+  { id: "faq", num: "05" },
+  { id: "about", num: "06" },
 ];
 
 const FaqItem = ({ question, answer, isOpen, onClick }: { question: string; answer: string; isOpen: boolean; onClick: () => void }) => (
@@ -597,6 +602,7 @@ export default function Home() {
             </a>
             <div className="hidden md:flex items-center gap-8">
               <a href="#mission" className="text-sm text-white/45 hover:text-orange-400/90 transition-colors">Mission</a>
+              <a href="#complete-guide" className="text-sm text-white/45 hover:text-orange-400/90 transition-colors">Guide</a>
               <a href="#features" className="text-sm text-white/45 hover:text-orange-400/90 transition-colors">Features</a>
               <a href="#faq" className="text-sm text-white/45 hover:text-orange-400/90 transition-colors">FAQ</a>
               <a href="#about" className="text-sm text-white/45 hover:text-orange-400/90 transition-colors">About</a>
@@ -630,6 +636,7 @@ export default function Home() {
             <div className="relative px-6 py-4 flex flex-col gap-1">
               {[
                 { label: "Mission", href: "#mission" },
+                { label: "Complete guide", href: "#complete-guide" },
                 { label: "Features", href: "#features" },
                 { label: "FAQ", href: "#faq" },
                 { label: "About", href: "#about" },
@@ -888,21 +895,146 @@ export default function Home() {
 
       <div className="section-line" />
 
-      {/* ══════════ IN PLAIN TERMS ══════════ */}
-      <section className="py-32 px-6 lg:px-24">
-        <div className="max-w-3xl mx-auto lg:pl-16 relative">
+      {/* ══════════ COMPLETE GUIDE (PLAIN LANGUAGE) ══════════ */}
+      <section id="complete-guide" className="py-32 px-6 lg:px-24 scroll-mt-24">
+        <div className="max-w-4xl mx-auto lg:pl-16 relative">
           <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-orange-500/50 via-orange-500/20 to-transparent" />
-          <div className="md:pl-8">
-            <span className="reveal-up inline-block px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-bold tracking-widest uppercase mb-6">In Plain Terms</span>
-            <h2 className="reveal-up font-display text-2xl md:text-3xl font-bold text-white mb-6 leading-tight">
-              Stratabin is an app that turns your ideas into action
-            </h2>
-            <p className="reveal-up text-lg text-white/50 leading-relaxed mb-6">
-              You know that feeling when you have a great idea, write it down somewhere, and never do anything with it? Stratabin fixes that. It&apos;s not just a note-taking app&mdash;it&apos;s a workspace where you <strong className="text-orange-400">write your ideas</strong>, <strong className="text-orange-400">break them into clear steps</strong>, <strong className="text-orange-400">see them as a visual flow</strong>, and <strong className="text-orange-400">track your progress</strong> as you actually get things done.
-            </p>
-            <p className="reveal-up text-white/35 leading-relaxed">
-              Think of it as a combination of a structured notebook, a project planner, and a progress tracker&mdash;all in one place.
-            </p>
+          <div className="md:pl-8 space-y-12">
+            <span className="reveal-up block text-orange-400/20 font-display text-8xl md:text-9xl font-bold leading-none select-none">03</span>
+            <header className="reveal-up space-y-4 -mt-6">
+              <span className="inline-block px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-bold tracking-widest uppercase">Complete guide</span>
+              <h2 className="font-display text-2xl md:text-4xl font-bold text-white leading-tight">
+                Stratabin in plain language
+              </h2>
+              <p className="text-lg text-white/50 leading-relaxed">
+                Everything below is the full explanation: how the dashboard works, what happens inside a project, the two STRABs, teams, and the guide site&mdash;written for normal readers, not jargon.
+              </p>
+            </header>
+
+            <div className="reveal-up rounded-2xl border border-orange-500/20 bg-orange-500/[0.06] p-6 md:p-8 space-y-3">
+              <h3 className="font-display text-lg font-bold text-white">Bottom line</h3>
+              <p className="text-white/60 leading-relaxed">
+                Stratabin helps you stop losing ideas in random notes.
+              </p>
+              <p className="text-white/60 leading-relaxed">
+                You see your thinking as a map, write the plan, schedule and do the work, and optionally use AI to create new plans or sharpen the one you&apos;re already on&mdash;especially through the links in the dashboard and in each project.
+              </p>
+            </div>
+
+            <article className="reveal-up space-y-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
+              <h3 className="font-display text-xl font-bold text-white">Your home screen (Dashboard)</h3>
+              <p className="text-white/55 leading-relaxed">
+                This is where you see all your projects.
+              </p>
+              <p className="text-white/55 leading-relaxed">
+                Think of a project as one big goal or idea you&apos;re working on&mdash;like &ldquo;launch a product,&rdquo; &ldquo;plan a wedding,&rdquo; or &ldquo;grow the business.&rdquo;
+              </p>
+              <p className="text-white/70 font-medium">You can:</p>
+              <ul className="list-disc pl-5 space-y-3 text-white/55 leading-relaxed marker:text-orange-400/80">
+                <li>
+                  Start a blank project and fill it in yourself, or
+                </li>
+                <li>
+                  Use <strong className="text-white/75 font-semibold">STRAB in the header</strong> when you want the AI to help you create a whole new plan from scratch (a fresh workspace with ideas, connections, and notes already sketched out).
+                </li>
+              </ul>
+              <p className="text-white/55 leading-relaxed pt-2">
+                You can also sort projects into folders, join team workspaces if you work with others, open your profile, visit the community, or open the &ldquo;How to use&rdquo; link to the guide again.
+              </p>
+            </article>
+
+            <article className="reveal-up space-y-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
+              <h3 className="font-display text-xl font-bold text-white">Inside one project</h3>
+              <p className="text-white/55 leading-relaxed">
+                When you open a project, you&apos;re really opening <strong className="text-white/80">one workspace for that goal</strong>. People usually move through it like this:
+              </p>
+
+              <div className="space-y-6 border-l-2 border-orange-500/25 pl-5 md:pl-6">
+                <div>
+                  <h4 className="font-display font-bold text-orange-400/95 mb-2">Strategy / flow view</h4>
+                  <p className="text-white/55 leading-relaxed">
+                    You see a map of ideas&mdash;boxes and links, not just a long document. That&apos;s where you think clearly: what matters, what depends on what, open questions, decisions.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-orange-400/95 mb-2">Writing</h4>
+                  <p className="text-white/55 leading-relaxed">
+                    When you&apos;re ready, you turn that thinking into real writing&mdash;overview, plans, notes&mdash;still inside the same project.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-orange-400/95 mb-2">Tasks</h4>
+                  <p className="text-white/55 leading-relaxed">
+                    You break work into things to do and tick them off. That&apos;s where doing starts.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-orange-400/95 mb-2">Timeline &amp; calendar</h4>
+                  <p className="text-white/55 leading-relaxed">
+                    You put dates and phases on it so the plan has a <em className="text-white/65 not-italic">when</em>, not only a <em className="text-white/65 not-italic">what</em>.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-display font-bold text-orange-400/95 mb-2">STRAB for this project</h4>
+                  <p className="text-white/55 leading-relaxed">
+                    That&apos;s the AI that knows this project: you can ask for summaries, risks, &ldquo;what should I do next?&rdquo;, and reports&mdash;like a coach that&apos;s read your map, tasks, and writing.
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-white/70 font-medium leading-relaxed border border-white/[0.08] rounded-xl bg-white/[0.03] px-5 py-4">
+                So in one sentence: think on the map &rarr; write it down &rarr; turn it into tasks and dates &rarr; use AI to stay on track.
+              </p>
+            </article>
+
+            <article className="reveal-up space-y-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
+              <h3 className="font-display text-xl font-bold text-white">Two different STRABs (simple version)</h3>
+              <div className="grid md:grid-cols-2 gap-5">
+                <div className="rounded-xl border border-white/[0.06] bg-black/20 p-5 space-y-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-orange-400/90">STRAB from the main dashboard (header)</p>
+                  <p className="text-white/55 leading-relaxed italic">
+                    &ldquo;I want to start something new and have AI help me build the first version of the plan.&rdquo;
+                  </p>
+                </div>
+                <div className="rounded-xl border border-white/[0.06] bg-black/20 p-5 space-y-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-orange-400/90">STRAB inside a project</p>
+                  <p className="text-white/55 leading-relaxed italic">
+                    &ldquo;I&apos;m already working on this thing&mdash;help me improve it, question it, and summarize it.&rdquo;
+                  </p>
+                </div>
+              </div>
+              <p className="text-white/50 leading-relaxed">
+                That&apos;s the only split most people need to remember.
+              </p>
+            </article>
+
+            <article className="reveal-up space-y-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
+              <h3 className="font-display text-xl font-bold text-white">Working with others</h3>
+              <p className="text-white/55 leading-relaxed">
+                If you use teams, you can share workspaces with people: same projects, chat, and daily rhythm together&mdash;instead of everyone living in separate notes and chats.
+              </p>
+            </article>
+
+            <article className="reveal-up space-y-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
+              <h3 className="font-display text-xl font-bold text-white">The guide website</h3>
+              <p className="text-white/55 leading-relaxed">
+                <a href="https://guide.stratabin.com" target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:text-orange-300 font-semibold underline-offset-2 hover:underline">guide.stratabin.com</a>{" "}
+                is the friendly explanation: what Stratabin is, why it exists, and how it&apos;s meant to help you go from &ldquo;I have an idea&rdquo; to &ldquo;I&apos;m actually doing it.&rdquo;
+              </p>
+              <p className="text-white/55 leading-relaxed">
+                You can open it from the app whenever you want that story in normal language.
+              </p>
+            </article>
+
+            <footer className="reveal-up rounded-2xl border border-white/[0.1] bg-gradient-to-br from-white/[0.04] to-transparent p-6 md:p-8 space-y-4">
+              <h3 className="font-display text-lg font-bold text-orange-400/95">Bottom line for &ldquo;normal&rdquo; readers</h3>
+              <p className="text-white/60 leading-relaxed">
+                Stratabin helps you stop losing ideas in random notes.
+              </p>
+              <p className="text-white/60 leading-relaxed">
+                You see your thinking as a map, write the plan, schedule and do the work, and optionally use AI to create new plans or sharpen the one you&apos;re already on&mdash;especially through the links in the dashboard and in each project.
+              </p>
+            </footer>
           </div>
         </div>
       </section>
@@ -940,7 +1072,7 @@ export default function Home() {
       {/* ══════════ FEATURES ══════════ */}
       <section id="features" className="py-32 px-6 lg:px-24 scroll-mt-24">
         <div className="max-w-6xl mx-auto lg:pl-16">
-          <span className="reveal-up block text-orange-400/20 font-display text-8xl md:text-9xl font-bold leading-none select-none">03</span>
+          <span className="reveal-up block text-orange-400/20 font-display text-8xl md:text-9xl font-bold leading-none select-none">04</span>
           <h2 className="reveal-up font-display text-4xl md:text-5xl font-bold -mt-6 mb-4">Features</h2>
           <p className="reveal-up text-white/35 mb-16 max-w-2xl text-lg">
             From solo planning to team collaboration&mdash;everything in one platform.
@@ -1058,11 +1190,11 @@ export default function Home() {
           <p className="reveal-up text-white/35 mb-16 max-w-xl">Everything happens in one place. No switching between tools.</p>
           <div className="grid md:grid-cols-5 gap-8">
             {[
-              { step: "01", title: "Write", desc: "Put your thoughts down in a structured format." },
-              { step: "02", title: "Structure", desc: "Break content into clear sections and expand." },
-              { step: "03", title: "Visualize", desc: "See how each step connects visually." },
-              { step: "04", title: "Plan", desc: "Create tasks, set phases, and define timelines." },
-              { step: "05", title: "Execute", desc: "Complete tasks and track progress." },
+              { step: "01", title: "Map", desc: "Strategy / flow view: ideas as boxes and links\u2014what matters, dependencies, questions, decisions." },
+              { step: "02", title: "Write", desc: "Turn that thinking into real writing: overview, plans, notes\u2014still inside the same project." },
+              { step: "03", title: "Tasks", desc: "Break work into things to do and tick them off. That\u2019s where doing starts." },
+              { step: "04", title: "Schedule", desc: "Timeline & calendar: put dates and phases on it so the plan has a when." },
+              { step: "05", title: "STRAB", desc: "Project-aware AI: summaries, risks, next steps, and reports to stay on track." },
             ].map(({ step, title, desc }) => (
               <div key={step} className="reveal-up group">
                 <span className="font-display text-4xl font-bold text-orange-500/20 group-hover:text-orange-400/40 transition-colors">{step}</span>
@@ -1124,7 +1256,7 @@ export default function Home() {
       {/* ══════════ FAQ ══════════ */}
       <section id="faq" className="py-32 px-6 lg:px-24 scroll-mt-24">
         <div className="max-w-2xl mx-auto lg:pl-16">
-          <span className="reveal-up block text-orange-400/20 font-display text-8xl md:text-9xl font-bold leading-none select-none">04</span>
+          <span className="reveal-up block text-orange-400/20 font-display text-8xl md:text-9xl font-bold leading-none select-none">05</span>
           <h2 className="reveal-up font-display text-3xl md:text-4xl font-bold -mt-6 mb-12">Frequently asked questions</h2>
           <div className="space-y-3">
             {FAQ_ITEMS.map((item, i) => (
@@ -1139,7 +1271,7 @@ export default function Home() {
       {/* ══════════ ABOUT ══════════ */}
       <section id="about" className="py-32 px-6 lg:px-24 scroll-mt-24">
         <div className="max-w-5xl mx-auto lg:pl-16">
-          <span className="reveal-up block text-orange-400/20 font-display text-8xl md:text-9xl font-bold leading-none select-none">05</span>
+          <span className="reveal-up block text-orange-400/20 font-display text-8xl md:text-9xl font-bold leading-none select-none">06</span>
           <h2 className="reveal-up font-display text-3xl md:text-4xl font-bold -mt-6 mb-16">Meet the founder</h2>
 
           <div className="reveal-up rounded-2xl bg-white/[0.02] border border-white/[0.06] overflow-hidden">
@@ -1206,6 +1338,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-8 justify-center text-sm text-white/25">
               <a href="#hero" className="hover:text-white/60 transition-colors">Home</a>
               <a href="#mission" className="hover:text-white/60 transition-colors">Mission</a>
+              <a href="#complete-guide" className="hover:text-white/60 transition-colors">Guide</a>
               <a href="#features" className="hover:text-white/60 transition-colors">Features</a>
               <a href="#faq" className="hover:text-white/60 transition-colors">FAQ</a>
               <a href="#about" className="hover:text-white/60 transition-colors">About</a>
