@@ -735,6 +735,12 @@ export default function Home() {
             <a href="#mission" className="px-8 py-4 rounded-full border border-white/10 text-white/60 hover:text-white hover:border-white/20 font-medium transition-all duration-300">
               Explore
             </a>
+            <a
+              href="#complete-guide"
+              className="px-8 py-4 rounded-full border border-orange-500/25 text-orange-400/90 hover:text-orange-300 hover:border-orange-400/40 font-medium transition-all duration-300"
+            >
+              Read the full guide
+            </a>
           </div>
         </div>
 
@@ -895,13 +901,15 @@ export default function Home() {
 
       <div className="section-line" />
 
-      {/* ══════════ COMPLETE GUIDE (PLAIN LANGUAGE) ══════════ */}
-      <section id="complete-guide" className="py-32 px-6 lg:px-24 scroll-mt-24">
+      {/* ══════════ COMPLETE GUIDE (PLAIN LANGUAGE) ══════════
+          No .reveal-up here: that class is opacity:0 until GSAP ScrollTrigger runs on desktop,
+          so hash jumps / timing could leave the whole guide invisible. */}
+      <section id="complete-guide" className="complete-guide py-32 px-6 lg:px-24 scroll-mt-24">
         <div className="max-w-4xl mx-auto lg:pl-16 relative">
           <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-orange-500/50 via-orange-500/20 to-transparent" />
           <div className="md:pl-8 space-y-12">
-            <span className="reveal-up block text-orange-400/20 font-display text-8xl md:text-9xl font-bold leading-none select-none">03</span>
-            <header className="reveal-up space-y-4 -mt-6">
+            <span className="block text-orange-400/20 font-display text-8xl md:text-9xl font-bold leading-none select-none">03</span>
+            <header className="space-y-4 -mt-6">
               <span className="inline-block px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-bold tracking-widest uppercase">Complete guide</span>
               <h2 className="font-display text-2xl md:text-4xl font-bold text-white leading-tight">
                 Stratabin in plain language
@@ -911,7 +919,7 @@ export default function Home() {
               </p>
             </header>
 
-            <div className="reveal-up rounded-2xl border border-orange-500/20 bg-orange-500/[0.06] p-6 md:p-8 space-y-3">
+            <div className="rounded-2xl border border-orange-500/20 bg-orange-500/[0.06] p-6 md:p-8 space-y-3">
               <h3 className="font-display text-lg font-bold text-white">Bottom line</h3>
               <p className="text-white/60 leading-relaxed">
                 Stratabin helps you stop losing ideas in random notes.
@@ -921,7 +929,7 @@ export default function Home() {
               </p>
             </div>
 
-            <article className="reveal-up space-y-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
+            <article className="space-y-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
               <h3 className="font-display text-xl font-bold text-white">Your home screen (Dashboard)</h3>
               <p className="text-white/55 leading-relaxed">
                 This is where you see all your projects.
@@ -943,7 +951,7 @@ export default function Home() {
               </p>
             </article>
 
-            <article className="reveal-up space-y-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
+            <article className="space-y-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
               <h3 className="font-display text-xl font-bold text-white">Inside one project</h3>
               <p className="text-white/55 leading-relaxed">
                 When you open a project, you&apos;re really opening <strong className="text-white/80">one workspace for that goal</strong>. People usually move through it like this:
@@ -987,7 +995,7 @@ export default function Home() {
               </p>
             </article>
 
-            <article className="reveal-up space-y-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
+            <article className="space-y-6 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
               <h3 className="font-display text-xl font-bold text-white">Two different STRABs (simple version)</h3>
               <div className="grid md:grid-cols-2 gap-5">
                 <div className="rounded-xl border border-white/[0.06] bg-black/20 p-5 space-y-3">
@@ -1008,14 +1016,14 @@ export default function Home() {
               </p>
             </article>
 
-            <article className="reveal-up space-y-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
+            <article className="space-y-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
               <h3 className="font-display text-xl font-bold text-white">Working with others</h3>
               <p className="text-white/55 leading-relaxed">
                 If you use teams, you can share workspaces with people: same projects, chat, and daily rhythm together&mdash;instead of everyone living in separate notes and chats.
               </p>
             </article>
 
-            <article className="reveal-up space-y-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
+            <article className="space-y-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8">
               <h3 className="font-display text-xl font-bold text-white">The guide website</h3>
               <p className="text-white/55 leading-relaxed">
                 <a href="https://guide.stratabin.com" target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:text-orange-300 font-semibold underline-offset-2 hover:underline">guide.stratabin.com</a>{" "}
@@ -1026,7 +1034,7 @@ export default function Home() {
               </p>
             </article>
 
-            <footer className="reveal-up rounded-2xl border border-white/[0.1] bg-gradient-to-br from-white/[0.04] to-transparent p-6 md:p-8 space-y-4">
+            <footer className="rounded-2xl border border-white/[0.1] bg-gradient-to-br from-white/[0.04] to-transparent p-6 md:p-8 space-y-4">
               <h3 className="font-display text-lg font-bold text-orange-400/95">Bottom line for &ldquo;normal&rdquo; readers</h3>
               <p className="text-white/60 leading-relaxed">
                 Stratabin helps you stop losing ideas in random notes.
