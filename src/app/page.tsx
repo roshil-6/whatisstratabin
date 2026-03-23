@@ -237,54 +237,16 @@ export default function Home() {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const setupHeroScrollStory = (opts: {
-      end: string;
-      pin: boolean;
-      scrub: number;
-      pinType?: "fixed" | "transform";
-    }) => {
+    /** No hero scroll-scrub on any breakpoint — scrub + “bottom top” made “Turn ideas into action” finish only as the hero left view. */
+    const applyHeroStaticVisible = (opts: { showScrollHint: boolean }) => {
       const introWords = gsap.utils.toArray<HTMLElement>(".hero-intro-word-inner");
-
-      gsap.set(introWords, { yPercent: 118, autoAlpha: 0.15 });
-      gsap.set(".hero-tag", { y: 28, autoAlpha: 0.25 });
-      gsap.set(".hero-title-line-inner", { yPercent: 105, autoAlpha: 0.2 });
-      gsap.set(".hero-title-line-2-inner", { yPercent: 105, autoAlpha: 0.2 });
-      gsap.set(".hero-desc", { y: 36, autoAlpha: 0 });
-      gsap.set(".hero-cta", { y: 28, autoAlpha: 0 });
-      gsap.set(".hero-scroll", { autoAlpha: 0 });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#hero",
-          start: "top top",
-          end: opts.end,
-          pin: opts.pin,
-          scrub: opts.scrub,
-          anticipatePin: opts.pin ? 1 : 0,
-          fastScrollEnd: true,
-          ...(opts.pin && opts.pinType ? { pinType: opts.pinType } : {}),
-        },
-      });
-
-      tl.to(
-        introWords,
-        {
-          yPercent: 0,
-          autoAlpha: 1,
-          duration: 0.42,
-          stagger: 0.055,
-          ease: "power3.out",
-        },
-        0
-      )
-        .to(".hero-tag", { y: 0, autoAlpha: 1, duration: 0.38, ease: "power2.out" }, 0.08)
-        .to(".hero-title-line-inner", { yPercent: 0, autoAlpha: 1, duration: 0.48, ease: "power3.out" }, 0.14)
-        .to(".hero-title-line-2-inner", { yPercent: 0, autoAlpha: 1, duration: 0.52, ease: "power3.out" }, 0.22)
-        .to(".hero-desc", { y: 0, autoAlpha: 1, duration: 0.42, ease: "power2.out" }, 0.34)
-        .to(".hero-cta", { y: 0, autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 0.44)
-        .to(".hero-scroll", { autoAlpha: 1, duration: 0.35, ease: "power2.out" }, 0.52);
-
-      return tl;
+      gsap.set(introWords, { yPercent: 0, autoAlpha: 1 });
+      gsap.set(".hero-tag", { y: 0, autoAlpha: 1 });
+      gsap.set(".hero-title-line-inner", { yPercent: 0, autoAlpha: 1 });
+      gsap.set(".hero-title-line-2-inner", { yPercent: 0, autoAlpha: 1 });
+      gsap.set(".hero-desc", { y: 0, autoAlpha: 1 });
+      gsap.set(".hero-cta", { y: 0, autoAlpha: 1 });
+      gsap.set(".hero-scroll", { autoAlpha: opts.showScrollHint ? 1 : 0 });
     };
 
     /** Scroll-scrubbed chapter (no pin — page keeps moving naturally). */
@@ -441,28 +403,16 @@ export default function Home() {
       return tl;
     };
 
-    /** Mobile: no scroll-scrub stories — everything readable immediately */
-    const applyMobileHeroStatic = () => {
-      const introWords = gsap.utils.toArray<HTMLElement>(".hero-intro-word-inner");
-      gsap.set(introWords, { yPercent: 0, autoAlpha: 1 });
-      gsap.set(".hero-tag", { y: 0, autoAlpha: 1 });
-      gsap.set(".hero-title-line-inner", { yPercent: 0, autoAlpha: 1 });
-      gsap.set(".hero-title-line-2-inner", { yPercent: 0, autoAlpha: 1 });
-      gsap.set(".hero-desc", { y: 0, autoAlpha: 1 });
-      gsap.set(".hero-cta", { y: 0, autoAlpha: 1 });
-      gsap.set(".hero-scroll", { autoAlpha: 0 });
-    };
-
     let mm: ReturnType<typeof gsap.matchMedia> | null = null;
 
     if (!prefersReduced) {
       mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
-        setupHeroScrollStory({ end: "bottom top", pin: false, scrub: 0.45 });
+        applyHeroStaticVisible({ showScrollHint: true });
         setupImmersiveStory({ end: "bottom top", pin: false, scrub: 0.35 });
       });
       mm.add("(max-width: 767px)", () => {
-        applyMobileHeroStatic();
+        applyHeroStaticVisible({ showScrollHint: false });
       });
     } else {
       gsap.set(
