@@ -4,16 +4,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "img.freepik.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "thumbs.dreamstime.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
         hostname: "t4.ftcdn.net",
         pathname: "/**",
       },
@@ -22,10 +12,21 @@ const nextConfig = {
         hostname: "procreator.design",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "banner2.cleanpng.com",
+        pathname: "/**",
+      },
     ],
   },
   async headers() {
     return [
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
       {
         source: "/:path*",
         headers: [

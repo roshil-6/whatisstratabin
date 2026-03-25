@@ -39,8 +39,14 @@ const config: Config = {
         /** Mission detail panel — timed to feel aligned with Lenis scroll-to */
         "mission-reveal": "missionReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both",
         "float": "float 6s ease-in-out infinite",
+        /** Chat assistant intro bubble — big side pop-in */
+        "chat-intro-pop": "chatIntroPop 0.65s cubic-bezier(0.34, 1.45, 0.64, 1) both",
       },
       keyframes: {
+        chatIntroPop: {
+          from: { opacity: "0", transform: "translateX(28px) scale(0.88)" },
+          to: { opacity: "1", transform: "translateX(0) scale(1)" },
+        },
         missionReveal: {
           from: { opacity: "0", transform: "translateY(28px)" },
           to: { opacity: "1", transform: "translateY(0)" },
